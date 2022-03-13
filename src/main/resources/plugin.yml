@@ -1,0 +1,6 @@
+main: me.glicz.glitchinventoryapi.GlitchInventoryAPI
+version: 1.0
+name: GlitchInventoryAPI
+api-version: 1.18
+depend:
+  - ProtocolLib
