@@ -7,7 +7,7 @@ If you want to shade this API into your plugin, you have to add this line in you
 new GlitchInventoryAPI().registerListeners();
 ```
 
-##Usage
+## Usage
 Usage is very simple, here is an example
 ```java
 new GlitchInventory(3, player, "Title")
