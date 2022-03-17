@@ -13,12 +13,12 @@ import java.util.List;
 public class CloseWindowPacketListener extends PacketAdapter {
 
     public CloseWindowPacketListener() {
-        super(GlitchInventoryAPI.getInstance(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.CLOSE_WINDOW), ListenerOptions.ASYNC);
+        super(GlitchInventoryAPI.getInstance(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.CLOSE_WINDOW));
     }
 
     @Override
     public void onPacketReceiving(PacketEvent e) {
-        if (!GlitchInventory.getCurrentInventories().containsKey(e.getPacket().getIntegers().read(0))) return;
-        GlitchInventory.getCurrentInventories().get(e.getPacket().getIntegers().read(0)).unRegister();
+        if (!GlitchInventory.getCurrentInventories().containsKey(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0))) return;
+        GlitchInventory.getCurrentInventories().get(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0)).unRegister();
     }
 }

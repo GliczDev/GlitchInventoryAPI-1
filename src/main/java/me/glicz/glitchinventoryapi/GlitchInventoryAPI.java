@@ -5,23 +5,12 @@ import me.glicz.glitchinventoryapi.listeners.CloseWindowPacketListener;
 import me.glicz.glitchinventoryapi.listeners.WindowClickPacketListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class GlitchInventoryAPI extends JavaPlugin {
+public class GlitchInventoryAPI{
 
-    private static GlitchInventoryAPI instance;
+    private static JavaPlugin plugin;
 
-    public GlitchInventoryAPI() {
-        instance = this;
-    }
-
-    @Override
-    public void onEnable() {
-        getLogger().info("Successfully enabled!");
-        registerListeners();
-    }
-
-    @Override
-    public void onDisable() {
-        getLogger().info("Successfully disabled!");
+    public GlitchInventoryAPI(JavaPlugin plugin) {
+        GlitchInventoryAPI.plugin = plugin;
     }
 
     public void registerListeners() {
@@ -29,7 +18,7 @@ public class GlitchInventoryAPI extends JavaPlugin {
         ProtocolLibrary.getProtocolManager().addPacketListener(new CloseWindowPacketListener());
     }
 
-    public static GlitchInventoryAPI getInstance() {
-        return instance;
+    public static JavaPlugin getInstance() {
+        return plugin;
     }
 }

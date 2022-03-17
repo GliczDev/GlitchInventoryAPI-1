@@ -1,5 +1,5 @@
-main: me.glicz.glitchinventoryapi.GlitchInventoryAPI
-version: 1.0
+main: me.glicz.glitchinventoryapi.GlitchInventoryAPIPlugin
+version: '${version}'
 name: GlitchInventoryAPI
 api-version: 1.18
 depend:
