@@ -14,7 +14,7 @@ new GlitchInventory(3, player, "Title")
         .fill(FillPattern.Alternately, new ItemStack(Material.BLACK_STAINED_GLASS_PANE), new ItemStack(Material.GRAY_STAINED_GLASS_PANE))
         .setSlot(10, new ItemStack(Material.STONE), new SlotClickListener() {
             @Override
-            public void onSlotClick(Player player, ItemStack item, GlitchInventory inventory) {
+            public void onSlotClick(Player player, ItemStack item, int slot, GlitchInventory inventory, boolean isLeftClick, boolean isRightClick) {
                 player.sendMessage("Simple GUI created with GlitchInventoryAPI!");
             }
         });
