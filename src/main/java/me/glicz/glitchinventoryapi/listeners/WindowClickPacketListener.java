@@ -25,7 +25,7 @@ public class WindowClickPacketListener extends PacketAdapter {
     public void onPacketReceiving(PacketEvent e) {
         if (!GlitchInventory.getCurrentInventories().containsKey(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0))) return;
         GlitchInventory glitchInventory = GlitchInventory.getCurrentInventories().get(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0));
-        if (glitchInventory.getItems().length <= e.getPacket().getIntegers().read(2)) return;
+        if (glitchInventory.getItems().length <= e.getPacket().getIntegers().read(2) || e.getPacket().getIntegers().read(2) == -999) return;
         if (GlitchInventory.getSlotListeners().containsKey(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0))) {
             HashMap<Integer, SlotClickListener> listenerMap = GlitchInventory.getSlotListeners().get(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0));
             if (listenerMap.containsKey(e.getPacket().getIntegers().read(2))) {
