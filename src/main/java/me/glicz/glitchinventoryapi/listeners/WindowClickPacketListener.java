@@ -39,5 +39,6 @@ public class WindowClickPacketListener extends PacketAdapter {
         }
         glitchInventory.setSlot(e.getPacket().getIntegers().read(2), glitchInventory.getItems()[e.getPacket().getIntegers().read(2)]);
         e.getPlayer().setItemOnCursor(null);
+        e.getPlayer().updateInventory();
     }
 }

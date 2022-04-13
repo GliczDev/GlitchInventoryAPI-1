@@ -104,6 +104,20 @@ public class GlitchInventory {
         return this;
     }
 
+    public GlitchInventory setSlot(int[] slots, ItemStack itemStack) {
+        for (int i : slots) {
+            setSlot(i, itemStack);
+        }
+        return this;
+    }
+
+    public GlitchInventory setSlot(int[] slots, ItemStack itemStack, SlotClickListener listener) {
+        for (int i : slots) {
+            setSlot(i, itemStack, listener);
+        }
+        return this;
+    }
+
     public void unRegister() {
         slotListeners.remove(equalID);
         currentInventories.remove(equalID);
