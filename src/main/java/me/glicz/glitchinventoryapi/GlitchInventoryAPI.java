@@ -18,7 +18,11 @@ public class GlitchInventoryAPI{
         ProtocolLibrary.getProtocolManager().addPacketListener(new CloseWindowPacketListener());
     }
 
-    public static JavaPlugin getInstance() {
+    public void unregisterListeners() {
+        ProtocolLibrary.getProtocolManager().removePacketListeners(plugin);
+    }
+
+    public static JavaPlugin getPlugin() {
         return plugin;
     }
 }

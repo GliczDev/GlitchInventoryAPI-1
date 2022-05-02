@@ -13,7 +13,7 @@ import java.util.List;
 public class CloseWindowPacketListener extends PacketAdapter {
 
     public CloseWindowPacketListener() {
-        super(GlitchInventoryAPI.getInstance(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.CLOSE_WINDOW));
+        super(GlitchInventoryAPI.getPlugin(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.CLOSE_WINDOW));
     }
 
     @Override

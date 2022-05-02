@@ -18,7 +18,7 @@ import java.util.List;
 public class WindowClickPacketListener extends PacketAdapter {
 
     public WindowClickPacketListener() {
-        super(GlitchInventoryAPI.getInstance(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.WINDOW_CLICK));
+        super(GlitchInventoryAPI.getPlugin(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.WINDOW_CLICK));
     }
 
     @Override
