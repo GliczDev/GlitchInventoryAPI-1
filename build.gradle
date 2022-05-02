@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'maven-publish'
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -16,7 +17,10 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven { url "https://repo.dmulloy2.net/repository/public/" }
+    maven { url 'https://jitpack.io' }
 }
+
+tasks.build.dependsOn tasks.shadowJar
 
 dependencies {
     compileOnly "org.spigotmc:spigot:1.18.2-R0.1-SNAPSHOT"
@@ -25,6 +29,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 shadowJar {
