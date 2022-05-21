@@ -2,9 +2,9 @@
 **This API requires ProtocolLib!**
 
 ## Shading
-If you want to shade this API into your plugin, you have to do something like that
+If you want to shade this API into your plugin, you have to do something like this
 ```java
-public static GlitchInventoryAPI glitchInventoryAPI;
+private static GlitchInventoryAPI glitchInventoryAPI;
 
 @Override
 public void onEnable() {
