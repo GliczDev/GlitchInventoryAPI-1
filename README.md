@@ -23,5 +23,6 @@ Usage is very simple, here is an example
 ```java
 new GlitchInventory(3, "Title")
         .fill(FillPattern.Alternately, new ItemStack(Material.BLACK_STAINED_GLASS_PANE), new ItemStack(Material.GRAY_STAINED_GLASS_PANE))
-        .setSlot(10, new ItemStack(Material.STONE), e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"));
+        .setSlot(10, new ItemStack(Material.STONE), e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"))
+        .open(player);
 ```
