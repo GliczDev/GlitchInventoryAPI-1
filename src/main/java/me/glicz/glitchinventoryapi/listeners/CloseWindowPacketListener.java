@@ -1,7 +1,6 @@
 package me.glicz.glitchinventoryapi.listeners;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
@@ -18,7 +17,7 @@ public class CloseWindowPacketListener extends PacketAdapter {
 
     @Override
     public void onPacketReceiving(PacketEvent e) {
-        if (!GlitchInventory.getCurrentInventories().containsKey(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0))) return;
-        GlitchInventory.getCurrentInventories().get(e.getPlayer().getUniqueId().toString() + e.getPacket().getIntegers().read(0)).unRegister();
+        if (!GlitchInventory.getCurrentInventories().containsKey(e.getPlayer().getUniqueId())) return;
+        GlitchInventory.getCurrentInventories().get(e.getPlayer().getUniqueId()).unRegister();
     }
 }

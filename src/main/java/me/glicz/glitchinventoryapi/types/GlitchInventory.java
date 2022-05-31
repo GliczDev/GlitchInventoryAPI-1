@@ -4,41 +4,38 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import net.minecraft.server.level.EntityPlayer;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
+import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class GlitchInventory {
 
-    private final int id;
-    private final String equalID;
+    private int id;
+    private Player player;
     private final String title;
-    private final Player player;
     private final ItemStack[] items;
+    private boolean isOpen = false;
 
-    private static final HashMap<String, HashMap<Integer, SlotClickListener>> slotListeners = new HashMap<>();
-    private static final HashMap<String, GlitchInventory> currentInventories = new HashMap<>();
+    private final HashMap<Integer, Consumer<? super SlotClickEvent>> slotClickListeners;
+    private static final HashMap<UUID, GlitchInventory> currentInventories = new HashMap<>();
 
-    public GlitchInventory(int rows, String title, Player player) {
+    public GlitchInventory(int rows, String title) {
         if (rows > 6) throw new IllegalArgumentException("Rows have to be less than 7");
-        EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
-        id = entityPlayer.nextContainerCounter();
-        equalID = player.getUniqueId().toString() + id;
         this.title = title;
-        this.player = player;
-        items = new ItemStack[9 * rows];
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
-        packet.getIntegers().write(0, id);
-        packet.getIntegers().write(1, rows - 1);
-        packet.getChatComponents().write(0, WrappedChatComponent.fromText(title));
-        sendPacket(player, packet);
-        currentInventories.put(equalID, this);
+        this.items = new ItemStack[9 * rows];
+        Arrays.fill(items, new ItemStack(Material.AIR));
+        this.slotClickListeners = new HashMap<>();
+    }
+
+    private GlitchInventory(ItemStack[] items, String title, HashMap<Integer, Consumer<? super SlotClickEvent>> slotListeners) {
+        this.items = items;
+        this.title = title;
+        this.slotClickListeners = slotListeners;
     }
 
     public GlitchInventory fill(FillPattern fillPattern, ItemStack... itemStacks) {
@@ -61,30 +58,54 @@ public class GlitchInventory {
         return this;
     }
 
+    public GlitchInventory drawColumn(int column, ItemStack itemStack) {
+        for (int i = 0; i <= (items.length / 3) - 1; i++) {
+            setSlot(i * 9 + column, itemStack);
+        }
+        return this;
+    }
+
+    public GlitchInventory drawColumn(int column, ItemStack itemStack, Consumer<? super SlotClickEvent> action) {
+        for (int i = 0; i <= (items.length / 3) - 1; i++) {
+            setSlot(i * 9 + column, itemStack, action);
+        }
+        return this;
+    }
+
+    public GlitchInventory drawRow(int row, ItemStack itemStack) {
+        for (int i = 0; i <= 8; i++) {
+            setSlot(row * 9 + i, itemStack);
+        }
+        return this;
+    }
+
+    public GlitchInventory drawRow(int row, ItemStack itemStack, Consumer<? super SlotClickEvent> action) {
+        for (int i = 0; i <= 8; i++) {
+            setSlot(row * 9 + i, itemStack, action);
+        }
+        return this;
+    }
+
     public ItemStack[] getItems() {
         return items;
     }
 
     public GlitchInventory setSlot(int slot, ItemStack itemStack) {
         items[slot] = itemStack;
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_SLOT);
-        packet.getIntegers().write(0, id);
-        packet.getIntegers().write(1, 0);
-        packet.getIntegers().write(2, slot);
-        packet.getItemModifier().write(0, itemStack);
-        sendPacket(player, packet);
+        if (isOpen) {
+            PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_SLOT);
+            packet.getIntegers().write(0, id);
+            packet.getIntegers().write(1, 0);
+            packet.getIntegers().write(2, slot);
+            packet.getItemModifier().write(0, itemStack);
+            sendPacket(player, packet);
+        }
         return this;
     }
 
-    public GlitchInventory setSlot(int slot, ItemStack itemStack, SlotClickListener listener) {
+    public GlitchInventory setSlot(int slot, ItemStack itemStack, Consumer<? super SlotClickEvent> action) {
         setSlot(slot, itemStack);
-        if (slotListeners.containsKey(equalID)) {
-            slotListeners.get(equalID).put(slot, listener);
-        } else {
-            HashMap<Integer, SlotClickListener> listenerMap = new HashMap<>();
-            listenerMap.put(slot, listener);
-            slotListeners.put(equalID, listenerMap);
-        }
+        slotClickListeners.put(slot, action);
         return this;
     }
 
@@ -96,10 +117,10 @@ public class GlitchInventory {
         return this;
     }
 
-    public GlitchInventory setSlot(int[] slots, ItemStack[] itemStacks, SlotClickListener listener) {
+    public GlitchInventory setSlot(int[] slots, ItemStack[] itemStacks, Consumer<? super SlotClickEvent> action) {
         if (slots.length != itemStacks.length) throw new IllegalArgumentException("Slots have to have the same amount of items as itemstacks");
         for (int i = 0; i <= slots.length - 1; i++) {
-            setSlot(slots[i], itemStacks[i], listener);
+            setSlot(slots[i], itemStacks[i], action);
         }
         return this;
     }
@@ -111,27 +132,70 @@ public class GlitchInventory {
         return this;
     }
 
-    public GlitchInventory setSlot(int[] slots, ItemStack itemStack, SlotClickListener listener) {
+    public GlitchInventory setSlot(int[] slots, ItemStack itemStack, Consumer<? super SlotClickEvent> action) {
         for (int i : slots) {
-            setSlot(i, itemStack, listener);
+            setSlot(i, itemStack, action);
         }
         return this;
     }
 
     public void unRegister() {
-        slotListeners.remove(equalID);
-        currentInventories.remove(equalID);
+        currentInventories.remove(player.getUniqueId());
+    }
+
+    public GlitchInventory open(Player player) {
+        if (this.player != null) {
+            return clone().open(player);
+        }
+        if (currentInventories.containsKey(player.getUniqueId())) {
+            currentInventories.get(player.getUniqueId()).close();
+        }
+        id = GlitchInventoryAPI.getNMSUtil().getNextContainerCounter(player);
+        this.player = player;
+        isOpen = true;
+        currentInventories.put(player.getUniqueId(), this);
+
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
+        packet.getIntegers().write(0, id);
+        packet.getIntegers().write(1, (getItems().length / 9) - 1);
+        packet.getChatComponents().write(0, WrappedChatComponent.fromText(title));
+        sendPacket(player, packet);
+
+        update();
+        return this;
+    }
+
+    public GlitchInventory close() {
+        unRegister();
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.CLOSE_WINDOW);
+        packet.getIntegers().write(0, id);
+        sendPacket(player, packet);
+        return this;
+    }
+
+    public GlitchInventory update() {
+        PacketContainer windowItemsPacket = new PacketContainer(PacketType.Play.Server.WINDOW_ITEMS);
+        windowItemsPacket.getIntegers().write(0, id);
+        windowItemsPacket.getIntegers().write(1, 0);
+        windowItemsPacket.getItemListModifier().write(0, List.of(items));
+        windowItemsPacket.getItemModifier().write(0, new ItemStack(Material.AIR));
+        sendPacket(player, windowItemsPacket);
+        return this;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public static HashMap<String, HashMap<Integer, SlotClickListener>> getSlotListeners() {
-        return slotListeners;
+    public HashMap<Integer, Consumer<? super SlotClickEvent>> getSlotClickListeners() {
+        return slotClickListeners;
     }
 
-    public static HashMap<String, GlitchInventory> getCurrentInventories() {
+    public static GlitchInventory getByPlayer(Player player) {
+        return currentInventories.get(player.getUniqueId());
+    }
+
+    public static HashMap<UUID, GlitchInventory> getCurrentInventories() {
         return currentInventories;
     }
 
@@ -141,5 +205,10 @@ public class GlitchInventory {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public GlitchInventory clone() {
+        return new GlitchInventory(items, title, slotClickListeners);
     }
 }
