@@ -21,12 +21,7 @@ public void onDisable() {
 ## Usage
 Usage is very simple, here is an example
 ```java
-new GlitchInventory(3, player, "Title")
+new GlitchInventory(3, "Title")
         .fill(FillPattern.Alternately, new ItemStack(Material.BLACK_STAINED_GLASS_PANE), new ItemStack(Material.GRAY_STAINED_GLASS_PANE))
-        .setSlot(10, new ItemStack(Material.STONE), new SlotClickListener() {
-            @Override
-            public void onSlotClick(Player player, ItemStack item, int slot, GlitchInventory inventory, boolean isLeftClick, boolean isRightClick) {
-                player.sendMessage("Simple GUI created with GlitchInventoryAPI!");
-            }
-        });
+        .setSlot(10, new ItemStack(Material.STONE), e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"));
 ```
