@@ -9,16 +9,14 @@ public class SlotClickEvent {
     private final ItemStack itemStack;
     private final int slot;
     private final GlitchInventory glitchInventory;
-    private final boolean isLeftClick;
-    private final boolean isRightClick;
+    private final ClickType clickType;
 
-    public SlotClickEvent(Player player, ItemStack itemStack, int slot, GlitchInventory glitchInventory, boolean isLeftClick, boolean isRightClick) {
+    public SlotClickEvent(Player player, ItemStack itemStack, int slot, GlitchInventory glitchInventory, ClickType clickType) {
         this.player = player;
         this.itemStack = itemStack;
         this.slot = slot;
         this.glitchInventory = glitchInventory;
-        this.isLeftClick = isLeftClick;
-        this.isRightClick = isRightClick;
+        this.clickType = clickType;
     }
 
     public Player getPlayer() {
@@ -37,11 +35,7 @@ public class SlotClickEvent {
         return glitchInventory;
     }
 
-    public boolean isLeftClick() {
-        return isLeftClick;
-    }
-
-    public boolean isRightClick() {
-        return isRightClick;
+    public ClickType getClickType() {
+        return clickType;
     }
 }

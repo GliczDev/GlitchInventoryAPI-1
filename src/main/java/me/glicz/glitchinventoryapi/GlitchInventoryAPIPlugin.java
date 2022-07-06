@@ -12,7 +12,6 @@ public class GlitchInventoryAPIPlugin extends JavaPlugin implements Listener {
         getLogger().info("Successfully enabled!");
         glitchInventoryAPI = new GlitchInventoryAPI(this);
         glitchInventoryAPI.registerListeners();
-        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override

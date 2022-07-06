@@ -5,6 +5,9 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
+import me.glicz.glitchinventoryapi.utils.NMSUtil;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
+import net.minecraft.network.protocol.game.PacketPlayOutWindowItems;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -110,7 +113,8 @@ public class GlitchInventory {
     }
 
     public GlitchInventory setSlot(int[] slots, ItemStack[] itemStacks) {
-        if (slots.length != itemStacks.length) throw new IllegalArgumentException("Slots have to have the same amount of items as itemstacks");
+        if (slots.length != itemStacks.length)
+            throw new IllegalArgumentException("Slots have to have the same amount of items as itemstacks");
         for (int i = 0; i <= slots.length - 1; i++) {
             setSlot(slots[i], itemStacks[i]);
         }
@@ -118,7 +122,8 @@ public class GlitchInventory {
     }
 
     public GlitchInventory setSlot(int[] slots, ItemStack[] itemStacks, Consumer<? super SlotClickEvent> action) {
-        if (slots.length != itemStacks.length) throw new IllegalArgumentException("Slots have to have the same amount of items as itemstacks");
+        if (slots.length != itemStacks.length)
+            throw new IllegalArgumentException("Slots have to have the same amount of items as itemstacks");
         for (int i = 0; i <= slots.length - 1; i++) {
             setSlot(slots[i], itemStacks[i], action);
         }
@@ -157,7 +162,7 @@ public class GlitchInventory {
 
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
         packet.getIntegers().write(0, id);
-        packet.getIntegers().write(1, (getItems().length / 9) - 1);
+        packet.getModifier().write(1, GlitchInventoryAPI.getNMSUtil().getContainersClass(InventoryType.getByRows(items.length / 9).getFieldName()));
         packet.getChatComponents().write(0, WrappedChatComponent.fromText(title));
         sendPacket(player, packet);
 

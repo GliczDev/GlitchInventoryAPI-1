@@ -5,17 +5,18 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
+import me.glicz.glitchinventoryapi.types.ClickType;
 import me.glicz.glitchinventoryapi.types.GlitchInventory;
 import me.glicz.glitchinventoryapi.types.SlotClickEvent;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class WindowClickPacketListener extends PacketAdapter {
 
     public WindowClickPacketListener() {
-        super(GlitchInventoryAPI.getPlugin(), ListenerPriority.HIGHEST, List.of(PacketType.Play.Client.WINDOW_CLICK));
+        super(GlitchInventoryAPI.getPlugin(), ListenerPriority.HIGHEST, PacketType.Play.Client.WINDOW_CLICK);
     }
 
     @Override
@@ -27,13 +28,15 @@ public class WindowClickPacketListener extends PacketAdapter {
         e.getPlayer().updateInventory();
         HashMap<Integer, Consumer<? super SlotClickEvent>> listenerMap = glitchInventory.getSlotClickListeners();
         if (listenerMap.containsKey(e.getPacket().getIntegers().read(2))) {
-            listenerMap.get(e.getPacket().getIntegers().read(2)).accept(
-                    new SlotClickEvent(e.getPlayer(),
-                            glitchInventory.getItems()[e.getPacket().getIntegers().read(2)],
-                            e.getPacket().getIntegers().read(2),
-                            glitchInventory,
-                            (e.getPacket().getIntegers().read(3) == 0),
-                            (e.getPacket().getIntegers().read(3) == 1)));
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
+                    GlitchInventoryAPI.getPlugin(),
+                    () -> listenerMap.get(e.getPacket().getIntegers().read(2)).accept(
+                            new SlotClickEvent(e.getPlayer(),
+                                    glitchInventory.getItems()[e.getPacket().getIntegers().read(2)],
+                                    e.getPacket().getIntegers().read(2),
+                                    glitchInventory,
+                                    ClickType.get(((Enum<?>) e.getPacket().getModifier().read(4)).ordinal(),
+                                            e.getPacket().getIntegers().read(3)))));
         }
     }
 }

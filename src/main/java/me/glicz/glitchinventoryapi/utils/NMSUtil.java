@@ -10,6 +10,7 @@ public class NMSUtil {
 
     private Method nextContainerCounter;
     private Method getEntityHandle;
+    private Class<?> containersClass;
 
     public NMSUtil() {
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -18,6 +19,7 @@ public class NMSUtil {
             try {
                 Class<?> entityClass = Class.forName("net.minecraft.server.level.EntityPlayer");
                 this.nextContainerCounter = entityClass.getDeclaredMethod("nextContainerCounter");
+                this.containersClass = Class.forName("net.minecraft.world.inventory.Containers");
             } catch (ClassNotFoundException e) {
                 Class<?> entityClass = Class.forName("net.minecraft.server." + version + ".EntityPlayer");
                 this.nextContainerCounter = entityClass.getDeclaredMethod("nextContainerCounter");
@@ -35,5 +37,15 @@ public class NMSUtil {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public Object getContainersClass(String fieldName) {
+        Object value;
+        try {
+            value = this.containersClass.getDeclaredField(fieldName).get(null);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        return value;
     }
 }
