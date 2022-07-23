@@ -6,7 +6,7 @@ plugins {
 compileJava.options.encoding = 'UTF-8'
 
 group 'me.glicz'
-version '1.0.3'
+version '1.0.4'
 
 repositories {
     mavenCentral()
