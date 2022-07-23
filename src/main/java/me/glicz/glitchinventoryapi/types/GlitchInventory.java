@@ -108,7 +108,7 @@ public class GlitchInventory {
 
     public GlitchInventory setSlot(int slot, ItemStack itemStack, Consumer<? super SlotClickEvent> action) {
         setSlot(slot, itemStack);
-        slotClickListeners.put(slot, action);
+        if (action != null) slotClickListeners.put(slot, action);
         return this;
     }
 
