@@ -3,6 +3,7 @@ package me.glicz.glitchinventoryapi;
 import com.comphenix.protocol.ProtocolLibrary;
 import me.glicz.glitchinventoryapi.listeners.CloseWindowPacketListener;
 import me.glicz.glitchinventoryapi.listeners.WindowClickPacketListener;
+import me.glicz.glitchinventoryapi.tasks.AnimatedTitleTask;
 import me.glicz.glitchinventoryapi.utils.NMSUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,12 +17,13 @@ public class GlitchInventoryAPI {
         GlitchInventoryAPI.nmsUtil = new NMSUtil();
     }
 
-    public void registerListeners() {
+    public void initialize() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new WindowClickPacketListener());
         ProtocolLibrary.getProtocolManager().addPacketListener(new CloseWindowPacketListener());
+        new AnimatedTitleTask().runTaskTimer(plugin, 0, 1);
     }
 
-    public void unregisterListeners() {
+    public void uninitialize() {
         ProtocolLibrary.getProtocolManager().removePacketListeners(plugin);
     }
 

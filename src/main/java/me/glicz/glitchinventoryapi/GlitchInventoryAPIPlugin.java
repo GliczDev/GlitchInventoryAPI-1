@@ -1,9 +1,9 @@
 package me.glicz.glitchinventoryapi;
 
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class GlitchInventoryAPIPlugin extends JavaPlugin implements Listener {
+@SuppressWarnings("unused")
+public class GlitchInventoryAPIPlugin extends JavaPlugin {
 
     private static GlitchInventoryAPI glitchInventoryAPI;
 
@@ -11,12 +11,12 @@ public class GlitchInventoryAPIPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         getLogger().info("Successfully enabled!");
         glitchInventoryAPI = new GlitchInventoryAPI(this);
-        glitchInventoryAPI.registerListeners();
+        glitchInventoryAPI.initialize();
     }
 
     @Override
     public void onDisable() {
         getLogger().info("Successfully disabled!");
-        glitchInventoryAPI.unregisterListeners();
+        glitchInventoryAPI.uninitialize();
     }
 }
