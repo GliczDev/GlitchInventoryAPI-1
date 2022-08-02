@@ -29,6 +29,14 @@ test {
     useJUnitPlatform()
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
 shadowJar {
     archiveFileName.set("${project.name}-${project.version}.jar")
 }
