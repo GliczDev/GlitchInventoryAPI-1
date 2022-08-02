@@ -1,6 +1,46 @@
 # GlitchInventoryAPI
 **This API requires ProtocolLib!** [![CodeFactor](https://www.codefactor.io/repository/github/michixyt/glitchinventoryapi/badge)](#)
 
+## JitPack
+<details><summary>Maven</summary>
+<p>
+
+Repository
+```xaml
+<repository>
+	<id>jitpack.io</id>
+	<url>https://jitpack.io</url>
+</repository>
+```
+Dependency
+```xaml
+<dependency>
+	<groupId>com.github.MichixYT</groupId>
+	<artifactId>GlitchInventoryAPI</artifactId>
+	<version>TAG</version>
+</dependency>
+```
+</p>
+</details>
+<details><summary>Gradle</summary>
+<p>
+
+Repository
+```gradle
+repositories {
+	maven { url 'https://jitpack.io' }
+}
+```
+Dependency
+```gradle
+dependencies {
+	implementation 'com.github.MichixYT:GlitchInventoryAPI:TAG'
+}
+```
+</p>
+</details>
+
+
 ## Shading
 If you want to shade this API into your plugin, you have to do something like this
 ```java
