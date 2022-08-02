@@ -6,7 +6,7 @@ plugins {
 
 compileJava.options.encoding = 'UTF-8'
 
-group 'me.glicz'
+group 'com.github.MichixYT'
 version '1.0.6'
 
 repositories {
