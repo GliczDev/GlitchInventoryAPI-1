@@ -1,35 +1,33 @@
 package me.glicz.glitchinventoryapi.types;
 
-import java.util.HashMap;
+import lombok.Getter;
 
 public enum InventoryType {
-    Generic_9x1("a", 1),
-    Generic_9x2("b", 2),
-    Generic_9x3("c", 3),
-    Generic_9x4("d", 4),
-    Generic_9x5("e", 5),
-    Generic_9x6("f", 6);
+    Chest_9x1("a", 1, 9),
+    Chest_9x2("b", 2, 2 * 9),
+    Chest_9x3("c", 3, 3 * 9),
+    Chest_9x4("d", 4, 4 * 9),
+    Chest_9x5("e", 5, 5 * 9),
+    Chest_9x6("f", 6, 6 * 9),
+    Anvil("h", 3)
+    ;
 
-    private static final HashMap<Integer, InventoryType> BY_ROWS = new HashMap<>();
-    static {
-        for (InventoryType invType : values()) {
-            BY_ROWS.put(invType.rows, invType);
-        }
-    }
-
+    @Getter
     private final String fieldName;
+    @Getter
     private final int rows;
+    @Getter
+    private final int items;
 
-    InventoryType(String fieldName, int rows) {
-        this.rows = rows;
+    InventoryType(String fieldName, int items) {
+        this.rows = -1;
+        this.items = items;
         this.fieldName = fieldName;
     }
 
-    public static InventoryType getByRows(int rows) {
-        return BY_ROWS.get(rows);
-    }
-
-    public String getFieldName() {
-        return fieldName;
+    InventoryType(String fieldName, int rows, int items) {
+        this.items = items;
+        this.rows = rows;
+        this.fieldName = fieldName;
     }
 }

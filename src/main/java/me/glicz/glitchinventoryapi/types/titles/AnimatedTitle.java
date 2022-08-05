@@ -10,7 +10,7 @@ public class AnimatedTitle implements Title {
 
     private static final Set<AnimatedTitle> animatedTitles = new HashSet<>();
 
-    private GlitchInventory glitchInventory;
+    private GlitchInventory<?> glitchInventory;
     private final int refresh;
     private int left;
     private final String[] frames;
@@ -26,7 +26,7 @@ public class AnimatedTitle implements Title {
     }
 
     @Override
-    public void setInventory(GlitchInventory glitchInventory) {
+    public void setInventory(GlitchInventory<?> glitchInventory) {
         this.glitchInventory = glitchInventory;
     }
 

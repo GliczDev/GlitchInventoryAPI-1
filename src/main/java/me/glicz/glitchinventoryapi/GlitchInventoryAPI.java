@@ -20,10 +20,10 @@ public class GlitchInventoryAPI {
     public void initialize() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new WindowClickPacketListener());
         ProtocolLibrary.getProtocolManager().addPacketListener(new CloseWindowPacketListener());
-        new AnimatedTitleTask().runTaskTimer(plugin, 0, 1);
+        new AnimatedTitleTask().runTaskTimerAsynchronously(plugin, 0, 1);
     }
 
-    public void uninitialize() {
+    public void unInitialize() {
         ProtocolLibrary.getProtocolManager().removePacketListeners(plugin);
     }
 

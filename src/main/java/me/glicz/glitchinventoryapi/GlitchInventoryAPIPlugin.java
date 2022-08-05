@@ -17,6 +17,6 @@ public class GlitchInventoryAPIPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Successfully disabled!");
-        glitchInventoryAPI.uninitialize();
+        glitchInventoryAPI.unInitialize();
     }
 }
