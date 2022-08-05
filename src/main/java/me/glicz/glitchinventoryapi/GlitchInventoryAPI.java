@@ -3,6 +3,7 @@ package me.glicz.glitchinventoryapi;
 import com.comphenix.protocol.ProtocolLibrary;
 import me.glicz.glitchinventoryapi.listeners.CloseWindowPacketListener;
 import me.glicz.glitchinventoryapi.listeners.WindowClickPacketListener;
+import me.glicz.glitchinventoryapi.listeners.ItemRenamePacketListener;
 import me.glicz.glitchinventoryapi.tasks.AnimatedTitleTask;
 import me.glicz.glitchinventoryapi.utils.NMSUtil;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +21,7 @@ public class GlitchInventoryAPI {
     public void initialize() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new WindowClickPacketListener());
         ProtocolLibrary.getProtocolManager().addPacketListener(new CloseWindowPacketListener());
+        ProtocolLibrary.getProtocolManager().addPacketListener(new ItemRenamePacketListener());
         new AnimatedTitleTask().runTaskTimerAsynchronously(plugin, 0, 1);
     }
 

@@ -29,9 +29,8 @@ public class WindowClickPacketListener extends PacketAdapter {
         glitchInventory.update();
         e.getPlayer().setItemOnCursor(null);
         e.getPlayer().updateInventory();
-        if (clickedItem == null) return;
         ItemClickEvent event = new ItemClickEvent(e.getPlayer(),
-                clickedItem.getItemStack(),
+                clickedItem == null ? null : clickedItem.getItemStack(),
                 slot,
                 glitchInventory,
                 ClickType.get(((Enum<?>) e.getPacket().getModifier().read(4)).ordinal(),
@@ -39,10 +38,11 @@ public class WindowClickPacketListener extends PacketAdapter {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(
                 GlitchInventoryAPI.getPlugin(),
                 () -> {
-                    if (clickedItem.getClickAction() != null)
-                        clickedItem.getClickAction().accept(event);
                     if (glitchInventory.getClickActions().containsKey(slot))
                         glitchInventory.getClickActions().get(slot).accept(event);
+                    if (clickedItem == null) return;
+                    if (clickedItem.getClickAction() != null)
+                        clickedItem.getClickAction().accept(event);
                     if (glitchInventory.getDefaultClickAction() != null)
                         glitchInventory.getDefaultClickAction().accept(event);
                 });
