@@ -34,21 +34,21 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder> {
         super(new ItemStack(Material.PLAYER_HEAD));
     }
 
-    public SkullBuilder setOwner(OfflinePlayer player) {
+    public SkullBuilder owner(OfflinePlayer player) {
         ((SkullMeta)itemMeta).setOwnerProfile(player.getPlayerProfile());
         return this;
     }
 
     @SneakyThrows
-    public SkullBuilder setValue(String value) {
+    public SkullBuilder value(String value) {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
         gameProfile.getProperties().put("textures",
                 new Property("textures", value));
-        profileField.set(itemStack, gameProfile);
+        profileField.set(itemMeta, gameProfile);
         return this;
     }
 
-    public SkullBuilder setURL(String url) {
-        return setValue(base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes()));
+    public SkullBuilder url(String url) {
+        return value(base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes()));
     }
 }
