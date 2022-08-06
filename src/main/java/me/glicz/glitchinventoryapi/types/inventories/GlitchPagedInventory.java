@@ -4,15 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.glitchinventoryapi.events.InventoryPageChangeEvent;
-import me.glicz.glitchinventoryapi.types.GlitchInventory;
-import me.glicz.glitchinventoryapi.types.GuiItem;
-import me.glicz.glitchinventoryapi.types.InventoryType;
-import me.glicz.glitchinventoryapi.types.Title;
+import me.glicz.glitchinventoryapi.types.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -39,11 +37,12 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
 
     @lombok.Builder(builderClassName = "Builder", buildMethodName = "create")
     private GlitchPagedInventory(InventoryType inventoryType, Title title) {
-        super(inventoryType, new ArrayList<>(Collections.nCopies(inventoryType.getItems(), new GuiItem(Material.AIR))));
+        super(inventoryType, new GuiItem[inventoryType.getItems()]);
+        Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
         setTitle(title);
     }
 
-    private GlitchPagedInventory(InventoryType inventoryType, Title title, List<GuiItem> items, List<GuiItem> pageItems) {
+    private GlitchPagedInventory(InventoryType inventoryType, Title title, GuiItem[] items, List<GuiItem> pageItems) {
         super(inventoryType, items);
         setTitle(title);
         this.pageItems = pageItems;
@@ -66,12 +65,12 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     }
 
     @Override
-    public List<ItemStack> getItemStacks() {
-        return getCurrentPageItems().stream().map(GuiItem::getItemStack).toList();
+    protected ItemStack[] getItemStacks() {
+        return getCurrentPageItems().stream().map(GuiItem::getItemStack).toArray(ItemStack[]::new);
     }
 
     private List<GuiItem> getCurrentPageItems() {
-        List<GuiItem> value = new ArrayList<>(items);
+        List<GuiItem> value = new ArrayList<>(List.of(items));
         List<GuiItem> temp;
         int itemsPerPage = getInventoryType().getItems() - ((topMargin + bottomMargin) * 9);
         try {

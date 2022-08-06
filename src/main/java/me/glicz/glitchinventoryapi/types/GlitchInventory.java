@@ -36,7 +36,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     @Setter(AccessLevel.NONE)
     private boolean isOpen;
     @NonNull
-    protected List<GuiItem> items;
+    protected GuiItem[] items;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private int id;
@@ -64,7 +64,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public T setItem(int slot, GuiItem guiItem) {
         if (guiItem == null) return removeItem(slot);
-        items.set(slot, guiItem);
+        items[slot] = guiItem;
         if (isOpen) {
             sendItem(slot, guiItem.getItemStack());
         }
@@ -73,30 +73,15 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public T setItems(int[] slots, GuiItem... guiItems) {
         for (int i = 0; i < slots.length && i < guiItems.length; i++) {
-            setItem(i, guiItems[i]);
-        }
-        return (T) this;
-    }
-
-    public T addItem(GuiItem guiItem) {
-        items.add(guiItem);
-        if (isOpen) {
-            sendItem(items.size() - 1, guiItem.getItemStack());
-        }
-        return (T) this;
-    }
-
-    public T addItems(GuiItem... guiItems) {
-        for (GuiItem guiItem : guiItems) {
-            addItem(guiItem);
+            setItem(slots[i], guiItems[i]);
         }
         return (T) this;
     }
 
     public T removeItem(int slot) {
-        items.set(slot, new GuiItem(Material.AIR));
+        items[slot] = ItemBuilder.from(Material.AIR).asGuiItem();
         if (isOpen) {
-            sendItem(slot, items.get(slot).getItemStack());
+            sendItem(slot, items[slot].getItemStack());
         }
         return (T) this;
     }
@@ -121,18 +106,16 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T fill(FillPattern fillPattern, GuiItem... guiItems) {
-        List<GuiItem> value = new ArrayList<>(Collections.nCopies(inventoryType.getItems(), new GuiItem(Material.AIR)));
         int item = 0;
         Random r = new Random();
         for (int i = 0; i < inventoryType.getItems(); i++) {
             if (fillPattern == FillPattern.Normal) {
-                value.set(i, guiItems[item]);
+                items[i] = guiItems[item];
                 item = (item < guiItems.length - 1) ? item + 1 : 0;
             } else if (fillPattern == FillPattern.Random) {
-                value.set(i, guiItems[r.nextInt(guiItems.length)]);
+                items[i] = guiItems[r.nextInt(guiItems.length)];
             }
         }
-        items = value;
         if (isOpen) update();
         return (T) this;
     }
@@ -192,7 +175,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         packet.getIntegers().write(1, 0);
         List<ItemStack> itemStacks;
         try {
-            itemStacks = getItemStacks();
+            itemStacks = List.of(getItemStacks());
         } catch (NullPointerException ex) {
             itemStacks = new ArrayList<>();
         }
@@ -221,8 +204,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return (T) this;
     }
 
-    protected List<ItemStack> getItemStacks() {
-        return items.stream().map(GuiItem::getItemStack).toList();
+    protected ItemStack[] getItemStacks() {
+        return Arrays.stream(items).map(GuiItem::getItemStack).toArray(ItemStack[]::new);
     }
 
     public abstract GuiItem getItem(int slot);

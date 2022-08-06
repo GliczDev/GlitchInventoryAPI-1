@@ -7,7 +7,7 @@ plugins {
 compileJava.options.encoding = 'UTF-8'
 
 group 'com.github.MichixYT'
-version '1.0.8'
+version '1.0.9'
 
 repositories {
     mavenCentral()
