@@ -15,11 +15,11 @@ public class LeatherArmorBuilder extends ItemBuilder<LeatherArmorBuilder> {
     }
 
     public LeatherArmorBuilder color(Color color) {
-        ((LeatherArmorMeta)itemStack.getItemMeta()).setColor(color);
+        ((LeatherArmorMeta)itemMeta).setColor(color);
         return this;
     }
 
     public Color color() {
-        return ((LeatherArmorMeta)itemStack.getItemMeta()).getColor();
+        return ((LeatherArmorMeta)itemMeta).getColor();
     }
 }
