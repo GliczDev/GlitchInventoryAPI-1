@@ -34,19 +34,19 @@ public class BookBuilder extends ItemBuilder<BookBuilder> {
     }
 
     @SuppressWarnings("deprecation")
-    public BookBuilder page(int index, String value) {
-        ((BookMeta)itemMeta).setPage(index, value);
+    public BookBuilder page(String... value) {
+        ((BookMeta)itemMeta).addPage(value);
         return this;
     }
 
     @SuppressWarnings("deprecation")
-    public BookBuilder page(int index, BaseComponent[] value) {
-        ((BookMeta)itemMeta).spigot().setPage(index, value);
+    public BookBuilder page(BaseComponent[]... value) {
+        ((BookMeta)itemMeta).spigot().addPage(value);
         return this;
     }
 
-    public BookBuilder page(int index, Component value) {
-        ((BookMeta)itemMeta).page(index, value);
+    public BookBuilder page(Component... value) {
+        ((BookMeta)itemMeta).addPages(value);
         return this;
     }
 
