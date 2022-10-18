@@ -54,4 +54,13 @@ public class BookBuilder extends ItemBuilder<BookBuilder> {
     public String page(int index) {
         return ((BookMeta)itemMeta).getPage(index);
     }
+
+    public BookBuilder title(String title) {
+        ((BookMeta)itemMeta).setTitle(title);
+        return this;
+    }
+
+    public String title() {
+        return ((BookMeta)itemMeta).getTitle();
+    }
 }
