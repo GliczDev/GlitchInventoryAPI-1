@@ -2,6 +2,7 @@ package me.glicz.glitchinventoryapi.types;
 
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
 import me.glicz.glitchinventoryapi.events.ItemClickEvent;
+import me.glicz.glitchinventoryapi.types.itembuilders.BookBuilder;
 import me.glicz.glitchinventoryapi.types.itembuilders.LeatherArmorBuilder;
 import me.glicz.glitchinventoryapi.types.itembuilders.SkullBuilder;
 import org.bukkit.Material;
@@ -34,6 +35,14 @@ public class ItemBuilder<T extends ItemBuilder<T>> {
 
     public static LeatherArmorBuilder leatherArmor(ItemStack itemStack) {
         return new LeatherArmorBuilder(itemStack);
+    }
+
+    public static BookBuilder book(Material material) {
+        return new BookBuilder(new ItemStack(material));
+    }
+
+    public static BookBuilder book(ItemStack itemStack) {
+        return new BookBuilder(itemStack);
     }
 
     protected final ItemStack itemStack;
