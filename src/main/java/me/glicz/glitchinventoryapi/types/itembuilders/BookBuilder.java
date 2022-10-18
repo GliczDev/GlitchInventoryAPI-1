@@ -1,6 +1,7 @@
 package me.glicz.glitchinventoryapi.types.itembuilders;
 
 import me.glicz.glitchinventoryapi.types.ItemBuilder;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -32,16 +33,24 @@ public class BookBuilder extends ItemBuilder<BookBuilder> {
         return ((BookMeta)itemMeta).getGeneration();
     }
 
+    @SuppressWarnings("deprecation")
     public BookBuilder page(int index, String value) {
         ((BookMeta)itemMeta).setPage(index, value);
         return this;
     }
 
+    @SuppressWarnings("deprecation")
     public BookBuilder page(int index, BaseComponent[] value) {
         ((BookMeta)itemMeta).spigot().setPage(index, value);
         return this;
     }
 
+    public BookBuilder page(int index, Component value) {
+        ((BookMeta)itemMeta).page(index, value);
+        return this;
+    }
+
+    @SuppressWarnings("deprecation")
     public String page(int index) {
         return ((BookMeta)itemMeta).getPage(index);
     }
