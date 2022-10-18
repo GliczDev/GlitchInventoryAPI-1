@@ -37,12 +37,8 @@ public class ItemBuilder<T extends ItemBuilder<T>> {
         return new LeatherArmorBuilder(itemStack);
     }
 
-    public static BookBuilder book(Material material) {
-        return new BookBuilder(new ItemStack(material));
-    }
-
-    public static BookBuilder book(ItemStack itemStack) {
-        return new BookBuilder(itemStack);
+    public static BookBuilder book() {
+        return new BookBuilder(new ItemStack(Material.WRITTEN_BOOK));
     }
 
     protected final ItemStack itemStack;
