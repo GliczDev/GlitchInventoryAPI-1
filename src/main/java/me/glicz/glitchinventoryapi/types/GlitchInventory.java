@@ -99,7 +99,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T drawRow(int row, GuiItem guiItem) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             setItem(row * 9 + i, guiItem);
         }
         return (T) this;
