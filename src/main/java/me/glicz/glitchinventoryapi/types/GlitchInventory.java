@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 @Data
 @RequiredArgsConstructor
-@SuppressWarnings({"unchecked", "unused"})
+@SuppressWarnings({"unchecked", "unused", "UnusedReturnValue"})
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public static GlitchSimpleInventory.Builder simple() {
@@ -205,6 +205,12 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     protected ItemStack[] getItemStacks() {
         return Arrays.stream(items).map(GuiItem::getItemStack).toArray(ItemStack[]::new);
+    }
+
+    public T clear() {
+        Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
+        update();
+        return (T) this;
     }
 
     public abstract GuiItem getItem(int slot);
