@@ -37,7 +37,6 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private boolean isOpen;
     @NonNull
     protected GuiItem[] items;
-    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private int id;
     @Getter(AccessLevel.NONE)
