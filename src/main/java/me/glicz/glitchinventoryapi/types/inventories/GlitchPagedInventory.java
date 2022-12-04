@@ -48,6 +48,11 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
         this.pageItems = pageItems;
     }
 
+    public static GlitchPagedInventory fromSimple(GlitchSimpleInventory inventory) {
+        return (GlitchPagedInventory) new GlitchPagedInventory(inventory.getInventoryType(), inventory.getTitle(),
+                inventory.getItems(), List.of()).setId(inventory.getId());
+    }
+
     @Override
     public GlitchPagedInventory open(Player player) {
         if (pageChangeAction != null)
@@ -69,7 +74,7 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
         return getCurrentPageItems().stream().map(GuiItem::getItemStack).toArray(ItemStack[]::new);
     }
 
-    private List<GuiItem> getCurrentPageItems() {
+    public List<GuiItem> getCurrentPageItems() {
         List<GuiItem> value = new ArrayList<>(List.of(items));
         List<GuiItem> temp;
         int itemsPerPage = getInventoryType().getItems() - ((topMargin + bottomMargin) * 9);

@@ -22,6 +22,11 @@ public class GlitchSimpleInventory extends GlitchInventory<GlitchSimpleInventory
         setTitle(title);
     }
 
+    public static GlitchSimpleInventory fromPaged(GlitchPagedInventory inventory) {
+        return (GlitchSimpleInventory) new GlitchSimpleInventory(inventory.getInventoryType(), inventory.getTitle(),
+                inventory.getCurrentPageItems().toArray(GuiItem[]::new)).setId(inventory.getId());
+    }
+
     @Override
     public GuiItem getItem(int slot) {
         try {

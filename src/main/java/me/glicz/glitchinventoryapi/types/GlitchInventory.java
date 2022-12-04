@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import lombok.*;
+import lombok.experimental.Accessors;
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
 import me.glicz.glitchinventoryapi.events.InventoryCloseEvent;
 import me.glicz.glitchinventoryapi.events.InventoryOpenEvent;
@@ -37,7 +38,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private boolean isOpen;
     @NonNull
     protected GuiItem[] items;
-    @Setter(AccessLevel.NONE)
+    @Accessors(chain = true)
+    @Setter(AccessLevel.PROTECTED)
     private int id;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -133,7 +135,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         if (currentInventories.containsKey(player.getUniqueId())) {
             currentInventories.get(player.getUniqueId()).close();
         }
-        id = GlitchInventoryAPI.getNMSUtil().getNextContainerCounter(player);
+        if (id == 0) id = GlitchInventoryAPI.getNMSUtil().getNextContainerCounter(player);
         this.player = player;
         isOpen = true;
         currentInventories.put(player.getUniqueId(), this);
