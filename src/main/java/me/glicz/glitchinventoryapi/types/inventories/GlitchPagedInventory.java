@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -49,7 +48,7 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     }
 
     public static GlitchPagedInventory fromSimple(GlitchSimpleInventory inventory) {
-        return (GlitchPagedInventory) new GlitchPagedInventory(inventory.getInventoryType(), inventory.getTitle(),
+        return new GlitchPagedInventory(inventory.getInventoryType(), inventory.getTitle(),
                 inventory.getItems(), List.of()).setId(inventory.getId());
     }
 

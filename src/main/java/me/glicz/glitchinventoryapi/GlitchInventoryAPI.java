@@ -2,8 +2,8 @@ package me.glicz.glitchinventoryapi;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import me.glicz.glitchinventoryapi.listeners.CloseWindowPacketListener;
-import me.glicz.glitchinventoryapi.listeners.WindowClickPacketListener;
 import me.glicz.glitchinventoryapi.listeners.ItemRenamePacketListener;
+import me.glicz.glitchinventoryapi.listeners.WindowClickPacketListener;
 import me.glicz.glitchinventoryapi.tasks.AnimatedTitleTask;
 import me.glicz.glitchinventoryapi.utils.NMSUtil;
 import org.bukkit.plugin.java.JavaPlugin;
