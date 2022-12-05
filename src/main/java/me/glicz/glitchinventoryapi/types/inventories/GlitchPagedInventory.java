@@ -53,10 +53,10 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     }
 
     @Override
-    public GlitchPagedInventory open(Player player) {
+    public GlitchPagedInventory resendInventory() {
         if (pageChangeAction != null)
             pageChangeAction.accept(new InventoryPageChangeEvent(player, this, hasNextPage(), hasPreviousPage(), page));
-        return super.open(player);
+        return super.resendInventory();
     }
 
     @Override
