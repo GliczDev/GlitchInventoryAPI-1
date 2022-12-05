@@ -127,11 +127,16 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T open(Player player) {
+        return open(player, true);
+    }
+
+    public T open(Player player, boolean closeCurrent) {
         if (this.player != null) {
             return clone().open(player);
         }
         if (currentInventories.containsKey(player.getUniqueId())) {
-            currentInventories.get(player.getUniqueId()).close();
+            if (closeCurrent) currentInventories.get(player.getUniqueId()).close();
+            else currentInventories.get(player.getUniqueId()).unRegister();
         }
         if (id == 0) id = GlitchInventoryAPI.getNMSUtil().getNextContainerCounter(player);
         this.player = player;
