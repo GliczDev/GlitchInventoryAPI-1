@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import lombok.*;
-import lombok.experimental.Accessors;
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
 import me.glicz.glitchinventoryapi.events.InventoryCloseEvent;
 import me.glicz.glitchinventoryapi.events.InventoryOpenEvent;
@@ -38,8 +37,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private boolean isOpen;
     @NonNull
     protected GuiItem[] items;
-    @Accessors(chain = true)
-    @Setter(AccessLevel.PROTECTED)
+    @Setter(AccessLevel.NONE)
     private int id;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -59,7 +57,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public T setTitle(Title title) {
         title.setInventory(this);
         this.title = title;
-        if (isOpen) sendInventory();
+        if (isOpen) resendInventory();
         return (T) this;
     }
 
@@ -141,7 +139,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         currentInventories.put(player.getUniqueId(), this);
         if (openAction != null)
             openAction.accept(new InventoryOpenEvent(player, this));
-        return sendInventory();
+        return resendInventory();
     }
 
     public T setDefaultClickAction(Consumer<ItemClickEvent> defaultClickAction) {
@@ -186,7 +184,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     @SneakyThrows
-    private T sendInventory() {
+    public T resendInventory() {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
         packet.getIntegers().write(0, id);
         packet.getModifier().write(1, GlitchInventoryAPI.getNMSUtil().getContainersClass(inventoryType.getFieldName()));
@@ -212,6 +210,17 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public T clear() {
         Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
         update();
+        return (T) this;
+    }
+
+    /**
+     *
+     * @param id The new ID of inventory
+     * @return GlitchInventory
+     * @apiNote <b>WARNING!</b> Be careful when changing inventory id. If you don't know what you're doing <b>do not change it!</b>
+     */
+    public T setId(int id) {
+        this.id = id;
         return (T) this;
     }
 
