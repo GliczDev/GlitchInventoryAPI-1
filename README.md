@@ -15,7 +15,7 @@ Repository
 Dependency
 ```xaml
 <dependency>
-	<groupId>com.github.MichixYT</groupId>
+	<groupId>com.github.GliczDev</groupId>
 	<artifactId>GlitchInventoryAPI</artifactId>
 	<version>TAG</version>
 </dependency>
@@ -34,7 +34,7 @@ repositories {
 Dependency
 ```gradle
 dependencies {
-	implementation 'com.github.MichixYT:GlitchInventoryAPI:TAG'
+	implementation 'com.github.GliczDev:GlitchInventoryAPI:TAG'
 }
 ```
 </p>
