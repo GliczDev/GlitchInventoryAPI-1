@@ -44,3 +44,7 @@ processResources {
         expand props
     }
 }
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
