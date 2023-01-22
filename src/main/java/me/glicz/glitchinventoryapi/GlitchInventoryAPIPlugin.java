@@ -9,14 +9,14 @@ public class GlitchInventoryAPIPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Successfully enabled!");
         glitchInventoryAPI = new GlitchInventoryAPI(this);
         glitchInventoryAPI.initialize();
+        getLogger().info("Successfully enabled!");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("Successfully disabled!");
         glitchInventoryAPI.unInitialize();
+        getLogger().info("Successfully disabled!");
     }
 }

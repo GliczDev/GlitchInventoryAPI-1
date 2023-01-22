@@ -1,6 +1,5 @@
-package me.glicz.glitchinventoryapi.types.itembuilders;
+package me.glicz.glitchinventoryapi.itembuilders;
 
-import me.glicz.glitchinventoryapi.types.ItemBuilder;
 import org.bukkit.Color;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -15,11 +14,11 @@ public class LeatherArmorBuilder extends ItemBuilder<LeatherArmorBuilder> {
     }
 
     public LeatherArmorBuilder color(Color color) {
-        ((LeatherArmorMeta)itemMeta).setColor(color);
+        ((LeatherArmorMeta) itemMeta).setColor(color);
         return this;
     }
 
     public Color color() {
-        return ((LeatherArmorMeta)itemMeta).getColor();
+        return ((LeatherArmorMeta) itemMeta).getColor();
     }
 }

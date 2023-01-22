@@ -6,9 +6,9 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
-import me.glicz.glitchinventoryapi.types.GlitchInventory;
+import me.glicz.glitchinventoryapi.inventories.GlitchInventory;
+import me.glicz.glitchinventoryapi.itembuilders.ItemBuilder;
 import me.glicz.glitchinventoryapi.types.InventoryType;
-import me.glicz.glitchinventoryapi.types.ItemBuilder;
 
 import java.util.List;
 

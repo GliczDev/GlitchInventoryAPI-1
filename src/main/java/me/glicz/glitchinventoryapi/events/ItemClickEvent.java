@@ -1,8 +1,8 @@
 package me.glicz.glitchinventoryapi.events;
 
 import lombok.Getter;
+import me.glicz.glitchinventoryapi.inventories.GlitchInventory;
 import me.glicz.glitchinventoryapi.types.ClickType;
-import me.glicz.glitchinventoryapi.types.GlitchInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

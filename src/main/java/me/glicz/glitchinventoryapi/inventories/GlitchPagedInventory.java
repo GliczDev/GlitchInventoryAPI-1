@@ -1,12 +1,14 @@
-package me.glicz.glitchinventoryapi.types.inventories;
+package me.glicz.glitchinventoryapi.inventories;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.glitchinventoryapi.events.InventoryPageChangeEvent;
-import me.glicz.glitchinventoryapi.types.*;
+import me.glicz.glitchinventoryapi.itembuilders.ItemBuilder;
+import me.glicz.glitchinventoryapi.titles.Title;
+import me.glicz.glitchinventoryapi.types.GuiItem;
+import me.glicz.glitchinventoryapi.types.InventoryType;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -95,9 +97,8 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     }
 
     public GlitchPagedInventory nextPage() {
-        if (!hasNextPage()) {
+        if (!hasNextPage())
             return this;
-        }
         page++;
         if (pageChangeAction != null)
             pageChangeAction.accept(new InventoryPageChangeEvent(player, this, hasNextPage(), hasPreviousPage(), page));
@@ -106,9 +107,8 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     }
 
     public GlitchPagedInventory previousPage() {
-        if (!hasPreviousPage()) {
+        if (!hasPreviousPage())
             return this;
-        }
         page--;
         if (pageChangeAction != null)
             pageChangeAction.accept(new InventoryPageChangeEvent(player, this, hasNextPage(), hasPreviousPage(), page));

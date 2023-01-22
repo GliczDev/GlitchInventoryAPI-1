@@ -1,6 +1,9 @@
-package me.glicz.glitchinventoryapi.types.inventories;
+package me.glicz.glitchinventoryapi.inventories;
 
-import me.glicz.glitchinventoryapi.types.*;
+import me.glicz.glitchinventoryapi.itembuilders.ItemBuilder;
+import me.glicz.glitchinventoryapi.titles.Title;
+import me.glicz.glitchinventoryapi.types.GuiItem;
+import me.glicz.glitchinventoryapi.types.InventoryType;
 import org.bukkit.Material;
 
 import java.util.Arrays;

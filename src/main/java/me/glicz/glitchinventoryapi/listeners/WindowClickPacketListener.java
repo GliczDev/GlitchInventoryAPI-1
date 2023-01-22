@@ -7,8 +7,8 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
 import me.glicz.glitchinventoryapi.events.ItemClickEvent;
+import me.glicz.glitchinventoryapi.inventories.GlitchInventory;
 import me.glicz.glitchinventoryapi.types.ClickType;
-import me.glicz.glitchinventoryapi.types.GlitchInventory;
 import me.glicz.glitchinventoryapi.types.GuiItem;
 import org.bukkit.Bukkit;
 

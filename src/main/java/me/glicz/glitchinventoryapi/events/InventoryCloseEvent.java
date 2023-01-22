@@ -1,7 +1,7 @@
 package me.glicz.glitchinventoryapi.events;
 
 import lombok.Getter;
-import me.glicz.glitchinventoryapi.types.GlitchInventory;
+import me.glicz.glitchinventoryapi.inventories.GlitchInventory;
 import org.bukkit.entity.Player;
 
 public class InventoryCloseEvent {

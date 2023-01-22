@@ -1,8 +1,6 @@
-package me.glicz.glitchinventoryapi.types.titles;
+package me.glicz.glitchinventoryapi.titles;
 
-import me.glicz.glitchinventoryapi.types.Title;
-
-public class SimpleTitle implements Title {
+public class SimpleTitle extends Title {
 
     private final String title;
 
@@ -15,7 +13,6 @@ public class SimpleTitle implements Title {
         return title;
     }
 
-    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Title clone() {
         return new SimpleTitle(title);

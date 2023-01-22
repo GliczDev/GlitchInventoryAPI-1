@@ -1,10 +1,9 @@
-package me.glicz.glitchinventoryapi.types.itembuilders;
+package me.glicz.glitchinventoryapi.itembuilders;
 
 import com.google.common.io.BaseEncoding;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lombok.SneakyThrows;
-import me.glicz.glitchinventoryapi.types.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +34,7 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder> {
     }
 
     public SkullBuilder owner(OfflinePlayer player) {
-        ((SkullMeta)itemMeta).setOwnerProfile(player.getPlayerProfile());
+        ((SkullMeta) itemMeta).setOwnerProfile(player.getPlayerProfile());
         return this;
     }
 

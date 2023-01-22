@@ -9,8 +9,7 @@ public enum InventoryType {
     Chest_9x4("d", 4, 4 * 9),
     Chest_9x5("e", 5, 5 * 9),
     Chest_9x6("f", 6, 6 * 9),
-    Anvil("h", 3)
-    ;
+    Anvil("h", 3);
 
     @Getter
     private final String fieldName;

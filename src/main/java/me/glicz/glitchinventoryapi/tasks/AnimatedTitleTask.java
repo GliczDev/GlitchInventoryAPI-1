@@ -1,6 +1,6 @@
 package me.glicz.glitchinventoryapi.tasks;
 
-import me.glicz.glitchinventoryapi.types.titles.AnimatedTitle;
+import me.glicz.glitchinventoryapi.titles.AnimatedTitle;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;

@@ -1,6 +1,6 @@
 package me.glicz.glitchinventoryapi.types;
 
-import java.util.HashMap;
+import java.util.Arrays;
 
 public enum ClickType {
     LeftClick(0, 0),
@@ -34,26 +34,12 @@ public enum ClickType {
     private final int mode;
     private final int button;
 
-    private static final HashMap<Integer, HashMap<Integer, ClickType>> clickTypes = new HashMap<>();
-
-    static {
-        for (ClickType value : values()) {
-            if (clickTypes.containsKey(value.mode)) {
-                clickTypes.get(value.mode).put(value.button, value);
-                continue;
-            }
-            HashMap<Integer, ClickType> tempValue = new HashMap<>();
-            tempValue.put(value.button, value);
-            clickTypes.put(value.mode, tempValue);
-        }
-    }
-
     ClickType(int mode, int button) {
         this.mode = mode;
         this.button = button;
     }
 
     public static ClickType get(int mode, int button) {
-        return clickTypes.get(mode).get(button);
+        return Arrays.stream(values()).filter(clickType -> clickType.mode == mode && clickType.button == button).findFirst().orElseThrow();
     }
 }

@@ -1,10 +1,8 @@
-package me.glicz.glitchinventoryapi.types;
+package me.glicz.glitchinventoryapi.itembuilders;
 
 import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
 import me.glicz.glitchinventoryapi.events.ItemClickEvent;
-import me.glicz.glitchinventoryapi.types.itembuilders.BookBuilder;
-import me.glicz.glitchinventoryapi.types.itembuilders.LeatherArmorBuilder;
-import me.glicz.glitchinventoryapi.types.itembuilders.SkullBuilder;
+import me.glicz.glitchinventoryapi.types.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +14,14 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public class ItemBuilder<T extends ItemBuilder<T>> {
+
+    protected final ItemStack itemStack;
+    protected final ItemMeta itemMeta;
+
+    protected ItemBuilder(ItemStack itemStack) {
+        this.itemStack = itemStack;
+        this.itemMeta = itemStack.getItemMeta();
+    }
 
     public static ItemBuilder<?> from(Material material) {
         return from(new ItemStack(material));
@@ -39,14 +45,6 @@ public class ItemBuilder<T extends ItemBuilder<T>> {
 
     public static BookBuilder book() {
         return new BookBuilder(new ItemStack(Material.WRITTEN_BOOK));
-    }
-
-    protected final ItemStack itemStack;
-    protected final ItemMeta itemMeta;
-
-    protected ItemBuilder(ItemStack itemStack) {
-        this.itemStack = itemStack;
-        this.itemMeta = itemStack.getItemMeta();
     }
 
     public T name(String name) {

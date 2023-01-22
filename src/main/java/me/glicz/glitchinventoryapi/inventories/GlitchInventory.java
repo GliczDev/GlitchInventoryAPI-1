@@ -1,4 +1,4 @@
-package me.glicz.glitchinventoryapi.types;
+package me.glicz.glitchinventoryapi.inventories;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -9,8 +9,11 @@ import me.glicz.glitchinventoryapi.GlitchInventoryAPI;
 import me.glicz.glitchinventoryapi.events.InventoryCloseEvent;
 import me.glicz.glitchinventoryapi.events.InventoryOpenEvent;
 import me.glicz.glitchinventoryapi.events.ItemClickEvent;
-import me.glicz.glitchinventoryapi.types.inventories.GlitchPagedInventory;
-import me.glicz.glitchinventoryapi.types.inventories.GlitchSimpleInventory;
+import me.glicz.glitchinventoryapi.itembuilders.ItemBuilder;
+import me.glicz.glitchinventoryapi.titles.Title;
+import me.glicz.glitchinventoryapi.types.FillPattern;
+import me.glicz.glitchinventoryapi.types.GuiItem;
+import me.glicz.glitchinventoryapi.types.InventoryType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,36 +26,39 @@ import java.util.function.Consumer;
 @SuppressWarnings({"unchecked", "unused", "UnusedReturnValue"})
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
-    public static GlitchSimpleInventory.Builder simple() {
-        return GlitchSimpleInventory.builder();
-    }
-    public static GlitchPagedInventory.Builder paged() {
-        return GlitchPagedInventory.builder();
-    }
-
+    @Getter
+    protected static final Map<UUID, GlitchInventory<?>> currentInventories = new HashMap<>();
     private final InventoryType inventoryType;
+    private final Map<Integer, Consumer<ItemClickEvent>> clickActions = new HashMap<>();
+    @NonNull
+    protected GuiItem[] items;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    protected Player player;
     @Getter
     private Title title;
     @Setter(AccessLevel.NONE)
     private boolean isOpen;
-    @NonNull
-    protected GuiItem[] items;
     @Setter(AccessLevel.NONE)
     private int id;
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    protected Player player;
-
-    @Getter
-    protected static final Map<UUID, GlitchInventory<?>> currentInventories = new HashMap<>();
-    private final Map<Integer, Consumer<ItemClickEvent>> clickActions = new HashMap<>();
-
     @Setter(AccessLevel.NONE)
     private Consumer<ItemClickEvent> defaultClickAction;
     @Setter(AccessLevel.NONE)
     private Consumer<InventoryOpenEvent> openAction;
     @Setter(AccessLevel.NONE)
     private Consumer<InventoryCloseEvent> closeAction;
+
+    public static GlitchSimpleInventory.Builder simple() {
+        return GlitchSimpleInventory.builder();
+    }
+
+    public static GlitchPagedInventory.Builder paged() {
+        return GlitchPagedInventory.builder();
+    }
+
+    public static GlitchInventory<?> getByPlayer(Player player) {
+        return currentInventories.get(player.getUniqueId());
+    }
 
     public T setTitle(Title title) {
         title.setInventory(this);
@@ -219,7 +225,6 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     /**
-     *
      * @param id The new ID of inventory
      * @return GlitchInventory
      * @apiNote <b>WARNING!</b> Be careful when changing inventory id. If you don't know what you're doing <b>do not change it!</b>
@@ -232,8 +237,4 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public abstract GuiItem getItem(int slot);
 
     public abstract T clone();
-
-    public static GlitchInventory<?> getByPlayer(Player player) {
-        return currentInventories.get(player.getUniqueId());
-    }
 }

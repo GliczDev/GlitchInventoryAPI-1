@@ -18,6 +18,14 @@ public class GlitchInventoryAPI {
         GlitchInventoryAPI.nmsUtil = new NMSUtil();
     }
 
+    public static JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    public static NMSUtil getNMSUtil() {
+        return nmsUtil;
+    }
+
     public void initialize() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new WindowClickPacketListener());
         ProtocolLibrary.getProtocolManager().addPacketListener(new CloseWindowPacketListener());
@@ -27,13 +35,5 @@ public class GlitchInventoryAPI {
 
     public void unInitialize() {
         ProtocolLibrary.getProtocolManager().removePacketListeners(plugin);
-    }
-
-    public static JavaPlugin getPlugin() {
-        return plugin;
-    }
-
-    public static NMSUtil getNMSUtil() {
-        return nmsUtil;
     }
 }

@@ -1,6 +1,5 @@
-package me.glicz.glitchinventoryapi.types.itembuilders;
+package me.glicz.glitchinventoryapi.itembuilders;
 
-import me.glicz.glitchinventoryapi.types.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.inventory.ItemStack;
@@ -16,51 +15,51 @@ public class BookBuilder extends ItemBuilder<BookBuilder> {
     }
 
     public BookBuilder author(String author) {
-        ((BookMeta)itemMeta).setAuthor(author);
+        ((BookMeta) itemMeta).setAuthor(author);
         return this;
     }
 
     public String author() {
-        return ((BookMeta)itemMeta).getAuthor();
+        return ((BookMeta) itemMeta).getAuthor();
     }
 
     public BookBuilder generation(BookMeta.Generation generation) {
-        ((BookMeta)itemMeta).setGeneration(generation);
+        ((BookMeta) itemMeta).setGeneration(generation);
         return this;
     }
 
     public BookMeta.Generation generation() {
-        return ((BookMeta)itemMeta).getGeneration();
+        return ((BookMeta) itemMeta).getGeneration();
     }
 
     @SuppressWarnings("deprecation")
     public BookBuilder page(String... value) {
-        ((BookMeta)itemMeta).addPage(value);
+        ((BookMeta) itemMeta).addPage(value);
         return this;
     }
 
     @SuppressWarnings("deprecation")
     public BookBuilder page(BaseComponent[]... value) {
-        ((BookMeta)itemMeta).spigot().addPage(value);
+        ((BookMeta) itemMeta).spigot().addPage(value);
         return this;
     }
 
     public BookBuilder page(Component... value) {
-        ((BookMeta)itemMeta).addPages(value);
+        ((BookMeta) itemMeta).addPages(value);
         return this;
     }
 
     @SuppressWarnings("deprecation")
     public String page(int index) {
-        return ((BookMeta)itemMeta).getPage(index);
+        return ((BookMeta) itemMeta).getPage(index);
     }
 
     public BookBuilder title(String title) {
-        ((BookMeta)itemMeta).setTitle(title);
+        ((BookMeta) itemMeta).setTitle(title);
         return this;
     }
 
     public String title() {
-        return ((BookMeta)itemMeta).getTitle();
+        return ((BookMeta) itemMeta).getTitle();
     }
 }
