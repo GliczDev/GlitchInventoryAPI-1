@@ -12,7 +12,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
-public class SkullBuilder extends ItemBuilder<SkullBuilder> {
+@SuppressWarnings({"deprecation", "unused"})
+public class SkullBuilder extends ItemBuilder<SkullBuilder, SkullMeta> {
 
     private static final BaseEncoding base64 = BaseEncoding.base64();
     private static final Field profileField;
@@ -20,7 +21,7 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder> {
     static {
         Field field;
         try {
-            SkullMeta skullMeta = (SkullMeta) ItemBuilder.skull().itemMeta;
+            SkullMeta skullMeta = ItemBuilder.skull().itemMeta;
             field = skullMeta.getClass().getDeclaredField("profile");
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
@@ -34,7 +35,7 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder> {
     }
 
     public SkullBuilder owner(OfflinePlayer player) {
-        ((SkullMeta) itemMeta).setOwnerProfile(player.getPlayerProfile());
+        itemMeta.setOwnerProfile(player.getPlayerProfile());
         return this;
     }
 

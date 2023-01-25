@@ -7,27 +7,32 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unchecked")
-public class ItemBuilder<T extends ItemBuilder<T>> {
+@SuppressWarnings({"unchecked", "deprecation", "unused"})
+public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
 
     protected final ItemStack itemStack;
-    protected final ItemMeta itemMeta;
+    protected final I itemMeta;
 
     protected ItemBuilder(ItemStack itemStack) {
         this.itemStack = itemStack;
-        this.itemMeta = itemStack.getItemMeta();
+        try {
+            this.itemMeta = (I) itemStack.getItemMeta();
+        } catch (ClassCastException ignored) {
+            throw new UnsupportedOperationException("ItemStack's ItemMeta has to be valid to selected ItemBuilder type");
+        }
     }
 
-    public static ItemBuilder<?> from(Material material) {
+    public static ItemBuilder<?, ItemMeta> from(Material material) {
         return from(new ItemStack(material));
     }
 
-    public static ItemBuilder<?> from(ItemStack itemStack) {
+    public static ItemBuilder<?, ItemMeta> from(ItemStack itemStack) {
         return new ItemBuilder<>(itemStack);
     }
 
@@ -36,15 +41,17 @@ public class ItemBuilder<T extends ItemBuilder<T>> {
     }
 
     public static LeatherArmorBuilder leatherArmor(Material material) {
-        return new LeatherArmorBuilder(new ItemStack(material));
+        return leatherArmor(new ItemStack(material));
     }
 
     public static LeatherArmorBuilder leatherArmor(ItemStack itemStack) {
+        if (!(itemStack.getItemMeta() instanceof LeatherArmorMeta))
+            throw new UnsupportedOperationException("ItemStack have to be any leather armor");
         return new LeatherArmorBuilder(itemStack);
     }
 
     public static BookBuilder book() {
-        return new BookBuilder(new ItemStack(Material.WRITTEN_BOOK));
+        return new BookBuilder();
     }
 
     public T name(String name) {
