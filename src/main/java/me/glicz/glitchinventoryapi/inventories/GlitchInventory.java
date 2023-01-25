@@ -48,12 +48,12 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     @Setter(AccessLevel.NONE)
     private Consumer<InventoryCloseEvent> closeAction;
 
-    public static GlitchSimpleInventory.Builder simple() {
-        return GlitchSimpleInventory.builder();
+    public static SimpleInventory.Builder simple() {
+        return SimpleInventory.builder();
     }
 
-    public static GlitchPagedInventory.Builder paged() {
-        return GlitchPagedInventory.builder();
+    public static PaginatedInventory.Builder paginated() {
+        return PaginatedInventory.builder();
     }
 
     public static GlitchInventory<?> getByPlayer(Player player) {

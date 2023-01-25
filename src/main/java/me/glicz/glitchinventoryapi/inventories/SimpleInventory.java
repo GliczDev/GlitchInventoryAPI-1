@@ -8,22 +8,23 @@ import org.bukkit.Material;
 
 import java.util.Arrays;
 
-public class GlitchSimpleInventory extends GlitchInventory<GlitchSimpleInventory> {
+@SuppressWarnings("unused")
+public class SimpleInventory extends GlitchInventory<SimpleInventory> {
 
     @lombok.Builder(builderClassName = "Builder", buildMethodName = "create")
-    private GlitchSimpleInventory(InventoryType inventoryType, Title title) {
+    private SimpleInventory(InventoryType inventoryType, Title title) {
         super(inventoryType, new GuiItem[inventoryType.getItems()]);
         Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
         setTitle(title);
     }
 
-    private GlitchSimpleInventory(InventoryType inventoryType, Title title, GuiItem[] items) {
+    private SimpleInventory(InventoryType inventoryType, Title title, GuiItem[] items) {
         super(inventoryType, items);
         setTitle(title);
     }
 
-    public static GlitchSimpleInventory fromPaged(GlitchPagedInventory inventory) {
-        return new GlitchSimpleInventory(inventory.getInventoryType(), inventory.getTitle(),
+    public static SimpleInventory fromPaged(PaginatedInventory inventory) {
+        return new SimpleInventory(inventory.getInventoryType(), inventory.getTitle(),
                 inventory.getCurrentPageItems().toArray(GuiItem[]::new)).setId(inventory.getId());
     }
 
@@ -37,7 +38,7 @@ public class GlitchSimpleInventory extends GlitchInventory<GlitchSimpleInventory
     }
 
     @Override
-    public GlitchSimpleInventory clone() {
-        return new GlitchSimpleInventory(getInventoryType(), getTitle().clone(), getItems());
+    public SimpleInventory clone() {
+        return new SimpleInventory(getInventoryType(), getTitle().clone(), getItems());
     }
 }

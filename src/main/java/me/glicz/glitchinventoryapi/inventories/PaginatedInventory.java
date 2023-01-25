@@ -16,7 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> {
+@SuppressWarnings("unused")
+public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     @Getter
     private List<GuiItem> pageItems = new ArrayList<>();
@@ -37,25 +38,25 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     private Consumer<InventoryPageChangeEvent> pageChangeAction;
 
     @lombok.Builder(builderClassName = "Builder", buildMethodName = "create")
-    private GlitchPagedInventory(InventoryType inventoryType, Title title) {
+    private PaginatedInventory(InventoryType inventoryType, Title title) {
         super(inventoryType, new GuiItem[inventoryType.getItems()]);
         Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
         setTitle(title);
     }
 
-    private GlitchPagedInventory(InventoryType inventoryType, Title title, GuiItem[] items, List<GuiItem> pageItems) {
+    private PaginatedInventory(InventoryType inventoryType, Title title, GuiItem[] items, List<GuiItem> pageItems) {
         super(inventoryType, items);
         setTitle(title);
         this.pageItems = pageItems;
     }
 
-    public static GlitchPagedInventory fromSimple(GlitchSimpleInventory inventory) {
-        return new GlitchPagedInventory(inventory.getInventoryType(), inventory.getTitle(),
+    public static PaginatedInventory fromSimple(SimpleInventory inventory) {
+        return new PaginatedInventory(inventory.getInventoryType(), inventory.getTitle(),
                 inventory.getItems(), List.of()).setId(inventory.getId());
     }
 
     @Override
-    public GlitchPagedInventory resendInventory() {
+    public PaginatedInventory resendInventory() {
         if (pageChangeAction != null)
             pageChangeAction.accept(new InventoryPageChangeEvent(player, this, hasNextPage(), hasPreviousPage(), page));
         return super.resendInventory();
@@ -92,11 +93,11 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
     }
 
     @Override
-    public GlitchPagedInventory clone() {
-        return new GlitchPagedInventory(getInventoryType(), getTitle().clone(), items, pageItems);
+    public PaginatedInventory clone() {
+        return new PaginatedInventory(getInventoryType(), getTitle().clone(), items, pageItems);
     }
 
-    public GlitchPagedInventory nextPage() {
+    public PaginatedInventory nextPage() {
         if (!hasNextPage())
             return this;
         page++;
@@ -106,7 +107,7 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
         return this;
     }
 
-    public GlitchPagedInventory previousPage() {
+    public PaginatedInventory previousPage() {
         if (!hasPreviousPage())
             return this;
         page--;
@@ -124,7 +125,7 @@ public class GlitchPagedInventory extends GlitchInventory<GlitchPagedInventory> 
         return page != 0;
     }
 
-    public GlitchPagedInventory setPageItems(List<GuiItem> pageItems) {
+    public PaginatedInventory setPageItems(List<GuiItem> pageItems) {
         this.pageItems = pageItems;
         if (isOpen()) update();
         return this;
