@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
@@ -45,13 +44,19 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public static LeatherArmorBuilder leatherArmor(ItemStack itemStack) {
-        if (!(itemStack.getItemMeta() instanceof LeatherArmorMeta))
-            throw new UnsupportedOperationException("ItemStack have to be any leather armor");
         return new LeatherArmorBuilder(itemStack);
     }
 
     public static BookBuilder book() {
         return new BookBuilder();
+    }
+
+    public static BannerBuilder banner(Material material) {
+        return banner(new ItemStack(material));
+    }
+
+    public static BannerBuilder banner(ItemStack itemStack) {
+        return new BannerBuilder(itemStack);
     }
 
     public T name(String name) {
