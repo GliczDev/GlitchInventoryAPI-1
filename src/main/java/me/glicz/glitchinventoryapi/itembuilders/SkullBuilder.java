@@ -30,7 +30,7 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder, SkullMeta> {
         profileField = field;
     }
 
-    public SkullBuilder() {
+    protected SkullBuilder() {
         super(new ItemStack(Material.PLAYER_HEAD));
     }
 

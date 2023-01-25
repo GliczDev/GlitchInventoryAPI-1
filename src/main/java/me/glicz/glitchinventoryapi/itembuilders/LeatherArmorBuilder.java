@@ -7,7 +7,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 @SuppressWarnings("unused")
 public class LeatherArmorBuilder extends ItemBuilder<LeatherArmorBuilder, LeatherArmorMeta> {
 
-    public LeatherArmorBuilder(ItemStack itemStack) {
+    protected LeatherArmorBuilder(ItemStack itemStack) {
         super(itemStack);
     }
 
