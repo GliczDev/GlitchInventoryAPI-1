@@ -19,7 +19,7 @@ public class AnimatedTitle extends Title {
         this(20, frames);
     }
 
-    public AnimatedTitle(int refresh, String... frames) {
+    protected AnimatedTitle(int refresh, String... frames) {
         this.refresh = refresh;
         this.left = refresh;
         this.frames = frames;

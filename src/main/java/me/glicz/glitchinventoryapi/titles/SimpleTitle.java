@@ -4,7 +4,7 @@ public class SimpleTitle extends Title {
 
     private final String title;
 
-    public SimpleTitle(String title) {
+    protected SimpleTitle(String title) {
         this.title = title;
     }
 
