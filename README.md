@@ -64,7 +64,7 @@ public void onDisable() {
 ```java
 GlitchInventory.simple() //Create simple inventory builder
 	.inventoryType(InventoryType.Chest_9x6) //Set inventory type to chest 9x6
-	.title(new SimpleTitle("Title")) //Set title to SimpleTitle object
+	.title(Title.simple("Title")) //Set title to SimpleTitle object
 	.create() //Create simple inventory from builder
 	.setSlot(10, ItemBuilder.from(Material.STONE) 
 		.asGuiItem(e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"))) //Set slot to stone item with click action
