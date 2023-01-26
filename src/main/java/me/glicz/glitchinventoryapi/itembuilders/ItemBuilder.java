@@ -59,39 +59,39 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return new BannerBuilder(itemStack);
     }
 
-    public T name(String name) {
+    public T setName(String name) {
         itemMeta.setDisplayName(name);
         return (T) this;
     }
 
-    public String name() {
+    public String getName() {
         return itemMeta.getDisplayName();
     }
 
-    public T lore(List<String> lore) {
+    public T setLore(List<String> lore) {
         itemMeta.setLore(lore);
         return (T) this;
     }
 
-    public List<String> lore() {
+    public List<String> getLore() {
         return itemMeta.getLore();
     }
 
-    public T amount(int amount) {
+    public T setAmount(int amount) {
         itemStack.setAmount(amount);
         return (T) this;
     }
 
-    public int amount() {
+    public int getAmount() {
         return itemStack.getAmount();
     }
 
-    public <T2, Z> T nbt(String key, PersistentDataType<T2, Z> valueType, Z value) {
+    public <D, Z> T setNbt(String key, PersistentDataType<D, Z> valueType, Z value) {
         itemMeta.getPersistentDataContainer().set(new NamespacedKey(GlitchInventoryAPI.getPlugin(), key), valueType, value);
         return (T) this;
     }
 
-    public <T2, Z> Z nbt(String key, PersistentDataType<T2, Z> valueType) {
+    public <D, Z> Z getNbt(String key, PersistentDataType<D, Z> valueType) {
         return itemMeta.getPersistentDataContainer().get(new NamespacedKey(GlitchInventoryAPI.getPlugin(), key), valueType);
     }
 

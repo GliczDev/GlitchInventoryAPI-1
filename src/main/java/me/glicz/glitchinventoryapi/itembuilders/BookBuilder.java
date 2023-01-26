@@ -13,49 +13,49 @@ public class BookBuilder extends ItemBuilder<BookBuilder, BookMeta> {
         super(new ItemStack(Material.WRITTEN_BOOK));
     }
 
-    public BookBuilder author(String author) {
+    public BookBuilder setAuthor(String author) {
         itemMeta.setAuthor(author);
         return this;
     }
 
-    public String author() {
+    public String getAuthor() {
         return itemMeta.getAuthor();
     }
 
-    public BookBuilder generation(BookMeta.Generation generation) {
+    public BookBuilder setGeneration(BookMeta.Generation generation) {
         itemMeta.setGeneration(generation);
         return this;
     }
 
-    public BookMeta.Generation generation() {
+    public BookMeta.Generation getGeneration() {
         return itemMeta.getGeneration();
     }
 
-    public BookBuilder page(String... value) {
+    public BookBuilder addPages(String... value) {
         itemMeta.addPage(value);
         return this;
     }
 
-    public BookBuilder page(BaseComponent[]... value) {
+    public BookBuilder addPages(BaseComponent[]... value) {
         itemMeta.spigot().addPage(value);
         return this;
     }
 
-    public BookBuilder page(Component... value) {
+    public BookBuilder addPages(Component... value) {
         itemMeta.addPages(value);
         return this;
     }
 
-    public String page(int index) {
+    public String getPage(int index) {
         return itemMeta.getPage(index);
     }
 
-    public BookBuilder title(String title) {
+    public BookBuilder setTitle(String title) {
         itemMeta.setTitle(title);
         return this;
     }
 
-    public String title() {
+    public String getTitle() {
         return itemMeta.getTitle();
     }
 }

@@ -15,39 +15,41 @@ public class BannerBuilder extends ItemBuilder<BannerBuilder, BannerMeta> {
         super(itemStack);
     }
 
-    public BannerBuilder baseColor(DyeColor color) {
+    public BannerBuilder setBaseColor(DyeColor color) {
         itemMeta.setBaseColor(color);
         return this;
     }
 
     @Nullable
-    public DyeColor baseColor() {
+    public DyeColor getBaseColor() {
         return itemMeta.getBaseColor();
     }
 
-    public BannerBuilder patterns(List<Pattern> patterns) {
+    public BannerBuilder setPatterns(List<Pattern> patterns) {
         itemMeta.setPatterns(patterns);
         return this;
     }
 
-    public List<Pattern> patterns() {
+    public List<Pattern> getPatterns() {
         return itemMeta.getPatterns();
     }
 
-    public BannerBuilder pattern(Pattern pattern) {
+    public BannerBuilder addPattern(Pattern pattern) {
         itemMeta.addPattern(pattern);
         return this;
     }
 
-    public BannerBuilder pattern(int index, @Nullable Pattern pattern) {
-        if (pattern == null)
-            itemMeta.removePattern(index);
-        else
-            itemMeta.setPattern(index, pattern);
+    public BannerBuilder setPattern(int index, Pattern pattern) {
+        itemMeta.setPattern(index, pattern);
         return this;
     }
 
-    public Pattern pattern(int index) {
+    public BannerBuilder removePattern(int index) {
+        itemMeta.removePattern(index);
+        return this;
+    }
+
+    public Pattern getPattern(int index) {
         return itemMeta.getPattern(index);
     }
 
