@@ -24,6 +24,6 @@ public class ItemRenamePacketListener extends PacketAdapter {
         GlitchInventory<?> glitchInventory = GlitchInventory.getCurrentInventories().get(e.getPlayer().getUniqueId());
         if (glitchInventory.getInventoryType() != InventoryType.Anvil) return;
         glitchInventory.setItem(2, ItemBuilder.from(glitchInventory.getItem(0).getItemStack())
-                .name(e.getPacket().getStrings().read(0)).asGuiItem());
+                .setName(e.getPacket().getStrings().read(0)).asGuiItem());
     }
 }
