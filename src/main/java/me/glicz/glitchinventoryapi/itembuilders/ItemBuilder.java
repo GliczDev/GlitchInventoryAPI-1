@@ -5,11 +5,15 @@ import me.glicz.glitchinventoryapi.events.ItemClickEvent;
 import me.glicz.glitchinventoryapi.types.GuiItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"unchecked", "deprecation", "unused"})
@@ -84,6 +88,76 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
 
     public int getAmount() {
         return itemStack.getAmount();
+    }
+
+    public T setCustomModelData(int customModelData) {
+        itemMeta.setCustomModelData(customModelData);
+        return (T) this;
+    }
+
+    public int getCustomModelData() {
+        return itemMeta.getCustomModelData();
+    }
+
+    public T setUnbreakable(boolean unbreakable) {
+        itemMeta.setUnbreakable(unbreakable);
+        return (T) this;
+    }
+
+    public boolean isUnbreakable() {
+        return itemMeta.isUnbreakable();
+    }
+
+    public T addEnchant(Enchantment enchant, int level) {
+        return addEnchant(enchant, level, false);
+    }
+
+    public T addEnchant(Enchantment enchant, int level, boolean ignoreLevelRestriction) {
+        itemMeta.addEnchant(enchant, level, ignoreLevelRestriction);
+        return (T) this;
+    }
+
+    public T removeEnchant(Enchantment enchant) {
+        itemMeta.removeEnchant(enchant);
+        return (T) this;
+    }
+
+    public int getEnchantLevel(Enchantment enchant) {
+        return itemMeta.getEnchantLevel(enchant);
+    }
+
+    public boolean hasEnchant(Enchantment enchant) {
+        return itemMeta.hasEnchant(enchant);
+    }
+
+    public boolean hasConflictingEnchant(Enchantment enchant) {
+        return itemMeta.hasConflictingEnchant(enchant);
+    }
+
+    public Map<Enchantment, Integer> getEnchants() {
+        return itemMeta.getEnchants();
+    }
+
+    public boolean hasEnchants() {
+        return itemMeta.hasEnchants();
+    }
+
+    public T addItemFlags(ItemFlag... itemFlags) {
+        itemMeta.addItemFlags(itemFlags);
+        return (T) this;
+    }
+
+    public T removeItemFlags(ItemFlag... itemFlags) {
+        itemMeta.removeItemFlags(itemFlags);
+        return (T) this;
+    }
+
+    public boolean hasItemFlag(ItemFlag itemFlag) {
+        return itemMeta.hasItemFlag(itemFlag);
+    }
+
+    public Set<ItemFlag> getItemFlags() {
+        return itemMeta.getItemFlags();
     }
 
     public <D, Z> T setNbt(String key, PersistentDataType<D, Z> valueType, Z value) {
