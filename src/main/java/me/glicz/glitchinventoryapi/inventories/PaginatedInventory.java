@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.glitchinventoryapi.events.InventoryPageChangeEvent;
-import me.glicz.glitchinventoryapi.itembuilders.ItemBuilder;
 import me.glicz.glitchinventoryapi.titles.Title;
 import me.glicz.glitchinventoryapi.types.GuiItem;
 import me.glicz.glitchinventoryapi.types.InventoryType;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -41,14 +39,11 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     @lombok.Builder(builderClassName = "Builder", buildMethodName = "create")
     private PaginatedInventory(InventoryType inventoryType, Title title) {
-        super(inventoryType, new GuiItem[inventoryType.getItems()]);
-        Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
-        setTitle(title);
+        super(inventoryType, title);
     }
 
     private PaginatedInventory(InventoryType inventoryType, Title title, GuiItem[] items, List<GuiItem> pageItems) {
-        super(inventoryType, items);
-        setTitle(title);
+        super(inventoryType, title, items);
         this.pageItems = pageItems;
     }
 

@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @Data
-@RequiredArgsConstructor
 @SuppressWarnings({"unchecked", "unused", "UnusedReturnValue"})
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
@@ -31,13 +30,13 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     protected static final Map<UUID, GlitchInventory<?>> currentInventories = new HashMap<>();
     private final Map<Integer, Consumer<ItemClickEvent>> clickActions = new HashMap<>();
     private final InventoryType inventoryType;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private final SecureRandom random = new SecureRandom();
-    @NonNull
     protected GuiItem[] items;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     protected Player player;
-    @Getter
     private Title title;
     @Setter(AccessLevel.NONE)
     private boolean isOpen;
@@ -49,6 +48,17 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private Consumer<InventoryOpenEvent> openAction;
     @Setter(AccessLevel.NONE)
     private Consumer<InventoryCloseEvent> closeAction;
+
+    protected GlitchInventory(InventoryType inventoryType, Title title) {
+        this(inventoryType, title, new GuiItem[inventoryType.getItems()]);
+        Arrays.fill(items, ItemBuilder.from(Material.AIR).asGuiItem());
+    }
+
+    protected GlitchInventory(InventoryType inventoryType, Title title, GuiItem[] items) {
+        this.inventoryType = inventoryType;
+        this.title = title;
+        this.items = items;
+    }
 
     public static SimpleInventory.Builder simple() {
         return SimpleInventory.builder();
@@ -69,12 +79,18 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return (T) this;
     }
 
+    public GuiItem getItem(int slot) {
+        try {
+            return items[slot];
+        } catch (IndexOutOfBoundsException ex) {
+            return null;
+        }
+    }
+
     public T setItem(int slot, GuiItem guiItem) {
         if (guiItem == null) return removeItem(slot);
         items[slot] = guiItem;
-        if (isOpen) {
-            sendItem(slot, guiItem.getItemStack());
-        }
+        if (isOpen) sendItem(slot, guiItem.getItemStack());
         return (T) this;
     }
 
@@ -87,28 +103,25 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public T removeItem(int slot) {
         items[slot] = ItemBuilder.from(Material.AIR).asGuiItem();
-        if (isOpen) {
-            sendItem(slot, items[slot].getItemStack());
-        }
+        if (isOpen) sendItem(slot, items[slot].getItemStack());
         return (T) this;
     }
 
     public T setClickAction(int slot, Consumer<ItemClickEvent> clickAction) {
-        clickActions.put(slot, clickAction);
+        if (clickAction == null) clickActions.remove(slot);
+        else clickActions.put(slot, clickAction);
         return (T) this;
     }
 
     public T drawColumn(int column, GuiItem guiItem) {
-        for (int i = 0; i < inventoryType.getRows(); i++) {
+        for (int i = 0; i < inventoryType.getRows(); i++)
             setItem(i * 9 + column, guiItem);
-        }
         return (T) this;
     }
 
     public T drawRow(int row, GuiItem guiItem) {
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++)
             setItem(row * 9 + i, guiItem);
-        }
         return (T) this;
     }
 
@@ -138,9 +151,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T open(Player player, boolean closeCurrent) {
-        if (this.player != null) {
+        if (this.player != null)
             return clone().open(player);
-        }
         if (currentInventories.containsKey(player.getUniqueId())) {
             if (closeCurrent) currentInventories.get(player.getUniqueId()).close();
             else currentInventories.get(player.getUniqueId()).unRegister();
@@ -228,8 +240,6 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         this.id = id;
         return (T) this;
     }
-
-    public abstract GuiItem getItem(int slot);
 
     public abstract T clone();
 }
