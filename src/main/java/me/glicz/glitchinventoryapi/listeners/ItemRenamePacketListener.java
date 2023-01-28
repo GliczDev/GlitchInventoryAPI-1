@@ -22,7 +22,7 @@ public class ItemRenamePacketListener extends PacketAdapter {
     public void onPacketReceiving(PacketEvent e) {
         if (!GlitchInventory.getCurrentInventories().containsKey(e.getPlayer().getUniqueId())) return;
         GlitchInventory<?> glitchInventory = GlitchInventory.getCurrentInventories().get(e.getPlayer().getUniqueId());
-        if (glitchInventory.getInventoryType() != InventoryType.Anvil) return;
+        if (glitchInventory.getInventoryType() != InventoryType.ANVIL) return;
         glitchInventory.setItem(2, ItemBuilder.from(glitchInventory.getItem(0).getItemStack())
                 .setName(e.getPacket().getStrings().read(0)).asGuiItem());
     }
