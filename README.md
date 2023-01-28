@@ -79,3 +79,4 @@ There are two different inventory types:
 There are two different title types:
 - Simple (`Title.simple()`) - normal title without any special abilities
 - Animated (`Title.animated()`) - allows you to create animated title text
+- Random (`Title.random()`) - allows you to create random title text
