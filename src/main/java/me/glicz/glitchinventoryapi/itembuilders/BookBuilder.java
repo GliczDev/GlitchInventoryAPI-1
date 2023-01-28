@@ -13,22 +13,22 @@ public class BookBuilder extends ItemBuilder<BookBuilder, BookMeta> {
         super(new ItemStack(Material.WRITTEN_BOOK));
     }
 
+    public String getAuthor() {
+        return itemMeta.getAuthor();
+    }
+
     public BookBuilder setAuthor(String author) {
         itemMeta.setAuthor(author);
         return this;
     }
 
-    public String getAuthor() {
-        return itemMeta.getAuthor();
+    public BookMeta.Generation getGeneration() {
+        return itemMeta.getGeneration();
     }
 
     public BookBuilder setGeneration(BookMeta.Generation generation) {
         itemMeta.setGeneration(generation);
         return this;
-    }
-
-    public BookMeta.Generation getGeneration() {
-        return itemMeta.getGeneration();
     }
 
     public BookBuilder addPages(String... value) {
@@ -50,12 +50,12 @@ public class BookBuilder extends ItemBuilder<BookBuilder, BookMeta> {
         return itemMeta.getPage(index);
     }
 
+    public String getTitle() {
+        return itemMeta.getTitle();
+    }
+
     public BookBuilder setTitle(String title) {
         itemMeta.setTitle(title);
         return this;
-    }
-
-    public String getTitle() {
-        return itemMeta.getTitle();
     }
 }

@@ -36,13 +36,27 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder, SkullMeta> {
         super(new ItemStack(Material.PLAYER_HEAD));
     }
 
+    public OfflinePlayer getOwner() {
+        return itemMeta.getOwningPlayer();
+    }
+
     public SkullBuilder setOwner(OfflinePlayer player) {
         itemMeta.setOwningPlayer(player);
         return this;
     }
 
-    public OfflinePlayer getOwner() {
-        return itemMeta.getOwningPlayer();
+    @SneakyThrows
+    public String getValue() {
+        GameProfile gameProfile = null;
+        try {
+            gameProfile = (GameProfile) profileField.get(itemMeta);
+        } catch (Exception ignored) {
+        }
+        if (gameProfile == null)
+            return null;
+        for (Property property : gameProfile.getProperties().get("textures"))
+            if (property.getName().equals("textures")) return property.getValue();
+        return null;
     }
 
     @SneakyThrows
@@ -54,28 +68,15 @@ public class SkullBuilder extends ItemBuilder<SkullBuilder, SkullMeta> {
         return this;
     }
 
-    @SneakyThrows
-    public String getValue() {
-        GameProfile gameProfile = null;
-        try {
-            gameProfile = (GameProfile) profileField.get(itemMeta);
-        } catch (Exception ignored) { }
-        if (gameProfile == null)
-            return null;
-        for (Property property : gameProfile.getProperties().get("textures"))
-            if (property.getName().equals("textures")) return property.getValue();
-        return null;
-    }
-
-    public SkullBuilder setUrl(String url) {
-        return setValue(base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes()));
-    }
-
     public String getUrl() {
         String value = getValue();
         if (value == null) return null;
         String texturesJson = new String(base64.decode(value));
         JsonObject jsonObject = new Gson().fromJson(texturesJson, JsonObject.class);
         return jsonObject.getAsJsonObject("textures").getAsJsonObject("SKIN").get("url").getAsString();
+    }
+
+    public SkullBuilder setUrl(String url) {
+        return setValue(base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes()));
     }
 }

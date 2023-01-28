@@ -63,17 +63,12 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return new BannerBuilder(itemStack);
     }
 
-    public T setName(String name) {
-        itemMeta.setDisplayName(name);
-        return (T) this;
-    }
-
     public String getName() {
         return itemMeta.getDisplayName();
     }
 
-    public T setLore(List<String> lore) {
-        itemMeta.setLore(lore);
+    public T setName(String name) {
+        itemMeta.setDisplayName(name);
         return (T) this;
     }
 
@@ -81,8 +76,8 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return itemMeta.getLore();
     }
 
-    public T setAmount(int amount) {
-        itemStack.setAmount(amount);
+    public T setLore(List<String> lore) {
+        itemMeta.setLore(lore);
         return (T) this;
     }
 
@@ -90,8 +85,8 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return itemStack.getAmount();
     }
 
-    public T setCustomModelData(int customModelData) {
-        itemMeta.setCustomModelData(customModelData);
+    public T setAmount(int amount) {
+        itemStack.setAmount(amount);
         return (T) this;
     }
 
@@ -99,13 +94,18 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return itemMeta.getCustomModelData();
     }
 
-    public T setUnbreakable(boolean unbreakable) {
-        itemMeta.setUnbreakable(unbreakable);
+    public T setCustomModelData(int customModelData) {
+        itemMeta.setCustomModelData(customModelData);
         return (T) this;
     }
 
     public boolean isUnbreakable() {
         return itemMeta.isUnbreakable();
+    }
+
+    public T setUnbreakable(boolean unbreakable) {
+        itemMeta.setUnbreakable(unbreakable);
+        return (T) this;
     }
 
     public T addEnchant(Enchantment enchant, int level) {
