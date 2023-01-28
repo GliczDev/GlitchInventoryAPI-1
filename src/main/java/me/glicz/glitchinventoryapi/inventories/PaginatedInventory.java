@@ -22,6 +22,8 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     @Getter
     private List<GuiItem> pageItems = new ArrayList<>();
     @Getter
+    private GuiItem[] currentPageItems;
+    @Getter
     private int page = 0;
     @Getter
     @Setter
@@ -65,31 +67,30 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     @Override
     public GuiItem getItem(int slot) {
         try {
-            return getCurrentPageItems().get(slot);
+            return getCurrentPageItems()[(slot)];
         } catch (IndexOutOfBoundsException ex) {
             return null;
         }
     }
 
     @Override
-    protected ItemStack[] getItemStacks() {
-        return getCurrentPageItems().stream().map(GuiItem::getItemStack).toArray(ItemStack[]::new);
+    protected List<ItemStack> getItemStacks() {
+        updateCurrentPageItems();
+        return Arrays.stream(getCurrentPageItems()).map(GuiItem::getItemStack).toList();
     }
 
-    public List<GuiItem> getCurrentPageItems() {
-        List<GuiItem> value = new ArrayList<>(List.of(items));
-        List<GuiItem> temp;
+    public void updateCurrentPageItems() {
+        GuiItem[] value = items.clone();
+        GuiItem[] temp;
         int itemsPerPage = getInventoryType().getItems() - ((topMargin + bottomMargin) * 9);
-        try {
-            temp = pageItems.subList(page * itemsPerPage,
-                    (page + 1) * itemsPerPage);
-        } catch (IndexOutOfBoundsException ex) {
-            temp = pageItems.subList(page * itemsPerPage, pageItems.size());
+        if ((page + 1) * itemsPerPage <= pageItems.size()) {
+            temp = Arrays.copyOfRange(pageItems.toArray(GuiItem[]::new), page * itemsPerPage, (page + 1) * itemsPerPage);
+        } else {
+            temp = Arrays.copyOfRange(pageItems.toArray(GuiItem[]::new), page * itemsPerPage, pageItems.size());
         }
-        for (int i = 0; i < value.size() - topMargin * 9 && i < temp.size(); i++) {
-            value.set(i + topMargin * 9, temp.get(i));
-        }
-        return value;
+        for (int i = 0; i < value.length - topMargin * 9 && i < temp.length; i++)
+            value[i + topMargin * 9] = temp[i];
+        currentPageItems = value;
     }
 
     @Override
@@ -104,6 +105,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         if (pageChangeAction != null)
             pageChangeAction.accept(new InventoryPageChangeEvent(player, this, hasNextPage(), hasPreviousPage(), page));
         if (isOpen()) update();
+        else updateCurrentPageItems();
         return this;
     }
 
@@ -114,6 +116,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         if (pageChangeAction != null)
             pageChangeAction.accept(new InventoryPageChangeEvent(player, this, hasNextPage(), hasPreviousPage(), page));
         if (isOpen()) update();
+        else updateCurrentPageItems();
         return this;
     }
 
@@ -128,6 +131,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     public PaginatedInventory setPageItems(List<GuiItem> pageItems) {
         this.pageItems = pageItems;
         if (isOpen()) update();
+        else updateCurrentPageItems();
         return this;
     }
 }

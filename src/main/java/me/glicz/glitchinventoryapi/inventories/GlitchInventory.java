@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -28,8 +29,9 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     @Getter
     protected static final Map<UUID, GlitchInventory<?>> currentInventories = new HashMap<>();
-    private final InventoryType inventoryType;
     private final Map<Integer, Consumer<ItemClickEvent>> clickActions = new HashMap<>();
+    private final InventoryType inventoryType;
+    private final SecureRandom random = new SecureRandom();
     @NonNull
     protected GuiItem[] items;
     @Getter(AccessLevel.NONE)
@@ -112,13 +114,12 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public T fill(FillPattern fillPattern, GuiItem... guiItems) {
         int item = 0;
-        Random r = new Random();
         for (int i = 0; i < inventoryType.getItems(); i++) {
             if (fillPattern == FillPattern.NORMAL) {
                 items[i] = guiItems[item];
                 item = (item < guiItems.length - 1) ? item + 1 : 0;
             } else if (fillPattern == FillPattern.RANDOM) {
-                items[i] = guiItems[r.nextInt(guiItems.length)];
+                items[i] = guiItems[random.nextInt(guiItems.length)];
             }
         }
         if (isOpen) update();
@@ -183,13 +184,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.WINDOW_ITEMS);
         packet.getIntegers().write(0, id);
         packet.getIntegers().write(1, 0);
-        List<ItemStack> itemStacks;
-        try {
-            itemStacks = List.of(getItemStacks());
-        } catch (NullPointerException ex) {
-            itemStacks = new ArrayList<>();
-        }
-        packet.getItemListModifier().write(0, itemStacks);
+        packet.getItemListModifier().write(0, getItemStacks());
         packet.getItemModifier().write(0, new ItemStack(Material.AIR));
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
     }
@@ -214,8 +209,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return (T) this;
     }
 
-    protected ItemStack[] getItemStacks() {
-        return Arrays.stream(items).map(GuiItem::getItemStack).toArray(ItemStack[]::new);
+    protected List<ItemStack> getItemStacks() {
+        return Arrays.stream(items).map(GuiItem::getItemStack).toList();
     }
 
     public T clear() {

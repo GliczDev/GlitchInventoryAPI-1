@@ -25,7 +25,7 @@ public class SimpleInventory extends GlitchInventory<SimpleInventory> {
 
     public static SimpleInventory fromPaged(PaginatedInventory inventory) {
         return new SimpleInventory(inventory.getInventoryType(), inventory.getTitle(),
-                inventory.getCurrentPageItems().toArray(GuiItem[]::new)).setId(inventory.getId());
+                inventory.getCurrentPageItems()).setId(inventory.getId());
     }
 
     @Override
