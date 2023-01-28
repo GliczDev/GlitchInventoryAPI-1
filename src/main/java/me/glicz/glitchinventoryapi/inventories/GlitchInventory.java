@@ -114,10 +114,10 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         int item = 0;
         Random r = new Random();
         for (int i = 0; i < inventoryType.getItems(); i++) {
-            if (fillPattern == FillPattern.Normal) {
+            if (fillPattern == FillPattern.NORMAL) {
                 items[i] = guiItems[item];
                 item = (item < guiItems.length - 1) ? item + 1 : 0;
-            } else if (fillPattern == FillPattern.Random) {
+            } else if (fillPattern == FillPattern.RANDOM) {
                 items[i] = guiItems[r.nextInt(guiItems.length)];
             }
         }
