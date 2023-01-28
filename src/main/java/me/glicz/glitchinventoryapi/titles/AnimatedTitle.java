@@ -1,5 +1,7 @@
 package me.glicz.glitchinventoryapi.titles;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.glicz.glitchinventoryapi.inventories.GlitchInventory;
 
 import java.util.HashSet;
@@ -7,15 +9,16 @@ import java.util.Set;
 
 public class AnimatedTitle extends Title {
 
+    @Getter
     private static final Set<AnimatedTitle> animatedTitles = new HashSet<>();
-    private final int refresh;
-    private final String[] frames;
-    private GlitchInventory<?> glitchInventory;
-    private int left;
-    private int frame = 0;
+    protected final int refresh;
+    protected final String[] frames;
+    @Setter
+    protected GlitchInventory<?> inventory;
+    protected int left;
+    protected int frame = 0;
 
-    @SuppressWarnings("unused")
-    public AnimatedTitle(String... frames) {
+    protected AnimatedTitle(String... frames) {
         this(20, frames);
     }
 
@@ -23,15 +26,6 @@ public class AnimatedTitle extends Title {
         this.refresh = refresh;
         this.left = refresh;
         this.frames = frames;
-    }
-
-    public static Set<AnimatedTitle> getAnimatedTitles() {
-        return animatedTitles;
-    }
-
-    @Override
-    public void setInventory(GlitchInventory<?> glitchInventory) {
-        this.glitchInventory = glitchInventory;
     }
 
     @Override
@@ -45,12 +39,16 @@ public class AnimatedTitle extends Title {
         return new AnimatedTitle(refresh, frames);
     }
 
+    protected int getNextFrame() {
+        return (frame < frames.length - 1) ? frame + 1 : 0;
+    }
+
     public void tick() {
-        if (!glitchInventory.isOpen()) animatedTitles.remove(this);
+        if (!inventory.isOpen()) animatedTitles.remove(this);
         if (left - 1 < 0) {
-            frame = (frame < frames.length - 1) ? frame + 1 : 0;
+            frame = getNextFrame();
             left = refresh;
-            glitchInventory.setTitle(this);
+            inventory.setTitle(this);
             return;
         }
         left--;
