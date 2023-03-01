@@ -63,7 +63,7 @@ public void onDisable() {
 ### Basic example
 ```java
 GlitchInventory.simple() //Create simple inventory builder
-	.inventoryType(InventoryType.Chest_9x6) //Set inventory type to chest 9x6
+	.inventoryType(InventoryType.GENERIC_9x6) //Set inventory type to chest 9x6
 	.title(Title.simple("Title")) //Set title to SimpleTitle object
 	.create() //Create simple inventory from builder
 	.setSlot(10, ItemBuilder.from(Material.STONE) 
