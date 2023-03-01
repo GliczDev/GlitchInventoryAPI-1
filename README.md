@@ -23,7 +23,24 @@ Dependency
 ```
 </p>
 </details>
-<details><summary>Gradle</summary>
+<details><summary>Gradle (Kotlin DSL)</summary>
+<p>
+
+Repository
+```gradle
+repositories {
+	maven("https://jitpack.io")
+}
+```
+Dependency
+```gradle
+dependencies {
+	implementation("com.github.GliczDev:GlitchInventoryAPI:TAG")
+}
+```
+</p>
+</details>
+<details><summary>Gradle (Groovy DSL)</summary>
 <p>
 
 Repository
