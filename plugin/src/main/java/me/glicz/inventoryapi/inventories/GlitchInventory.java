@@ -74,7 +74,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return (T) this;
     }
 
-    public @NotNull GuiItem getItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot) {
+    public GuiItem getItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot) {
         try {
             return items.get(slot);
         } catch (IndexOutOfBoundsException ignored) {
@@ -125,9 +125,15 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         slotClickActions.get(slot).accept(event);
     }
 
-    public void setTitle(Title title) {
+    public T setTitle(Title title) {
         this.title = title;
         viewers.keySet().forEach(this::sendInventory);
+        return (T) this;
+    }
+
+    public T setTitle(Player player, Title title) {
+        sendInventory(player, title);
+        return (T) this;
     }
 
     public T open(Player player) {
@@ -157,6 +163,10 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T sendInventory(Player player) {
+        return sendInventory(player, title);
+    }
+
+    public T sendInventory(Player player, Title title) {
         NMS nms = GlitchInventoryAPI.getNms();
         if (inventoryType == InventoryType.CHEST)
             nms.openInventory(getId(player), player, size / 9, title.getComponent());
