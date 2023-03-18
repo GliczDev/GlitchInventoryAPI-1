@@ -30,6 +30,8 @@ tasks {
     shadowJar {
         archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
+
+    build.get().dependsOn(shadowJar)
 }
 
 publishing {
