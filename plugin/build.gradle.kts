@@ -22,11 +22,6 @@ dependencies {
         .forEach { implementation(project(":core:" + it.name, "reobf")) }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
 tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
@@ -35,8 +30,10 @@ tasks {
     shadowJar {
         archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
+}
 
-    build.get().dependsOn(shadowJar)
+artifacts {
+    archives(tasks.getByName("shadowJar"))
 }
 
 publishing {
