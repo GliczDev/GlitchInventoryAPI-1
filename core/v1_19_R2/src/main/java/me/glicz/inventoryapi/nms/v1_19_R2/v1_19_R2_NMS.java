@@ -11,10 +11,8 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.inventory.MenuType;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftContainer;
 import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -65,14 +63,53 @@ public class v1_19_R2_NMS implements NMS {
         return craftPlayer.getHandle().nextContainerCounter();
     }
 
+    private MenuType<?> getMenuType(int rows) {
+        return switch (rows) {
+            case 1 -> MenuType.GENERIC_9x1;
+            case 2 -> MenuType.GENERIC_9x2;
+            case 3 -> MenuType.GENERIC_9x3;
+            case 4 -> MenuType.GENERIC_9x4;
+            case 5 -> MenuType.GENERIC_9x5;
+            case 6 -> MenuType.GENERIC_9x6;
+            default -> throw new IllegalArgumentException("Can't open a " + rows + " rows inventory!");
+        };
+    }
+
+    private MenuType<?> getMenuType(InventoryType inventoryType) {
+        return switch (inventoryType) {
+            case PLAYER -> MenuType.GENERIC_9x4;
+            case WORKBENCH -> MenuType.CRAFTING;
+            case FURNACE -> MenuType.FURNACE;
+            case DISPENSER, DROPPER -> MenuType.GENERIC_3x3;
+            case ENCHANTING -> MenuType.ENCHANTMENT;
+            case BREWING -> MenuType.BREWING_STAND;
+            case BEACON -> MenuType.BEACON;
+            case ANVIL -> MenuType.ANVIL;
+            case SMITHING -> MenuType.SMITHING;
+            case HOPPER -> MenuType.HOPPER;
+            case SHULKER_BOX -> MenuType.SHULKER_BOX;
+            case BLAST_FURNACE -> MenuType.BLAST_FURNACE;
+            case LECTERN -> MenuType.LECTERN;
+            case SMOKER -> MenuType.SMOKER;
+            case LOOM -> MenuType.LOOM;
+            case CARTOGRAPHY -> MenuType.CARTOGRAPHY_TABLE;
+            case GRINDSTONE -> MenuType.GRINDSTONE;
+            case STONECUTTER -> MenuType.STONECUTTER;
+            case MERCHANT -> MenuType.MERCHANT;
+            case CREATIVE, CRAFTING ->
+                    throw new IllegalArgumentException("Can't open a " + inventoryType + " inventory!");
+            default -> MenuType.GENERIC_9x3;
+        };
+    }
+
     @Override
     public void openInventory(int id, Player player, InventoryType inventoryType, Component title) {
-        openInventory0(id, player, CraftContainer.getNotchInventoryType(Bukkit.createInventory(null, inventoryType)), title);
+        openInventory0(id, player, getMenuType(inventoryType), title);
     }
 
     @Override
     public void openInventory(int id, Player player, int rows, Component title) {
-        openInventory0(id, player, CraftContainer.getNotchInventoryType(Bukkit.createInventory(null, rows * 9)), title);
+        openInventory0(id, player, getMenuType(rows), title);
     }
 
     private void openInventory0(int id, Player player, MenuType<?> menuType, Component title) {
