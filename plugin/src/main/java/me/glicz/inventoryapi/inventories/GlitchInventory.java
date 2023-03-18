@@ -2,6 +2,7 @@ package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
+import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import me.glicz.inventoryapi.nms.NMS;
 import org.bukkit.Material;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
@@ -24,6 +26,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private final int size;
     private final List<GuiItem> items;
     private final Map<Player, Integer> viewers = new HashMap<>();
+    private final Map<Integer, Consumer<InventoryClickEvent>> slotClickActions = new HashMap<>();
 
     protected GlitchInventory(InventoryType inventoryType) {
         this.inventoryType = inventoryType;
@@ -99,6 +102,22 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public int getId(Player player) {
         return viewers.get(player);
+    }
+
+    public T addSlotClickAction(int slot, Consumer<InventoryClickEvent> action) {
+        slotClickActions.put(slot, action);
+        return (T) this;
+    }
+
+    public T removeSlotClickAction(int slot) {
+        slotClickActions.remove(slot);
+        return (T) this;
+    }
+
+    public void executeSlotClickAction(int slot, InventoryClickEvent event) {
+        if (!slotClickActions.containsKey(slot))
+            return;
+        slotClickActions.get(slot).accept(event);
     }
 
     public T open(Player player) {

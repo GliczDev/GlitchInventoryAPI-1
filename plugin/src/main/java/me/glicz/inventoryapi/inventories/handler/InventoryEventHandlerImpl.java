@@ -16,7 +16,9 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             GlitchInventory<?> inventory = GlitchInventory.get(player);
             inventory.updateItems(player);
             player.updateInventory();
-            inventory.getItem(slot).executeClickAction(new InventoryClickEvent(player, inventory, clickType, slot));
+            InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
+            inventory.executeSlotClickAction(slot, event);
+            inventory.getItem(slot).executeClickAction(event);
         }
     }
 
