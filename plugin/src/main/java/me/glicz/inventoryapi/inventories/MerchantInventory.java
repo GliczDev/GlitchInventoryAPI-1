@@ -1,6 +1,5 @@
 package me.glicz.inventoryapi.inventories;
 
-import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
@@ -9,17 +8,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.MerchantRecipe;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class MerchantInventory extends GlitchInventory<MerchantInventory> {
 
     private final List<MerchantRecipe> recipeList = new ArrayList<>();
-    @Getter
-    @Setter
-    private MerchantRecipe selectedRecipe;
+    private final Map<Player, MerchantRecipe> selectedRecipes = new HashMap<>();
     @Setter
     @Accessors(chain = true)
     private Consumer<InventoryTradeSelectEvent> tradeSelectAction;
@@ -50,6 +45,18 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
         return Collections.unmodifiableList(recipeList);
     }
 
+    public MerchantInventory setSelectedRecipe(Player player, int recipeIndex) {
+        if (getRecipe(recipeIndex) == null)
+            selectedRecipes.remove(player);
+        else
+            selectedRecipes.put(player, getRecipe(recipeIndex));
+        return this;
+    }
+
+    public MerchantRecipe getSelectedRecipe(Player player) {
+        return selectedRecipes.get(player);
+    }
+
     public MerchantInventory sendRecipes(Player player) {
         GlitchInventoryAPI.getNms().setRecipes(getId(player), player, recipeList);
         return this;
@@ -64,8 +71,8 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
     @Override
     public MerchantInventory open(Player player, boolean closeCurrent) {
         super.open(player, closeCurrent);
-        selectedRecipe = getRecipe(0);
-        if (selectedRecipe != null)
+        setSelectedRecipe(player, 0);
+        if (getSelectedRecipe(player) != null)
             executeTradeSelectAction(new InventoryTradeSelectEvent(player, this, 0));
         return this;
     }
