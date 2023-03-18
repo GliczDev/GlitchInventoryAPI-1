@@ -17,6 +17,9 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
 
     @Getter
     private final List<MerchantRecipe> recipeList = new ArrayList<>();
+    @Getter
+    @Setter
+    private MerchantRecipe selectedRecipe;
     @Setter
     @Accessors(chain = true)
     private Consumer<InventoryTradeSelectEvent> tradeSelectAction;
@@ -36,7 +39,11 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
     }
 
     public MerchantRecipe getRecipe(int index) {
-        return recipeList.get(index);
+        try {
+            return recipeList.get(index);
+        } catch (IndexOutOfBoundsException ignored) {
+            return null;
+        }
     }
 
     public MerchantInventory sendRecipes(Player player) {
@@ -47,6 +54,9 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
     @Override
     public MerchantInventory open(Player player, boolean closeCurrent) {
         super.open(player, closeCurrent);
+        selectedRecipe = getRecipe(0);
+        if (selectedRecipe != null)
+            executeTradeSelectAction(new InventoryTradeSelectEvent(player, this, 0));
         return sendRecipes(player);
     }
 

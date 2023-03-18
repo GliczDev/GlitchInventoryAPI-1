@@ -37,7 +37,9 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
 
     @Override
     public void handleSelectTrade(Player player, int recipe) {
-        if (GlitchInventory.has(player) && GlitchInventory.get(player) instanceof MerchantInventory inventory)
+        if (GlitchInventory.has(player) && GlitchInventory.get(player) instanceof MerchantInventory inventory) {
+            inventory.setSelectedRecipe(inventory.getRecipe(recipe));
             inventory.executeTradeSelectAction(new InventoryTradeSelectEvent(player, inventory, recipe));
+        }
     }
 }
