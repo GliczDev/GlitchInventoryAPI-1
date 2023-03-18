@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public interface NMS {
     void setItems(int id, Player player, List<ItemStack> items);
 
     void setItem(int id, int slot, Player player, ItemStack item);
+
+    void setRecipes(int id, Player player, List<MerchantRecipe> recipeList);
 
     void closeInventory(int id, Player player);
 }

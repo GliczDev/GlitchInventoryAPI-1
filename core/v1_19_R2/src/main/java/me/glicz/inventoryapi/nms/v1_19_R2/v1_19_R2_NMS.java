@@ -11,13 +11,16 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftMerchantRecipe;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -42,6 +45,8 @@ public class v1_19_R2_NMS implements NMS {
                     InventoryEventHandler.get().handleClose(player, packet.getContainerId());
                 else if (rawPacket instanceof ServerboundRenameItemPacket packet)
                     InventoryEventHandler.get().handleItemRename(player, packet.getName());
+                else if (rawPacket instanceof ServerboundSelectTradePacket packet)
+                    InventoryEventHandler.get().handleSelectTrade(player, packet.getItem());
                 super.channelRead(ctx, rawPacket);
             }
         });
@@ -140,6 +145,16 @@ public class v1_19_R2_NMS implements NMS {
     @Override
     public void setItem(int id, int slot, Player player, ItemStack item) {
         ClientboundContainerSetSlotPacket packet = new ClientboundContainerSetSlotPacket(id, 0, slot, CraftItemStack.asNMSCopy(item));
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        craftPlayer.getHandle().connection.send(packet);
+    }
+
+    @Override
+    public void setRecipes(int id, Player player, List<MerchantRecipe> recipeList) {
+        MerchantOffers offers = new MerchantOffers();
+        recipeList.forEach(recipe -> offers.add(CraftMerchantRecipe.fromBukkit(recipe).toMinecraft()));
+        ClientboundMerchantOffersPacket packet = new ClientboundMerchantOffersPacket(
+                id, offers, 0, 0, false, false);
         CraftPlayer craftPlayer = (CraftPlayer) player;
         craftPlayer.getHandle().connection.send(packet);
     }

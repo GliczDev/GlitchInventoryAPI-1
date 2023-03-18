@@ -22,4 +22,6 @@ public abstract class InventoryEventHandler {
     public abstract void handleClose(Player player, int inventoryId);
 
     public abstract void handleItemRename(Player player, String name);
+
+    public abstract void handleSelectTrade(Player player, int recipe);
 }

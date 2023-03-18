@@ -1,8 +1,10 @@
 package me.glicz.inventoryapi.inventories.handler;
 
 import me.glicz.inventoryapi.events.InventoryClickEvent;
+import me.glicz.inventoryapi.events.merchant.InventoryTradeSelectEvent;
 import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.GlitchInventory;
+import me.glicz.inventoryapi.inventories.MerchantInventory;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import org.bukkit.entity.Player;
 
@@ -29,5 +31,11 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
         if (GlitchInventory.has(player))
             GlitchInventory.get(player).setItem(2, ItemBuilder.of(
                     GlitchInventory.get(player).getItem(0).getItemStack()).setName(name).asGuiItem());
+    }
+
+    @Override
+    public void handleSelectTrade(Player player, int recipe) {
+        if (GlitchInventory.has(player) && GlitchInventory.get(player) instanceof MerchantInventory inventory)
+            inventory.executeTradeSelectAction(new InventoryTradeSelectEvent(player, inventory, recipe));
     }
 }
