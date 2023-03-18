@@ -30,10 +30,6 @@ tasks {
     shadowJar {
         archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
-
-    artifacts {
-        archives(shadowJar)
-    }
 }
 
 publishing {
