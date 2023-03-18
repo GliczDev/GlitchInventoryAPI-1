@@ -32,6 +32,10 @@ tasks {
         options.encoding = Charsets.UTF_8.name()
     }
 
+    javadoc {
+        options.encoding = Charsets.UTF_8.name()
+    }
+
     shadowJar {
         archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
@@ -40,7 +44,6 @@ tasks {
 publishing {
     publications {
         register<MavenPublication>("maven") {
-            artifact(tasks["shadowJar"])
             from(components["java"])
         }
     }
