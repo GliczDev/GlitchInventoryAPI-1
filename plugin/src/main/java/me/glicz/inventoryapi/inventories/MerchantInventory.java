@@ -10,12 +10,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.MerchantRecipe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class MerchantInventory extends GlitchInventory<MerchantInventory> {
 
-    @Getter
     private final List<MerchantRecipe> recipeList = new ArrayList<>();
     @Getter
     @Setter
@@ -44,6 +44,10 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
         } catch (IndexOutOfBoundsException ignored) {
             return null;
         }
+    }
+
+    public List<MerchantRecipe> getRecipeList() {
+        return Collections.unmodifiableList(recipeList);
     }
 
     public MerchantInventory sendRecipes(Player player) {
