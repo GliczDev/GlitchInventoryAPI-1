@@ -22,6 +22,11 @@ dependencies {
         .forEach { implementation(project(":core:" + it.name, "reobf")) }
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
