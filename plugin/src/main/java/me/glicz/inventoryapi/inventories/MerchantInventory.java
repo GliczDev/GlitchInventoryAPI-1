@@ -56,12 +56,18 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
     }
 
     @Override
+    public MerchantInventory sendInventory(Player player) {
+        super.sendInventory(player);
+        return sendRecipes(player);
+    }
+
+    @Override
     public MerchantInventory open(Player player, boolean closeCurrent) {
         super.open(player, closeCurrent);
         selectedRecipe = getRecipe(0);
         if (selectedRecipe != null)
             executeTradeSelectAction(new InventoryTradeSelectEvent(player, this, 0));
-        return sendRecipes(player);
+        return this;
     }
 
     public void executeTradeSelectAction(InventoryTradeSelectEvent event) {

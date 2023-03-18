@@ -79,7 +79,7 @@ public void onEnable() {
 ### Basic example
 ```java
 GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit InventoryType can be also used)
-	.setTitle(Title.simple("GlitchInventoryAPI") //Soon
+	.setTitle(Title.simple("GlitchInventoryAPI") //Set title to GlitchInventoryAPI
 	.setItem(10, ItemBuilder.of(Material.STONE) 
 		.asGuiItem(e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"))) //Set slot to stone item with click action
         .open(player); //Open inventory to player
@@ -89,8 +89,8 @@ There are two different inventory types:
 - Simple (`GlitchInventory.simple()`) - normal inventory without any special abilities
 - Paginated (`GlitchInventory.paginated()`) - allows you to create inventory pages <ins>**//Soon**</ins>
 
-### Title types <ins>**//Soon**</ins>
+### Title types
 There are two different title types:
 - Simple (`Title.simple()`) - normal title without any special abilities
-- Animated (`Title.animated()`) - allows you to create animated title text
-- Random (`Title.random()`) - allows you to create random title text
+- Animated (`Title.animated()`) - allows you to create animated title text <ins>**//Soon**</ins>
+- Random (`Title.random()`) - allows you to create random title text <ins>**//Soon**</ins>

@@ -5,6 +5,7 @@ import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import me.glicz.inventoryapi.nms.NMS;
+import me.glicz.inventoryapi.titles.Title;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -27,17 +28,21 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private final List<GuiItem> items;
     private final Map<Player, Integer> viewers = new HashMap<>();
     private final Map<Integer, Consumer<InventoryClickEvent>> slotClickActions = new HashMap<>();
+    @Getter
+    private Title title;
 
     protected GlitchInventory(InventoryType inventoryType) {
         this.inventoryType = inventoryType;
         this.size = inventoryType.getDefaultSize();
         this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
+        this.title = Title.simple(inventoryType.defaultTitle());
     }
 
     protected GlitchInventory(int rows) {
         this.inventoryType = InventoryType.CHEST;
         this.size = rows * 9;
         this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
+        this.title = Title.simple(inventoryType.defaultTitle());
     }
 
     public static SimpleInventory simple(InventoryType inventoryType) {
@@ -120,6 +125,11 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         slotClickActions.get(slot).accept(event);
     }
 
+    public void setTitle(Title title) {
+        this.title = title;
+        viewers.keySet().forEach(this::sendInventory);
+    }
+
     public T open(Player player) {
         return open(player, true);
     }
@@ -141,11 +151,17 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         if (!viewers.containsKey(player))
             viewers.put(player, id);
         PLAYER_INVENTORY_MAP.put(player, this);
-        if (inventoryType == InventoryType.CHEST)
-            nms.openInventory(id, player, size / 9, inventoryType.defaultTitle());
-        else
-            nms.openInventory(id, player, inventoryType, inventoryType.defaultTitle());
+        sendInventory(player);
         nms.setItems(id, player, getItemStacks());
+        return (T) this;
+    }
+
+    public T sendInventory(Player player) {
+        NMS nms = GlitchInventoryAPI.getNms();
+        if (inventoryType == InventoryType.CHEST)
+            nms.openInventory(getId(player), player, size / 9, title.getComponent());
+        else
+            nms.openInventory(getId(player), player, inventoryType, title.getComponent());
         return (T) this;
     }
 
