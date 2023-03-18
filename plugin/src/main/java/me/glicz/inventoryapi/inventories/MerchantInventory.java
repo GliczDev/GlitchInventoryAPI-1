@@ -4,6 +4,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.merchant.InventoryTradeSelectEvent;
+import me.glicz.inventoryapi.titles.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.MerchantRecipe;
@@ -63,8 +64,8 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
     }
 
     @Override
-    public MerchantInventory sendInventory(Player player) {
-        super.sendInventory(player);
+    public MerchantInventory sendInventory(Player player, Title title) {
+        super.sendInventory(player, title);
         return sendRecipes(player);
     }
 
