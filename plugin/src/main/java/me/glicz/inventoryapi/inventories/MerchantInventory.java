@@ -2,6 +2,7 @@ package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.merchant.InventoryTradeSelectEvent;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
     @Getter
     private final List<MerchantRecipe> recipeList = new ArrayList<>();
     @Setter
+    @Accessors(chain = true)
     private Consumer<InventoryTradeSelectEvent> tradeSelectAction;
 
     protected MerchantInventory() {
