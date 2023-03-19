@@ -1,4 +1,4 @@
-package me.glicz.inventoryapi.nms.v1_19_R2;
+package me.glicz.inventoryapi.nms.v1_19_R3;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
@@ -13,9 +13,9 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.trading.MerchantOffers;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftMerchantRecipe;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftMerchantRecipe;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class v1_19_R2_NMS implements NMS {
+public class v1_19_R3_NMS implements NMS {
 
     @Override
     public void registerListener(Player player) {
@@ -80,6 +80,7 @@ public class v1_19_R2_NMS implements NMS {
         };
     }
 
+    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
     private MenuType<?> getMenuType(InventoryType inventoryType) {
         return switch (inventoryType) {
             case PLAYER -> MenuType.GENERIC_9x4;
@@ -90,7 +91,7 @@ public class v1_19_R2_NMS implements NMS {
             case BREWING -> MenuType.BREWING_STAND;
             case BEACON -> MenuType.BEACON;
             case ANVIL -> MenuType.ANVIL;
-            case SMITHING -> MenuType.SMITHING;
+            case SMITHING -> MenuType.LEGACY_SMITHING;
             case HOPPER -> MenuType.HOPPER;
             case SHULKER_BOX -> MenuType.SHULKER_BOX;
             case BLAST_FURNACE -> MenuType.BLAST_FURNACE;
@@ -101,6 +102,7 @@ public class v1_19_R2_NMS implements NMS {
             case GRINDSTONE -> MenuType.GRINDSTONE;
             case STONECUTTER -> MenuType.STONECUTTER;
             case MERCHANT -> MenuType.MERCHANT;
+            case SMITHING_NEW -> MenuType.SMITHING;
             case CREATIVE, CRAFTING ->
                     throw new IllegalArgumentException("Can't open a " + inventoryType + " inventory!");
             default -> MenuType.GENERIC_9x3;
