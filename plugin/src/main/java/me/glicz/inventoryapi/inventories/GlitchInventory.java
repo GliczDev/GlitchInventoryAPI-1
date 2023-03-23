@@ -1,8 +1,11 @@
 package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
+import me.glicz.inventoryapi.events.InventoryCloseEvent;
+import me.glicz.inventoryapi.events.InventoryOpenEvent;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import me.glicz.inventoryapi.nms.NMS;
 import me.glicz.inventoryapi.titles.Title;
@@ -28,6 +31,11 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private final List<GuiItem> items;
     private final Map<Player, Integer> viewers = new HashMap<>();
     private final Map<Integer, Consumer<InventoryClickEvent>> slotClickActions = new HashMap<>();
+    @Setter
+    private Consumer<InventoryOpenEvent> openAction;
+    @Setter
+    private Consumer<InventoryCloseEvent> closeAction;
+
     @Getter
     private Title title;
 
@@ -109,6 +117,17 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return viewers.get(player);
     }
 
+    public T setTitle(Title title) {
+        this.title = title;
+        viewers.keySet().forEach(this::sendInventory);
+        return (T) this;
+    }
+
+    public T setTitle(Player player, Title title) {
+        sendInventory(player, title);
+        return (T) this;
+    }
+
     public T addSlotClickAction(int slot, Consumer<InventoryClickEvent> action) {
         slotClickActions.put(slot, action);
         return (T) this;
@@ -125,15 +144,16 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         slotClickActions.get(slot).accept(event);
     }
 
-    public T setTitle(Title title) {
-        this.title = title;
-        viewers.keySet().forEach(this::sendInventory);
-        return (T) this;
+    public void executeOpenAction(InventoryOpenEvent event) {
+        if (openAction == null)
+            return;
+        openAction.accept(event);
     }
 
-    public T setTitle(Player player, Title title) {
-        sendInventory(player, title);
-        return (T) this;
+    public void executeCloseAction(InventoryCloseEvent event) {
+        if (closeAction == null)
+            return;
+        closeAction.accept(event);
     }
 
     public T open(Player player) {
@@ -159,6 +179,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         PLAYER_INVENTORY_MAP.put(player, this);
         sendInventory(player);
         nms.setItems(id, player, getItemStacks());
+        executeOpenAction(new InventoryOpenEvent(player, this));
         return (T) this;
     }
 
@@ -185,6 +206,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
             return (T) this;
         PLAYER_INVENTORY_MAP.remove(player);
         viewers.remove(player);
+        executeCloseAction(new InventoryCloseEvent(player, this));
         return (T) this;
     }
 
