@@ -25,7 +25,6 @@ Dependency
 	<groupId>com.github.GliczDev</groupId>
 	<artifactId>GlitchInventoryAPI</artifactId>
 	<version>TAG</version>
-	<classifier>all</classifier>
 </dependency>
 ```
 </p>
@@ -42,7 +41,7 @@ repositories {
 Dependency
 ```gradle
 dependencies {
-	implementation("com.github.GliczDev:GlitchInventoryAPI:TAG:all")
+	implementation("com.github.GliczDev:GlitchInventoryAPI:TAG")
 }
 ```
 </p>
@@ -59,7 +58,7 @@ repositories {
 Dependency
 ```gradle
 dependencies {
-	implementation 'com.github.GliczDev:GlitchInventoryAPI:TAG:all'
+	implementation 'com.github.GliczDev:GlitchInventoryAPI:TAG'
 }
 ```
 </p>
