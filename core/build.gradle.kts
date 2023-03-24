@@ -2,7 +2,7 @@ plugins {
     id("java")
 }
 
-group = "me.glicz"
+group = "com.github.GliczDev.GlitchInventoryAPI"
 
 repositories {
     mavenCentral()

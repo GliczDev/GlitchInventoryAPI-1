@@ -3,7 +3,7 @@ plugins {
     id("io.papermc.paperweight.userdev") version "1.5.3"
 }
 
-group = "me.glicz"
+group = "com.github.GliczDev.GlitchInventoryAPI"
 
 repositories {
     mavenCentral()
