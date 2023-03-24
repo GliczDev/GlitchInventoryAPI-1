@@ -37,7 +37,6 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("publishMaven") {
-            artifact(tasks["shadowJar"])
             project.shadow.component(this)
         }
     }
