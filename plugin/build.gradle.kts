@@ -28,14 +28,17 @@ tasks {
     }
 
     shadowJar {
+        archiveClassifier.set("")
+        minimize()
         archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
 }
 
 publishing {
     publications {
-        register<MavenPublication>("maven") {
-            from(components["java"])
+        create<MavenPublication>("publishMaven") {
+            artifact(tasks["shadowJar"])
+            project.shadow.component(this)
         }
     }
 }
