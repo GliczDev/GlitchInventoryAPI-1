@@ -5,7 +5,7 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
 }
 
-group = "me.glicz"
+group = "com.github.GliczDev.GlitchInventoryAPI"
 version = "1.2.0-SNAPSHOT"
 
 repositories {
