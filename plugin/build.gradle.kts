@@ -28,7 +28,6 @@ tasks {
     }
 
     shadowJar {
-        archiveClassifier.set("")
         archiveFileName.set("${rootProject.name}-${project.version}.jar")
     }
 }
