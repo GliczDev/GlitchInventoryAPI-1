@@ -2,8 +2,6 @@ plugins {
     id("java")
 }
 
-group = "com.github.GliczDev.GlitchInventoryAPI"
-
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
