@@ -33,7 +33,7 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("publishMaven") {
-            project.shadow.component(this)
+            shadow.component(this)
         }
     }
 }
