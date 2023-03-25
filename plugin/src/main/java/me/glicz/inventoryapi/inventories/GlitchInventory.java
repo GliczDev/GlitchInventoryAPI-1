@@ -106,7 +106,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public List<ItemStack> getItemStacks() {
-        return items.stream().map(GuiItem::getItemStack).toList();
+        return getItems().stream().map(GuiItem::getItemStack).toList();
     }
 
     public Set<Player> getViewers() {
