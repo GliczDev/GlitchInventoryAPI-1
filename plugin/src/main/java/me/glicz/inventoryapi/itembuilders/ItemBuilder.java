@@ -160,12 +160,12 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return itemMeta.getItemFlags();
     }
 
-    public <D, Z> T setNbt(String key, PersistentDataType<D, Z> valueType, Z value) {
+    public <D, Z> T setPDCValue(String key, PersistentDataType<D, Z> valueType, Z value) {
         itemMeta.getPersistentDataContainer().set(new NamespacedKey(GlitchInventoryAPI.getPlugin(), key), valueType, value);
         return (T) this;
     }
 
-    public <D, Z> Z getNbt(String key, PersistentDataType<D, Z> valueType) {
+    public <D, Z> Z getPDCValue(String key, PersistentDataType<D, Z> valueType) {
         return itemMeta.getPersistentDataContainer().get(new NamespacedKey(GlitchInventoryAPI.getPlugin(), key), valueType);
     }
 
