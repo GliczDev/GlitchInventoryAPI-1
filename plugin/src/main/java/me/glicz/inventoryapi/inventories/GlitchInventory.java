@@ -10,10 +10,12 @@ import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import me.glicz.inventoryapi.nms.NMS;
 import me.glicz.inventoryapi.titles.Title;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -22,6 +24,8 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
+
+    public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("GlitchInventoryAPI", "inventoryOpened");
 
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
     @Getter
@@ -70,6 +74,12 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public static boolean has(Player player) {
+        return has(player, true);
+    }
+
+    public static boolean has(Player player, boolean deep) {
+        if (deep)
+            return player.getPersistentDataContainer().has(OPENED_INVENTORY_KEY);
         return get(player) != null;
     }
 
@@ -156,13 +166,15 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         closeAction.accept(event);
     }
 
-    public T open(Player player) {
+    public OpenResult<T> open(Player player) {
         return open(player, true);
     }
 
-    public T open(Player player, boolean closeCurrent) {
+    public OpenResult<T> open(Player player, boolean closeCurrent) {
         Integer id = null;
         if (has(player)) {
+            if (!has(player, false))
+                return new OpenResult<>(false, this);
             GlitchInventory<?> current = get(player);
             if (closeCurrent)
                 current.close(player);
@@ -177,10 +189,11 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         if (!viewers.containsKey(player))
             viewers.put(player, id);
         PLAYER_INVENTORY_MAP.put(player, this);
+        player.getPersistentDataContainer().set(OPENED_INVENTORY_KEY, PersistentDataType.BYTE, (byte) 1);
         sendInventory(player);
         nms.setItems(id, player, getItemStacks());
         executeOpenAction(new InventoryOpenEvent(player, this));
-        return (T) this;
+        return new OpenResult<>(true, this);
     }
 
     public T sendInventory(Player player) {
@@ -205,6 +218,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         if (!viewers.containsKey(player))
             return (T) this;
         PLAYER_INVENTORY_MAP.remove(player);
+        player.getPersistentDataContainer().remove(OPENED_INVENTORY_KEY);
         viewers.remove(player);
         executeCloseAction(new InventoryCloseEvent(player, this));
         return (T) this;
