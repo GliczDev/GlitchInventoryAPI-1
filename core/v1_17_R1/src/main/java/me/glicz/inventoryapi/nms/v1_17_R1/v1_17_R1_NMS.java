@@ -21,6 +21,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,36 +29,37 @@ import java.util.List;
 public class v1_17_R1_NMS implements NMS {
 
     @Override
-    public void registerListener(Player player) {
+    public void registerListener(JavaPlugin plugin, Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         Channel channel = craftPlayer.getHandle().connection.connection.channel;
-        channel.pipeline().addBefore("packet_handler", "GlitchInventoryAPI_Handler", new ChannelDuplexHandler() {
-            @Override
-            public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object rawPacket) throws Exception {
-                if (rawPacket instanceof ServerboundContainerClickPacket packet)
-                    InventoryEventHandler.get().handleClick(
-                            player,
-                            packet.getContainerId(),
-                            ClickType.get(packet.getClickType().ordinal(), packet.getButtonNum()),
-                            packet.getSlotNum()
-                    );
-                else if (rawPacket instanceof ServerboundContainerClosePacket packet)
-                    InventoryEventHandler.get().handleClose(player, packet.getContainerId());
-                else if (rawPacket instanceof ServerboundRenameItemPacket packet)
-                    InventoryEventHandler.get().handleItemRename(player, packet.getName());
-                else if (rawPacket instanceof ServerboundSelectTradePacket packet)
-                    InventoryEventHandler.get().handleSelectTrade(player, packet.getItem());
-                super.channelRead(ctx, rawPacket);
-            }
-        });
+        channel.pipeline().addBefore("packet_handler", plugin.getName() + "_GlitchInventoryAPI_Handler",
+                new ChannelDuplexHandler() {
+                    @Override
+                    public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object rawPacket) throws Exception {
+                        if (rawPacket instanceof ServerboundContainerClickPacket packet)
+                            InventoryEventHandler.get().handleClick(
+                                    player,
+                                    packet.getContainerId(),
+                                    ClickType.get(packet.getClickType().ordinal(), packet.getButtonNum()),
+                                    packet.getSlotNum()
+                            );
+                        else if (rawPacket instanceof ServerboundContainerClosePacket packet)
+                            InventoryEventHandler.get().handleClose(player, packet.getContainerId());
+                        else if (rawPacket instanceof ServerboundRenameItemPacket packet)
+                            InventoryEventHandler.get().handleItemRename(player, packet.getName());
+                        else if (rawPacket instanceof ServerboundSelectTradePacket packet)
+                            InventoryEventHandler.get().handleSelectTrade(player, packet.getItem());
+                        super.channelRead(ctx, rawPacket);
+                    }
+                });
     }
 
     @Override
-    public void unregisterListener(Player player) {
+    public void unregisterListener(JavaPlugin plugin, Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         Channel channel = craftPlayer.getHandle().connection.connection.channel;
         channel.eventLoop().submit(() -> {
-            channel.pipeline().remove("GlitchInventoryAPI_Handler");
+            channel.pipeline().remove(plugin.getName() + "_GlitchInventoryAPI_Handler");
             return null;
         });
     }
