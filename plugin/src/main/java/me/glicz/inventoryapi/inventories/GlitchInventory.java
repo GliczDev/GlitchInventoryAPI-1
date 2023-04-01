@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 @SuppressWarnings("unchecked")
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
-    public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("GlitchInventoryAPI", "inventoryOpened");
+    public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("glitchinventoryapi", "inventory-opened");
 
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
     @Getter
