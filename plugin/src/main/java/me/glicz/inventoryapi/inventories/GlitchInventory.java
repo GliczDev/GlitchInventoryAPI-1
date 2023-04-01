@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 @SuppressWarnings("unchecked")
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
+    @SuppressWarnings("deprecation")
     public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("glitchinventoryapi", "inventory-opened");
 
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
@@ -79,7 +80,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public static boolean has(Player player, boolean deep) {
         if (deep)
-            return player.getPersistentDataContainer().has(OPENED_INVENTORY_KEY);
+            return player.getPersistentDataContainer().has(OPENED_INVENTORY_KEY, PersistentDataType.BYTE);
         return get(player) != null;
     }
 
