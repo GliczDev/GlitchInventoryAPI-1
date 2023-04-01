@@ -3,6 +3,7 @@ package me.glicz.inventoryapi.itembuilders;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.inventories.GuiItem;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -72,12 +73,30 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return (T) this;
     }
 
+    public Component getComponentName() {
+        return itemMeta.displayName();
+    }
+
+    public T setComponentName(Component component) {
+        itemMeta.displayName(component);
+        return (T) this;
+    }
+
     public List<String> getLore() {
         return itemMeta.getLore();
     }
 
     public T setLore(List<String> lore) {
         itemMeta.setLore(lore);
+        return (T) this;
+    }
+
+    public List<Component> getComponentLore() {
+        return itemMeta.lore();
+    }
+
+    public T setComponentLore(List<Component> component) {
+        itemMeta.lore(component);
         return (T) this;
     }
 
