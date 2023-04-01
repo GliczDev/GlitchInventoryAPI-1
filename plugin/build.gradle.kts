@@ -45,6 +45,6 @@ configurations.all {
 bukkit {
     name = rootProject.name
     main = "me.glicz.inventoryapi.GlitchInventoryAPIPlugin"
-    apiVersion = "1.18"
+    apiVersion = "1.17"
     author = "Glicz"
 }
