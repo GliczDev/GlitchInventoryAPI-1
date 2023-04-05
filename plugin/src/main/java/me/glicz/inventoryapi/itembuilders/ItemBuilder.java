@@ -64,6 +64,14 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
         return new BannerBuilder(itemStack);
     }
 
+    public static PotionBuilder potion(Material material) {
+        return potion(new ItemStack(material));
+    }
+
+    public static PotionBuilder potion(ItemStack itemStack) {
+        return new PotionBuilder(itemStack);
+    }
+
     public String getName() {
         return itemMeta.getDisplayName();
     }
