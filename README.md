@@ -66,12 +66,17 @@ dependencies {
 
 
 ## Shading
-If you want to shade this API into your plugin, you have to load it in `onEnable()`, for example:
+If you want to shade this API into your plugin, you have to load it in `onEnable()`
 ```java
 @Override
 public void onEnable() {
         new GlitchInventoryAPI(this).load();
 }
+```
+Also, you need to make sure you have added commons 3 library to your plugin.yml
+```yaml
+libraries:
+  - org.apache.commons:commons-lang3:3.12.0
 ```
 
 ## Usage
@@ -85,11 +90,12 @@ GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit Inventor
 ```
 ### Inventory types
 There are two different inventory types:
-- Simple (`GlitchInventory.simple()`) - normal inventory without any special abilities
-- Paginated (`GlitchInventory.paginated()`) - allows you to create inventory pages <ins>**//Soon**</ins>
+- Simple (`GlitchInventory.simple()`) - a normal inventory
+- Paginated (`GlitchInventory.paginated()`) - a paginated inventory <ins>**//Soon**</ins>
+- Merchant (`GlitchInventory.merchant()`) - a merchant inventory
 
 ### Title types
 There are two different title types:
-- Simple (`Title.simple()`) - normal title without any special abilities
-- Animated (`Title.animated()`) - allows you to create animated title text <ins>**//Soon**</ins>
-- Random (`Title.random()`) - allows you to create random title text <ins>**//Soon**</ins>
+- Simple (`Title.simple()`) - a normal title
+- Animated (`Title.animated()`) - an animated title <ins>**//Soon**</ins>
+- Random (`Title.random()`) - a randomly animated title <ins>**//Soon**</ins>
