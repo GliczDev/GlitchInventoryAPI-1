@@ -73,11 +73,6 @@ public void onEnable() {
         new GlitchInventoryAPI(this).load();
 }
 ```
-Also, you need to make sure you have added commons 3 library to your plugin.yml
-```yaml
-libraries:
-  - org.apache.commons:commons-lang3:3.12.0
-```
 
 ## Usage
 ### Basic example
