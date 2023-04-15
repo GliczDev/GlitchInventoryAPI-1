@@ -175,7 +175,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         Integer id = null;
         if (has(player)) {
             if (!has(player, false))
-                return new OpenResult<>(false, this);
+                return new OpenResult<>(false, (T) this);
             GlitchInventory<?> current = get(player);
             if (closeCurrent)
                 current.close(player);
@@ -194,7 +194,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         sendInventory(player);
         nms.setItems(id, player, getItemStacks());
         executeOpenAction(new InventoryOpenEvent(player, this));
-        return new OpenResult<>(true, this);
+        return new OpenResult<>(true, (T) this);
     }
 
     public T sendInventory(Player player) {
