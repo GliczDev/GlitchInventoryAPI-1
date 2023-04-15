@@ -18,7 +18,7 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             player.updateInventory();
             InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
             inventory.executeSlotClickAction(slot, event);
-            inventory.getItem(slot).executeClickAction(event);
+            inventory.getItem(player, slot).executeClickAction(event);
         }
     }
 

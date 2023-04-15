@@ -2,6 +2,7 @@ package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.events.InventoryCloseEvent;
@@ -29,18 +30,19 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("glitchinventoryapi", "inventory-opened");
 
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
+    protected final Map<Player, Integer> viewers = new HashMap<>();
     @Getter
     private final InventoryType inventoryType;
     @Getter
     private final int size;
     private final List<GuiItem> items;
-    private final Map<Player, Integer> viewers = new HashMap<>();
     private final Map<Integer, Consumer<InventoryClickEvent>> slotClickActions = new HashMap<>();
     @Setter
+    @Accessors(chain = true)
     private Consumer<InventoryOpenEvent> openAction;
     @Setter
+    @Accessors(chain = true)
     private Consumer<InventoryCloseEvent> closeAction;
-
     @Getter
     private Title title;
 
@@ -64,6 +66,14 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public static SimpleInventory simple(@Range(from = 1, to = 6) int rows) {
         return new SimpleInventory(rows);
+    }
+
+    public static PaginatedInventory paginated(InventoryType inventoryType) {
+        return new PaginatedInventory(inventoryType);
+    }
+
+    public static PaginatedInventory paginated(@Range(from = 1, to = 6) int rows) {
+        return new PaginatedInventory(rows);
     }
 
     public static MerchantInventory merchant() {
@@ -94,6 +104,22 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public GuiItem getItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot) {
+        try {
+            return items.get(slot);
+        } catch (IndexOutOfBoundsException ignored) {
+            return ItemBuilder.of(Material.AIR).asGuiItem();
+        }
+    }
+
+    /**
+     * Allows you to get item from player's view.
+     * Better implemented in paginated-based inventories.
+     *
+     * @param player Selected viewer
+     * @param slot   Selected slot
+     * @return Item from selected viewer's view
+     */
+    public GuiItem getItem(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int slot) {
         try {
             return items.get(slot);
         } catch (IndexOutOfBoundsException ignored) {
@@ -192,7 +218,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         PLAYER_INVENTORY_MAP.put(player, this);
         player.getPersistentDataContainer().set(OPENED_INVENTORY_KEY, PersistentDataType.BYTE, (byte) 1);
         sendInventory(player);
-        nms.setItems(id, player, getItemStacks());
+        updateItems(player);
         executeOpenAction(new InventoryOpenEvent(player, this));
         return new OpenResult<>(true, (T) this);
     }
