@@ -49,13 +49,18 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         GuiItem[] value = super.getItems().toArray(GuiItem[]::new);
         GuiItem[] temp;
         int page = getPage(player);
-        int itemsPerPage = getSize() - ((margins.getTop() + margins.getBottom()) * 9);
+        int itemsPerPage = getSize() - margins.sumSlots(getSize() / 9);
         if ((page + 1) * itemsPerPage <= pageItems.size())
             temp = Arrays.copyOfRange(pageItems.toArray(GuiItem[]::new), page * itemsPerPage, (page + 1) * itemsPerPage);
         else
             temp = Arrays.copyOfRange(pageItems.toArray(GuiItem[]::new), page * itemsPerPage, pageItems.size());
-        for (int i = 0; i < value.length - margins.getTop() * 9 && i < temp.length; i++)
-            value[i + margins.getTop() * 9] = temp[i];
+        int slot = margins.getTop() * 9 + margins.getLeft();
+        for (int i = 0; i < value.length - margins.getTop() * 9 && i < temp.length; i++) {
+            if ((slot / 9 + 1) * 9 - margins.getRight() == slot)
+                slot += margins.getRight() + margins.getLeft();
+            value[slot] = temp[i];
+            slot++;
+        }
         currentPageItemsMap.put(player, List.of(value));
         return this;
     }
@@ -153,7 +158,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     }
 
     public boolean hasNextPage(Player player) {
-        return !(pageItems.size() < (getPage(player) + 1) * (getSize() - ((margins.getTop() + margins.getBottom()) * 9)));
+        return !(pageItems.size() < (getPage(player) + 1) * (getSize() - margins.sumSlots(getSize() / 9)));
     }
 
     public boolean hasPreviousPage(Player player) {
