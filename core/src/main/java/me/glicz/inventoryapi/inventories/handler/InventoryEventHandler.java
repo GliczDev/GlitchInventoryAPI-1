@@ -8,6 +8,8 @@ public abstract class InventoryEventHandler {
     private static InventoryEventHandler instance;
 
     public static void set(InventoryEventHandler instance) {
+        if (InventoryEventHandler.instance != null)
+            throw new RuntimeException("PacketListener's instance is already set");
         InventoryEventHandler.instance = instance;
     }
 
