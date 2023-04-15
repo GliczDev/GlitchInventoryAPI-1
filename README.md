@@ -86,7 +86,7 @@ GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit Inventor
 ### Inventory types
 There are two different inventory types:
 - Simple (`GlitchInventory.simple()`) - a normal inventory
-- Paginated (`GlitchInventory.paginated()`) - a paginated inventory <ins>**//Soon**</ins>
+- Paginated (`GlitchInventory.paginated()`) - a paginated inventory
 - Merchant (`GlitchInventory.merchant()`) - a merchant inventory
 
 ### Title types
