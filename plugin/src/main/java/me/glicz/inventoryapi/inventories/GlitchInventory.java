@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -125,6 +126,26 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         } catch (IndexOutOfBoundsException ignored) {
             return ItemBuilder.of(Material.AIR).asGuiItem();
         }
+    }
+
+    /**
+     * @apiNote draft API
+     */
+    @ApiStatus.Experimental
+    public T drawColumn(@Range(from = 0, to = Integer.MAX_VALUE) int column, @NotNull GuiItem item) {
+        for (int i = 0; i < getSize() / 9; i++)
+            setItem(i * 9 + column, item);
+        return (T) this;
+    }
+
+    /**
+     * @apiNote draft API
+     */
+    @ApiStatus.Experimental
+    public T drawRow(@Range(from = 0, to = Integer.MAX_VALUE) int row, @NotNull GuiItem item) {
+        for (int i = 0; i < 9; i++)
+            setItem(row * 9 + i, item);
+        return (T) this;
     }
 
     public T setProperty(InventoryView.Property property, int value) {
