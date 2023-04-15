@@ -45,4 +45,8 @@ public class Margins {
     public static Margins copy(Margins margins) {
         return from(margins.getTop(), margins.getLeft(), margins.getBottom(), margins.getRight());
     }
+
+    public int sumSlots(int rows) {
+        return (left + right) * rows + (9 - (left + right)) * (top + bottom);
+    }
 }
