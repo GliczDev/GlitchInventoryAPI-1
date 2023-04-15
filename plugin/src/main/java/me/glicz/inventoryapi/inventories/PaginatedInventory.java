@@ -74,6 +74,11 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         return pageMap.getOrDefault(player, 0);
     }
 
+    public PaginatedInventory setPage(@Range(from = 0, to = Integer.MAX_VALUE) int page) {
+        getViewers().forEach(player -> setPage(player, page));
+        return this;
+    }
+
     public PaginatedInventory setPage(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int page) {
         if (!getViewers().contains(player))
             return this;
