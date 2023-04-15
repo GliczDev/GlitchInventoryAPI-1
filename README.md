@@ -80,7 +80,9 @@ public void onEnable() {
 GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit InventoryType can be also used)
 	.setTitle(Title.simple("GlitchInventoryAPI") //Set title to GlitchInventoryAPI
 	.setItem(10, ItemBuilder.of(Material.STONE) 
-		.asGuiItem(e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"))) //Set slot to stone item with click action
+		.asGuiItem(e -> {
+			e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!")
+		})) //Set slot to stone item with click action
         .open(player); //Open inventory to player
 ```
 ### Inventory types
