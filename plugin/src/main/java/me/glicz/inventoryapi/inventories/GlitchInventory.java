@@ -31,8 +31,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("glitchinventoryapi", "inventory-opened");
 
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
-    private final Map<Player, Map<Integer, GuiItem>> viewerItems = new HashMap<>();
     protected final Map<Player, Integer> viewers = new HashMap<>();
+    private final Map<Player, Map<Integer, GuiItem>> viewerItems = new HashMap<>();
     @Getter
     private final InventoryType inventoryType;
     @Getter
@@ -163,9 +163,29 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
      * @apiNote draft API
      */
     @ApiStatus.Experimental
+    public T drawColumn(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int column, @NotNull GuiItem item) {
+        for (int i = 0; i < getSize() / 9; i++)
+            setItem(player, i * 9 + column, item);
+        return (T) this;
+    }
+
+    /**
+     * @apiNote draft API
+     */
+    @ApiStatus.Experimental
     public T drawRow(@Range(from = 0, to = Integer.MAX_VALUE) int row, @NotNull GuiItem item) {
         for (int i = 0; i < 9; i++)
             setItem(row * 9 + i, item);
+        return (T) this;
+    }
+
+    /**
+     * @apiNote draft API
+     */
+    @ApiStatus.Experimental
+    public T drawRow(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int row, @NotNull GuiItem item) {
+        for (int i = 0; i < 9; i++)
+            setItem(player, row * 9 + i, item);
         return (T) this;
     }
 
