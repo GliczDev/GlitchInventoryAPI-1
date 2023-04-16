@@ -46,7 +46,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     }
 
     public PaginatedInventory updateCurrentPageItems(Player player) {
-        GuiItem[] value = super.getItems().toArray(GuiItem[]::new);
+        GuiItem[] value = getViewerItems(player).toArray(GuiItem[]::new);
         GuiItem[] temp;
         int page = getPage(player);
         int itemsPerPage = getSize() - margins.sumSlots(getSize() / 9);

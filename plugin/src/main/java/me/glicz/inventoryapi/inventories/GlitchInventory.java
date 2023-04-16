@@ -31,6 +31,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public static final NamespacedKey OPENED_INVENTORY_KEY = new NamespacedKey("glitchinventoryapi", "inventory-opened");
 
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
+    private final Map<Player, Map<Integer, GuiItem>> viewerItems = new HashMap<>();
     protected final Map<Player, Integer> viewers = new HashMap<>();
     @Getter
     private final InventoryType inventoryType;
@@ -98,7 +99,27 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public T setItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot, @NotNull GuiItem item) {
         try {
             items.set(slot, item);
+            viewerItems.values().forEach(map -> map.remove(slot));
             viewers.forEach((viewer, id) -> GlitchInventoryAPI.getNms().setItem(id, slot, viewer, item.getItemStack()));
+        } catch (IndexOutOfBoundsException ignored) {
+        }
+        return (T) this;
+    }
+
+    public T setItem(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int slot, GuiItem item) {
+        try {
+            if (!viewerItems.containsKey(player))
+                viewerItems.put(player, new HashMap<>());
+            ItemStack itemStack;
+            if (item != null) {
+                viewerItems.get(player).put(slot, item);
+                itemStack = item.getItemStack();
+            } else {
+                viewerItems.get(player).remove(slot);
+                itemStack = items.get(slot).getItemStack();
+            }
+            if (viewers.containsKey(player))
+                GlitchInventoryAPI.getNms().setItem(getId(player), slot, player, itemStack);
         } catch (IndexOutOfBoundsException ignored) {
         }
         return (T) this;
@@ -122,7 +143,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
      */
     public GuiItem getItem(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int slot) {
         try {
-            return items.get(slot);
+            return getViewerItems(player).get(slot);
         } catch (IndexOutOfBoundsException ignored) {
             return ItemBuilder.of(Material.AIR).asGuiItem();
         }
@@ -165,6 +186,16 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     public List<ItemStack> getItemStacks() {
         return getItems().stream().map(GuiItem::getItemStack).toList();
+    }
+
+    public List<GuiItem> getViewerItems(Player player) {
+        List<GuiItem> result = new ArrayList<>(items);
+        viewerItems.getOrDefault(player, new HashMap<>()).forEach(result::set);
+        return Collections.unmodifiableList(result);
+    }
+
+    public List<ItemStack> getViewerItemStacks(Player player) {
+        return getViewerItems(player).stream().map(GuiItem::getItemStack).toList();
     }
 
     public Set<Player> getViewers() {
@@ -268,6 +299,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         PLAYER_INVENTORY_MAP.remove(player);
         player.getPersistentDataContainer().remove(OPENED_INVENTORY_KEY);
         viewers.remove(player);
+        viewerItems.remove(player);
         executeCloseAction(new InventoryCloseEvent(player, this));
         return (T) this;
     }
@@ -290,7 +322,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T updateItems(Player player) {
-        GlitchInventoryAPI.getNms().setItems(getId(player), player, getItemStacks());
+        GlitchInventoryAPI.getNms().setItems(getId(player), player, getViewerItemStacks(player));
         return (T) this;
     }
 }
