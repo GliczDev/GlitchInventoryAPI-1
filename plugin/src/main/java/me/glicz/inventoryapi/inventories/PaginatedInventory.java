@@ -27,12 +27,12 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     protected PaginatedInventory(InventoryType inventoryType) {
         super(inventoryType);
-        pageItems = new ArrayList<>(Collections.nCopies(getSize(), ItemBuilder.of(Material.AIR).asGuiItem()));
+        pageItems = new ArrayList<>();
     }
 
     protected PaginatedInventory(int rows) {
         super(rows);
-        pageItems = new ArrayList<>(Collections.nCopies(getSize(), ItemBuilder.of(Material.AIR).asGuiItem()));
+        pageItems = new ArrayList<>();
     }
 
     public PaginatedInventory setPageItems(List<GuiItem> pageItems) {
