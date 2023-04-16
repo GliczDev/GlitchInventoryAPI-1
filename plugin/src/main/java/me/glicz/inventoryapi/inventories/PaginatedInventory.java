@@ -126,6 +126,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     @Override
     public PaginatedInventory silentClose(Player player) {
         pageMap.remove(player);
+        currentPageItemsMap.remove(player);
         return super.silentClose(player);
     }
 
