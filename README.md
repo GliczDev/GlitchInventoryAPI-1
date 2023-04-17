@@ -8,7 +8,7 @@
 This API supports **1.17, 1.18 and 1.19**, however it only supports **latest minor** version!
 
 ## JitPack
-> If you want to always use the latest commit build, please use `dev-SNAPSHOT` instead of version tag
+> If you want to always use the latest commit build, please use `main-SNAPSHOT` instead of version tag
 <details><summary>Maven</summary>
 <p>
 
