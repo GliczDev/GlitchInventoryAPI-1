@@ -1,8 +1,14 @@
-# GlitchInventoryAPI
-**This API requires ProtocolLib!** [![CodeFactor](https://www.codefactor.io/repository/github/gliczdev/glitchinventoryapi/badge)](#)
+# GlitchInventoryAPI [![CodeFactor](https://www.codefactor.io/repository/github/gliczdev/glitchinventoryapi/badge)](#)
+<div align="center">
+<a href="https://discord.gg/ZRuaXh3P63"><img alt="discord-plural" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-plural_46h.png"></a>
+<a href="#"><img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_46h.png"></a>
+</div>
+
+## Supported versions
+This API supports **1.17, 1.18 and 1.19**, however it only supports **latest minor** version!
 
 ## JitPack
-> If you want to always use the latest commit build, please use `main-SNAPSHOT` instead of version tag
+> If you want to always use the latest commit build, please use `dev-SNAPSHOT` instead of version tag
 <details><summary>Maven</summary>
 <p>
 
@@ -60,40 +66,33 @@ dependencies {
 
 
 ## Shading
-If you want to shade this API into your plugin, you have to initialize it in `onEnable()` and uninitialize it in `onDisable()`, for example:
+If you want to shade this API into your plugin, you have to load it in `onEnable()`
 ```java
-private static GlitchInventoryAPI glitchInventoryAPI;
-
 @Override
 public void onEnable() {
-        glitchInventoryAPI = new GlitchInventoryAPI(this);
-        glitchInventoryAPI.initialize();
-}
-
-@Override
-public void onDisable() {
-        glitchInventoryAPI.uninitialize();
+        new GlitchInventoryAPI(this).load();
 }
 ```
 
 ## Usage
 ### Basic example
 ```java
-GlitchInventory.simple() //Create simple inventory builder
-	.inventoryType(InventoryType.GENERIC_9x6) //Set inventory type to chest 9x6
-	.title(Title.simple("Title")) //Set title to SimpleTitle object
-	.create() //Create simple inventory from builder
-	.setSlot(10, ItemBuilder.from(Material.STONE) 
-		.asGuiItem(e -> e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!"))) //Set slot to stone item with click action
+GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit InventoryType can be also used)
+	.setTitle(Title.simple("GlitchInventoryAPI") //Set title to GlitchInventoryAPI
+	.setItem(10, ItemBuilder.of(Material.STONE) 
+		.asGuiItem(e -> {
+			e.getPlayer().sendMessage("Simple GUI created with GlitchInventoryAPI!")
+		})) //Set slot to stone item with click action
         .open(player); //Open inventory to player
 ```
 ### Inventory types
 There are two different inventory types:
-- Simple (`GlitchInventory.simple()`) - normal inventory without any special abilities
-- Paged (`GlitchInventory.paged()`) - allows you to create inventory pages
+- Simple (`GlitchInventory.simple()`) - a normal inventory
+- Paginated (`GlitchInventory.paginated()`) - a paginated inventory
+- Merchant (`GlitchInventory.merchant()`) - a merchant inventory
 
 ### Title types
 There are two different title types:
-- Simple (`Title.simple()`) - normal title without any special abilities
-- Animated (`Title.animated()`) - allows you to create animated title text
-- Random (`Title.random()`) - allows you to create random title text
+- Simple (`Title.simple()`) - a normal title
+- Animated (`Title.animated()`) - an animated title <ins>**//Soon**</ins>
+- Random (`Title.random()`) - a randomly animated title <ins>**//Soon**</ins>
