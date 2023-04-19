@@ -108,9 +108,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     }
 
     @Override
-    public OpenResult<PaginatedInventory> open(Player player, boolean closeCurrent) {
-        if (has(player) && !has(player, false))
-            return new OpenResult<>(false, this);
+    public PaginatedInventory open(Player player, boolean closeCurrent) {
         executePageChangeAction(new InventoryPageChangeEvent(player, this, 0, 0));
         pageMap.put(player, 0);
         updateCurrentPageItems(player);

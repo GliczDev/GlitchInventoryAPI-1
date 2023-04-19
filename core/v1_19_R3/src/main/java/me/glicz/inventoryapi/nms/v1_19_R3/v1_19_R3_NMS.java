@@ -3,6 +3,7 @@ package me.glicz.inventoryapi.nms.v1_19_R3;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import io.papermc.paper.adventure.PaperAdventure;
 import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
@@ -34,6 +35,13 @@ public class v1_19_R3_NMS implements NMS {
         Channel channel = craftPlayer.getHandle().connection.connection.channel;
         channel.pipeline().addBefore("packet_handler", plugin.getName() + "_GlitchInventoryAPI_Handler",
                 new ChannelDuplexHandler() {
+                    @Override
+                    public void write(ChannelHandlerContext ctx, Object rawPacket, ChannelPromise promise) throws Exception {
+                        if (rawPacket instanceof ClientboundContainerClosePacket packet)
+                            InventoryEventHandler.get().handleClose(player, packet.getContainerId());
+                        super.write(ctx, rawPacket, promise);
+                    }
+
                     @Override
                     public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object rawPacket) throws Exception {
                         if (rawPacket instanceof ServerboundContainerClickPacket packet)
@@ -82,7 +90,7 @@ public class v1_19_R3_NMS implements NMS {
         };
     }
 
-    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
+    @SuppressWarnings({"UnstableApiUsage"})
     private MenuType<?> getMenuType(InventoryType inventoryType) {
         return switch (inventoryType) {
             case PLAYER -> MenuType.GENERIC_9x4;
