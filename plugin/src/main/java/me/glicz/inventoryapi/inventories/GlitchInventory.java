@@ -186,7 +186,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T setProperty(Player player, InventoryView.Property property, int value) {
-        GlitchInventoryAPI.getNms().setProperty(getId(player), player, property, value);
+        if (property.getType() == inventoryType)
+            GlitchInventoryAPI.getNms().setProperty(getId(player), player, property, value);
         return (T) this;
     }
 
