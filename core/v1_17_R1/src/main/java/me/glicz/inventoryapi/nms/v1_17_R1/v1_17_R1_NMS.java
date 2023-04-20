@@ -12,15 +12,14 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffers;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftMerchantRecipe;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -141,19 +140,18 @@ public class v1_17_R1_NMS implements NMS {
     }
 
     @Override
-    public void setItems(int id, Player player, List<ItemStack> items) {
-        net.minecraft.world.item.ItemStack[] itemStacks = items.stream()
+    public void setItems(int id, Player player, List<org.bukkit.inventory.ItemStack> items) {
+        ItemStack[] itemStacks = items.stream()
                 .map(CraftItemStack::asNMSCopy)
-                .toArray(net.minecraft.world.item.ItemStack[]::new);
-        var airItem = CraftItemStack.asNMSCopy(new ItemStack(Material.AIR));
+                .toArray(ItemStack[]::new);
         ClientboundContainerSetContentPacket packet = new ClientboundContainerSetContentPacket(id, 0,
-                NonNullList.of(airItem, itemStacks), airItem);
+                NonNullList.of(ItemStack.EMPTY, itemStacks), ItemStack.EMPTY);
         CraftPlayer craftPlayer = (CraftPlayer) player;
         craftPlayer.getHandle().connection.send(packet);
     }
 
     @Override
-    public void setItem(int id, int slot, Player player, ItemStack item) {
+    public void setItem(int id, int slot, Player player, org.bukkit.inventory.ItemStack item) {
         ClientboundContainerSetSlotPacket packet = new ClientboundContainerSetSlotPacket(id, 0, slot, CraftItemStack.asNMSCopy(item));
         CraftPlayer craftPlayer = (CraftPlayer) player;
         craftPlayer.getHandle().connection.send(packet);
