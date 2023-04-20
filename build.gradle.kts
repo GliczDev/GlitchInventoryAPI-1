@@ -24,11 +24,12 @@ tasks {
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
 }
-
-publishing {
-    publications {
-        create<MavenPublication>("publishMaven") {
-            shadow.component(this)
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("publishMaven") {
+                shadow.component(this)
+            }
         }
     }
 }
