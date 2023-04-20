@@ -13,14 +13,14 @@ import java.util.Map;
 
 public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
 
-    private final Map<String, GuiItem> replacements = new HashMap<>();
+    private final Map<Character, GuiItem> replacements = new HashMap<>();
     private final T inventory;
     @Getter
     private List<String> pattern;
 
     private InventoryPatternBuilder(T inventory) {
         this.inventory = inventory;
-        replacements.put(" ", ItemBuilder.of(Material.AIR).asGuiItem());
+        replacements.put(' ', ItemBuilder.of(Material.AIR).asGuiItem());
     }
 
     public static <T extends GlitchInventory<T>> InventoryPatternBuilder<T> create(@NotNull T inventory) {
@@ -35,20 +35,20 @@ public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
     }
 
     public InventoryPatternBuilder<T> setReplacement(char character, GuiItem item) {
-        replacements.put(Character.valueOf(character).toString(), item);
+        replacements.put(character, item);
         return this;
     }
 
     public GuiItem getReplacement(char character) {
-        return replacements.get(Character.valueOf(character).toString());
+        return replacements.get(character);
     }
 
     public T build() {
         for (int y = 0; y < pattern.size(); y++) {
             String line = pattern.get(y);
-            String[] chars = line.split("");
+            char[] chars = line.toCharArray();
             for (int x = 0; x < chars.length; x++) {
-                String id = chars[x];
+                char id = chars[x];
                 if (!replacements.containsKey(id))
                     throw new RuntimeException("No replacement found for key '%s'!".formatted(id));
                 inventory.setItem(y * line.length() + x, replacements.get(id));
