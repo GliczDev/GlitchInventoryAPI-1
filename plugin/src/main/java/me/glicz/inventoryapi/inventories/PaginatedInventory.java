@@ -134,6 +134,11 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         pageChangeAction.accept(event);
     }
 
+    public int getPageCount() {
+        double itemsPerPage = getSize() - margins.sumSlots(getSize() / 9);
+        return (int) Math.ceil(getPageItems().size() / itemsPerPage);
+    }
+
     public PaginatedInventory nextPage() {
         getViewers().forEach(this::nextPage);
         return this;
@@ -157,7 +162,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     }
 
     public boolean hasNextPage(Player player) {
-        return !(pageItems.size() < (getPage(player) + 1) * (getSize() - margins.sumSlots(getSize() / 9)));
+        return getPage(player) < getPageCount();
     }
 
     public boolean hasPreviousPage(Player player) {
