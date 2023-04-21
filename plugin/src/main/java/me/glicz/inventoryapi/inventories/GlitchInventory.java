@@ -323,7 +323,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         if (!viewers.containsKey(player))
             return (T) this;
         GlitchInventoryAPI.getNms().closeInventory(viewers.get(player), player);
-        return silentClose(player);
+        return (T) this;
     }
 
     public T updateItems() {
