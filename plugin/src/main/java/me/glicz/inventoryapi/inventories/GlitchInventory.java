@@ -86,11 +86,14 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return get(player) != null;
     }
 
-    public T setItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot, @NotNull GuiItem item) {
+    public T setItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot, GuiItem item) {
         try {
+            if (item == null)
+                item = ItemBuilder.of(Material.AIR).asGuiItem();
             items.set(slot, item);
             viewerItems.values().forEach(map -> map.remove(slot));
-            viewers.forEach((viewer, id) -> GlitchInventoryAPI.getNms().setItem(id, slot, viewer, item.getItemStack()));
+            final GuiItem finalItem = item;
+            viewers.forEach((viewer, id) -> GlitchInventoryAPI.getNms().setItem(id, slot, viewer, finalItem.getItemStack()));
         } catch (IndexOutOfBoundsException ignored) {
         }
         return (T) this;
@@ -143,7 +146,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
      * @apiNote draft API
      */
     @ApiStatus.Experimental
-    public T drawColumn(@Range(from = 0, to = Integer.MAX_VALUE) int column, @NotNull GuiItem item) {
+    public T drawColumn(@Range(from = 0, to = Integer.MAX_VALUE) int column, GuiItem item) {
         for (int i = 0; i < getSize() / 9; i++)
             setItem(i * 9 + column, item);
         return (T) this;
@@ -153,7 +156,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
      * @apiNote draft API
      */
     @ApiStatus.Experimental
-    public T drawColumn(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int column, @NotNull GuiItem item) {
+    public T drawColumn(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int column, GuiItem item) {
         for (int i = 0; i < getSize() / 9; i++)
             setItem(player, i * 9 + column, item);
         return (T) this;
@@ -163,7 +166,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
      * @apiNote draft API
      */
     @ApiStatus.Experimental
-    public T drawRow(@Range(from = 0, to = Integer.MAX_VALUE) int row, @NotNull GuiItem item) {
+    public T drawRow(@Range(from = 0, to = Integer.MAX_VALUE) int row, GuiItem item) {
         for (int i = 0; i < 9; i++)
             setItem(row * 9 + i, item);
         return (T) this;
@@ -173,7 +176,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
      * @apiNote draft API
      */
     @ApiStatus.Experimental
-    public T drawRow(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int row, @NotNull GuiItem item) {
+    public T drawRow(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int row, GuiItem item) {
         for (int i = 0; i < 9; i++)
             setItem(player, row * 9 + i, item);
         return (T) this;
