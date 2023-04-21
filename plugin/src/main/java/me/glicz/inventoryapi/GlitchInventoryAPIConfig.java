@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class GlitchInventoryAPIConfig {
 
     private boolean verifyInventoryIdOnClose;
+    private boolean removeViewerItemOnItemSet = true;
 }

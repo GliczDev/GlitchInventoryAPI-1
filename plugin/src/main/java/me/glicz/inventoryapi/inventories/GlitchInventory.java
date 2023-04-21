@@ -17,7 +17,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.*;
@@ -91,7 +90,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
             if (item == null)
                 item = ItemBuilder.of(Material.AIR).asGuiItem();
             items.set(slot, item);
-            viewerItems.values().forEach(map -> map.remove(slot));
+            if (GlitchInventoryAPI.getConfig().isRemoveViewerItemOnItemSet())
+                viewerItems.values().forEach(map -> map.remove(slot));
             final GuiItem finalItem = item;
             viewers.forEach((viewer, id) -> GlitchInventoryAPI.getNms().setItem(id, slot, viewer, finalItem.getItemStack()));
         } catch (IndexOutOfBoundsException ignored) {
