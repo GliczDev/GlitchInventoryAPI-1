@@ -25,13 +25,14 @@ public class GlitchInventoryAPI {
         GlitchInventoryAPI.plugin = plugin;
     }
 
-    public void load() {
-        load(new InventoryEventHandlerImpl());
+    public GlitchInventoryAPI load() {
+        return load(new InventoryEventHandlerImpl());
     }
 
-    public void load(@NotNull InventoryEventHandler listener) {
+    public GlitchInventoryAPI load(@NotNull InventoryEventHandler listener) {
         nms = NMSInitializer.initialize(plugin);
         InventoryEventHandler.set(listener);
         Bukkit.getPluginManager().registerEvents(new JoinQuitListener(), plugin);
+        return this;
     }
 }
