@@ -19,7 +19,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     private final Map<Player, List<GuiItem>> currentPageItemsMap = new HashMap<>();
     private final Map<Player, Integer> pageMap = new HashMap<>();
     @Getter
-    private List<GuiItem> pageItems;
+    private List<GuiItem> pageItems = new ArrayList<>();
     private Margins margins = Margins.zero();
     @Setter
     @Accessors(chain = true)
@@ -27,12 +27,10 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     protected PaginatedInventory(InventoryType inventoryType) {
         super(inventoryType);
-        pageItems = new ArrayList<>();
     }
 
     protected PaginatedInventory(int rows) {
         super(rows);
-        pageItems = new ArrayList<>();
     }
 
     public PaginatedInventory setPageItems(List<GuiItem> pageItems) {
