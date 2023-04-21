@@ -17,9 +17,9 @@ public class NMSInitializer {
     @SuppressWarnings("unchecked")
     public static NMS initialize(JavaPlugin plugin) {
         try {
-            Class<? extends NMS> nmsServerClass = (Class<? extends NMS>) Class.forName(
+            Class<? extends NMS> nms = (Class<? extends NMS>) Class.forName(
                     NMSInitializer.class.getPackageName() + "." + getVersion() + "." + getVersion() + "_NMS");
-            return (NMS) nmsServerClass.getConstructors()[0].newInstance();
+            return (NMS) nms.getConstructors()[0].newInstance();
         } catch (ClassNotFoundException ex) {
             plugin.getLogger().severe("GlitchInventoryAPI DOES NOT support your server version!");
             plugin.getLogger().severe("If you think this is a bug, please report it on github (https://github.com/GliczDev/GlitchInventoryAPI/issues)");
