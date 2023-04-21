@@ -16,6 +16,8 @@ public class GlitchInventoryAPI {
     private static NMS nms;
     @Getter
     private static JavaPlugin plugin;
+    @Getter
+    private static final GlitchInventoryAPIConfig config = new GlitchInventoryAPIConfig();
 
     public GlitchInventoryAPI(@NotNull JavaPlugin plugin) {
         if (GlitchInventoryAPI.plugin != null)

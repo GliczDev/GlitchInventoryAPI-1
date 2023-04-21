@@ -1,5 +1,6 @@
 package me.glicz.inventoryapi.inventories.handler;
 
+import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.events.merchant.InventoryTradeSelectEvent;
 import me.glicz.inventoryapi.inventories.ClickType;
@@ -16,6 +17,7 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             GlitchInventory<?> inventory = GlitchInventory.get(player);
             inventory.updateItems(player);
             player.updateInventory();
+            if (inventory.getId(player) != inventoryId) return;
             InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
             inventory.executeSlotClickAction(slot, event);
             inventory.getItem(player, slot).executeClickAction(event);
@@ -24,8 +26,11 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
 
     @Override
     public void handleClose(Player player, int inventoryId) {
-        if (GlitchInventory.has(player))
-            GlitchInventory.get(player).silentClose(player);
+        if (GlitchInventory.has(player)) {
+            GlitchInventory<?> inventory = GlitchInventory.get(player);
+            if (GlitchInventoryAPI.getConfig().isVerifyInventoryIdOnClose() && inventory.getId(player) != inventoryId) return;
+            inventory.silentClose(player);
+        }
     }
 
     @Override
