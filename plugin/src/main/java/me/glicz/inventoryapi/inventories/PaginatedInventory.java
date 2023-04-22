@@ -1,6 +1,5 @@
 package me.glicz.inventoryapi.inventories;
 
-import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
@@ -19,7 +18,6 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     private final Map<Player, List<GuiItem>> currentPageItemsMap = new HashMap<>();
     private final Map<Player, Integer> pageMap = new HashMap<>();
-    @Getter
     private List<GuiItem> pageItems = new ArrayList<>();
     private Margins margins = Margins.zero();
     @Setter
@@ -36,8 +34,14 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     public PaginatedInventory setPageItems(List<GuiItem> pageItems) {
         this.pageItems = pageItems;
+        getViewers().forEach(this::updateCurrentPageItems);
         updateItems();
         return this;
+    }
+
+    @Unmodifiable
+    public List<GuiItem> getPageItems() {
+        return Collections.unmodifiableList(pageItems);
     }
 
     @Unmodifiable
