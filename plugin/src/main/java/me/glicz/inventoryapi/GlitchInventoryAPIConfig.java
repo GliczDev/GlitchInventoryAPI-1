@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 public class GlitchInventoryAPIConfig {
 
     private boolean verifyInventoryIdOnClose;
