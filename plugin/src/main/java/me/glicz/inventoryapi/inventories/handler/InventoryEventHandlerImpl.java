@@ -28,7 +28,7 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
     public void handleClose(Player player, int inventoryId) {
         if (GlitchInventory.has(player)) {
             GlitchInventory<?> inventory = GlitchInventory.get(player);
-            if (GlitchInventoryAPI.getConfig().isVerifyInventoryIdOnClose() && inventory.getId(player) != inventoryId) return;
+            if (GlitchInventoryAPI.getConfig().verifyInventoryIdOnClose() && inventory.getId(player) != inventoryId) return;
             inventory.silentClose(player);
         }
     }
