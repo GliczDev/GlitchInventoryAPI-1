@@ -8,6 +8,7 @@ import me.glicz.inventoryapi.titles.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.MerchantRecipe;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -42,6 +43,7 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
         }
     }
 
+    @Unmodifiable
     public List<MerchantRecipe> getRecipeList() {
         return Collections.unmodifiableList(recipeList);
     }

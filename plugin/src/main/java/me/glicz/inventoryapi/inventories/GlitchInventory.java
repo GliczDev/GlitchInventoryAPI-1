@@ -18,6 +18,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -194,26 +195,31 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return (T) this;
     }
 
+    @Unmodifiable
     public List<GuiItem> getItems() {
         return Collections.unmodifiableList(items);
     }
 
+    @Unmodifiable
     public List<ItemStack> getItemStacks() {
         return getItems().stream().map(GuiItem::getItemStack).toList();
     }
 
+    @Unmodifiable
     public List<GuiItem> getViewerItems(Player player) {
         List<GuiItem> result = new ArrayList<>(items);
         viewerItems.getOrDefault(player, new HashMap<>()).forEach(result::set);
         return Collections.unmodifiableList(result);
     }
 
+    @Unmodifiable
     public List<ItemStack> getViewerItemStacks(Player player) {
         return getViewerItems(player).stream().map(GuiItem::getItemStack).toList();
     }
 
+    @Unmodifiable
     public Set<Player> getViewers() {
-        return viewers.keySet();
+        return Collections.unmodifiableSet(viewers.keySet());
     }
 
     public int getId(Player player) {

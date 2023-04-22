@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -39,6 +40,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         return this;
     }
 
+    @Unmodifiable
     public List<GuiItem> getCurrentPageItems(Player player) {
         return currentPageItemsMap.getOrDefault(player, List.of());
     }
