@@ -4,6 +4,8 @@ import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.inventories.GuiItem;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -14,10 +16,11 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings("unchecked")
 public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
 
     protected final ItemStack itemStack;
@@ -73,11 +76,15 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public String getName() {
-        return itemMeta.getDisplayName();
+        return LegacyComponentSerializer.legacySection().serialize(
+                Objects.requireNonNullElse(
+                        itemMeta.displayName(),
+                        Component.translatable(itemStack.getType().translationKey())
+                ));
     }
 
     public T setName(String name) {
-        itemMeta.setDisplayName(name);
+        itemMeta.displayName(Component.text(name));
         return (T) this;
     }
 
@@ -91,11 +98,14 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public List<String> getLore() {
-        return itemMeta.getLore();
+        List<Component> lore = itemMeta.lore();
+        if (lore == null)
+            return null;
+        return lore.stream().map(LegacyComponentSerializer.legacySection()::serialize).toList();
     }
 
     public T setLore(List<String> lore) {
-        itemMeta.setLore(lore);
+        itemMeta.lore(lore.stream().map(LegacyComponentSerializer.legacySection()::deserialize).map(TextComponent::asComponent).toList());
         return (T) this;
     }
 
