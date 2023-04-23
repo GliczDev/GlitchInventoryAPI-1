@@ -24,9 +24,9 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     protected final I itemMeta;
 
     protected ItemBuilder(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        this.itemStack = itemStack.clone();
         try {
-            this.itemMeta = (I) itemStack.getItemMeta();
+            this.itemMeta = (I) this.itemStack.getItemMeta();
         } catch (ClassCastException ignored) {
             throw new UnsupportedOperationException("ItemStack's ItemMeta has to be valid to selected ItemBuilder type");
         }
