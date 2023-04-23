@@ -14,10 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
@@ -76,11 +73,7 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public String getName() {
-        return LegacyComponentSerializer.legacySection().serialize(
-                Objects.requireNonNullElse(
-                        itemMeta.displayName(),
-                        Component.translatable(itemStack.getType().translationKey())
-                ));
+        return LegacyComponentSerializer.legacySection().serialize(getComponentName());
     }
 
     public T setName(String name) {
@@ -89,7 +82,7 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public Component getComponentName() {
-        return itemMeta.displayName();
+        return Objects.requireNonNullElse(itemMeta.displayName(), Component.translatable(itemStack.getType().translationKey()));
     }
 
     public T setComponentName(Component component) {
@@ -98,10 +91,7 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public List<String> getLore() {
-        List<Component> lore = itemMeta.lore();
-        if (lore == null)
-            return null;
-        return lore.stream().map(LegacyComponentSerializer.legacySection()::serialize).toList();
+        return getComponentLore().stream().map(LegacyComponentSerializer.legacySection()::serialize).toList();
     }
 
     public T setLore(List<String> lore) {
@@ -110,7 +100,7 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public List<Component> getComponentLore() {
-        return itemMeta.lore();
+        return Objects.requireNonNullElse(itemMeta.lore(), new ArrayList<>());
     }
 
     public T setComponentLore(List<Component> component) {
