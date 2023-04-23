@@ -7,6 +7,7 @@ import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.GlitchInventory;
 import me.glicz.inventoryapi.inventories.MerchantInventory;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class InventoryEventHandlerImpl extends InventoryEventHandler {
@@ -18,9 +19,15 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             inventory.updateItems(player);
             player.updateInventory();
             if (inventory.getId(player) != inventoryId) return;
-            InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
-            inventory.executeSlotClickAction(slot, event);
-            inventory.getItem(player, slot).executeClickAction(event);
+            Runnable clickAction = () -> {
+                InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
+                inventory.executeSlotClickAction(slot, event);
+                inventory.getItem(player, slot).executeClickAction(event);
+            };
+            if (GlitchInventoryAPI.getConfig().synchronizeItemClickAction())
+                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), clickAction);
+            else
+                clickAction.run();
         }
     }
 

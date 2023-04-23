@@ -1,6 +1,8 @@
 package me.glicz.inventoryapi;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandlerImpl;
 import me.glicz.inventoryapi.listeners.JoinQuitListener;
@@ -10,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@NoArgsConstructor(access = AccessLevel.NONE)
 public class GlitchInventoryAPI {
 
     @Getter
@@ -19,19 +22,19 @@ public class GlitchInventoryAPI {
     @Getter
     private static final GlitchInventoryAPIConfig config = new GlitchInventoryAPIConfig();
 
-    public GlitchInventoryAPI(@NotNull JavaPlugin plugin) {
+    public static boolean load(@NotNull JavaPlugin plugin) {
         if (GlitchInventoryAPI.plugin != null)
             throw new RuntimeException("GlitchInventoryAPI instance is already created by " + GlitchInventoryAPI.plugin.getName());
+        return load(plugin, new InventoryEventHandlerImpl());
+    }
+
+    public static boolean load(@NotNull JavaPlugin plugin, @NotNull InventoryEventHandler listener) {
         GlitchInventoryAPI.plugin = plugin;
-    }
-
-    public void load() {
-        load(new InventoryEventHandlerImpl());
-    }
-
-    public void load(@NotNull InventoryEventHandler listener) {
         nms = NMSInitializer.initialize(plugin);
+        if (!plugin.isEnabled())
+            return false;
         InventoryEventHandler.set(listener);
         Bukkit.getPluginManager().registerEvents(new JoinQuitListener(), plugin);
+        return true;
     }
 }

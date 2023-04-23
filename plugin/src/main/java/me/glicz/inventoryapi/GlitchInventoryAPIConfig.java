@@ -11,5 +11,5 @@ import lombok.experimental.Accessors;
 public class GlitchInventoryAPIConfig {
 
     private boolean verifyInventoryIdOnClose;
-    private boolean removeViewerItemOnItemSet = true;
+    private boolean removeViewerItemOnItemSet, synchronizeItemClickAction = true;
 }

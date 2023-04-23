@@ -10,6 +10,8 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("1.17.1-R0.1-SNAPSHOT")
     compileOnly(project(":core"))
+    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.26")
 }
 
 java {

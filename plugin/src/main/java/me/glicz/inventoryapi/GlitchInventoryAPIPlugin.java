@@ -1,14 +1,14 @@
 package me.glicz.inventoryapi;
 
 import me.glicz.inventoryapi.nms.NMSInitializer;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class GlitchInventoryAPIPlugin extends JavaPlugin implements Listener {
+public class GlitchInventoryAPIPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new GlitchInventoryAPI(this).load();
+        if (!GlitchInventoryAPI.load(this))
+            return;
         getLogger().info("Successfully enabled for " + NMSInitializer.getVersion() + "!");
     }
 
