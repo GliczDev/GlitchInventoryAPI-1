@@ -2,13 +2,14 @@
 <div align="center">
 <a href="https://discord.gg/ZRuaXh3P63"><img alt="discord-plural" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-plural_46h.png"></a>
 <a href="#"><img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_46h.png"></a>
+<a href="https://jitpack.io/#GliczDev/GlitchInventoryAPI"><img alt="jitpack" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/jitpack_46h.png"></a>
 </div>
 
 ## Supported versions
-This API supports **1.17, 1.18 and 1.19**, however it only supports **latest minor** version!
+This API supports all versions >= 1.17.1!
 
 ## JitPack
-> If you want to always use the latest commit build, please use `dev-SNAPSHOT` instead of version tag
+> If you want to always use the latest commit build, please use `*branch*-SNAPSHOT` instead of version tag
 <details><summary>Maven</summary>
 <p>
 
@@ -70,7 +71,7 @@ If you want to shade this API into your plugin, you have to load it in `onEnable
 ```java
 @Override
 public void onEnable() {
-        new GlitchInventoryAPI(this).load();
+        GlitchInventoryAPI.load(this);
 }
 ```
 
@@ -86,13 +87,11 @@ GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit Inventor
         .open(player); //Open inventory to player
 ```
 ### Inventory types
-There are two different inventory types:
 - Simple (`GlitchInventory.simple()`) - a normal inventory
 - Paginated (`GlitchInventory.paginated()`) - a paginated inventory
 - Merchant (`GlitchInventory.merchant()`) - a merchant inventory
 
 ### Title types
-There are two different title types:
 - Simple (`Title.simple()`) - a normal title
 - Animated (`Title.animated()`) - an animated title <ins>**//Soon**</ins>
 - Random (`Title.random()`) - a randomly animated title <ins>**//Soon**</ins>
