@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import io.papermc.paper.adventure.PaperAdventure;
 import lombok.SneakyThrows;
+import me.glicz.inventoryapi.GlitchInventoryAPIConfig;
 import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
 import me.glicz.inventoryapi.nms.NMS;
@@ -21,6 +22,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
@@ -36,10 +38,15 @@ import java.util.List;
 @NativeVersion(major = 1, minor = 17, patch = 1)
 public class v1_17_R1_NMS implements NMS {
 
+    protected final JavaPlugin plugin;
+    protected final GlitchInventoryAPIConfig config;
     protected Method playerGetHandle, itemStackAsNMS, merchantRecipeFromBukkit, merchantRecipeToMinecraft;
     protected Field connectionChannel;
 
-    public v1_17_R1_NMS() throws ClassNotFoundException, NoSuchMethodException {
+    public v1_17_R1_NMS(JavaPlugin plugin, GlitchInventoryAPIConfig config) throws ClassNotFoundException, NoSuchMethodException {
+        this.plugin = plugin;
+        this.config = config;
+
         Class<?> craftPlayerClass = Class.forName(
                 "org.bukkit.craftbukkit.%s.entity.CraftPlayer".formatted(NMSInitializer.getVersion()));
         playerGetHandle = craftPlayerClass.getMethod("getHandle");
@@ -92,7 +99,7 @@ public class v1_17_R1_NMS implements NMS {
     }
 
     @Override
-    public void registerListener(JavaPlugin plugin, Player player) {
+    public void registerListener(Player player) {
         getChannel(player).pipeline().addBefore("packet_handler", plugin.getName() + "_GlitchInventoryAPI_Handler",
                 new ChannelDuplexHandler() {
                     @Override
@@ -118,7 +125,7 @@ public class v1_17_R1_NMS implements NMS {
     }
 
     @Override
-    public void unregisterListener(JavaPlugin plugin, Player player) {
+    public void unregisterListener(Player player) {
         Channel channel = getChannel(player);
         channel.eventLoop().submit(() -> {
             channel.pipeline().remove(plugin.getName() + "_GlitchInventoryAPI_Handler");
@@ -128,23 +135,31 @@ public class v1_17_R1_NMS implements NMS {
 
     protected void handleS2CPacket(Player player, Object rawPacket) {
         if (rawPacket instanceof ClientboundContainerClosePacket packet)
-            InventoryEventHandler.get().handleClose(player, packet.getContainerId());
+            executePacketAction(() -> InventoryEventHandler.get().handleClose(player, packet.getContainerId()));
     }
 
     protected void handleC2SPacket(Player player, Object rawPacket) {
         if (rawPacket instanceof ServerboundContainerClickPacket packet)
-            InventoryEventHandler.get().handleClick(
+            executePacketAction(() -> InventoryEventHandler.get().handleClick(
                     player,
                     packet.getContainerId(),
                     ClickType.get(packet.getClickType().ordinal(), packet.getButtonNum()),
                     packet.getSlotNum()
-            );
+            ));
         else if (rawPacket instanceof ServerboundContainerClosePacket packet)
-            InventoryEventHandler.get().handleClose(player, packet.getContainerId());
+            executePacketAction(() -> InventoryEventHandler.get().handleClose(player, packet.getContainerId()));
         else if (rawPacket instanceof ServerboundRenameItemPacket packet)
-            InventoryEventHandler.get().handleItemRename(player, packet.getName());
+            executePacketAction(() -> InventoryEventHandler.get().handleItemRename(player, packet.getName()));
         else if (rawPacket instanceof ServerboundSelectTradePacket packet)
-            InventoryEventHandler.get().handleSelectTrade(player, packet.getItem());
+            executePacketAction(() -> InventoryEventHandler.get().handleSelectTrade(player, packet.getItem()));
+    }
+
+    protected void executePacketAction(Runnable runnable) {
+        if (config.synchronizeHandlingPackets()) {
+            Bukkit.getScheduler().runTask(plugin, runnable);
+            return;
+        }
+        runnable.run();
     }
 
     @SneakyThrows

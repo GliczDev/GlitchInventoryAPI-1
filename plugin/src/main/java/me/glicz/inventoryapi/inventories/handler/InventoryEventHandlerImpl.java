@@ -7,7 +7,6 @@ import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.GlitchInventory;
 import me.glicz.inventoryapi.inventories.MerchantInventory;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class InventoryEventHandlerImpl extends InventoryEventHandler {
@@ -19,15 +18,9 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             inventory.updateItems(player);
             player.updateInventory();
             if (inventory.getId(player) != inventoryId) return;
-            Runnable clickAction = () -> {
-                InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
-                inventory.executeSlotClickAction(slot, event);
-                inventory.getItem(player, slot).executeClickAction(event);
-            };
-            if (GlitchInventoryAPI.getConfig().synchronizeItemClickAction())
-                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), clickAction);
-            else
-                clickAction.run();
+            InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
+            inventory.executeSlotClickAction(slot, event);
+            inventory.getItem(player, slot).executeClickAction(event);
         }
     }
 
@@ -35,7 +28,8 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
     public void handleClose(Player player, int inventoryId) {
         if (GlitchInventory.has(player)) {
             GlitchInventory<?> inventory = GlitchInventory.get(player);
-            if (GlitchInventoryAPI.getConfig().verifyInventoryIdOnClose() && inventory.getId(player) != inventoryId) return;
+            if (GlitchInventoryAPI.getConfig().verifyInventoryIdOnClose() && inventory.getId(player) != inventoryId)
+                return;
             inventory.silentClose(player);
         }
     }

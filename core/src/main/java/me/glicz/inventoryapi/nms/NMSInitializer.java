@@ -4,6 +4,7 @@ import com.google.common.reflect.ClassPath;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import me.glicz.inventoryapi.GlitchInventoryAPIConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,7 +22,7 @@ public class NMSInitializer {
 
     @SneakyThrows
     @SuppressWarnings({"unchecked", "UnstableApiUsage"})
-    public static NMS initialize(JavaPlugin plugin) {
+    public static NMS initialize(JavaPlugin plugin, GlitchInventoryAPIConfig config) {
         try {
             int[] serverVersion = Arrays.stream(Bukkit.getMinecraftVersion().split("\\.")).mapToInt(Integer::parseInt).toArray();
             int serverMajor = serverVersion[0];
@@ -55,7 +56,7 @@ public class NMSInitializer {
                 throw new ClassNotFoundException();
             else
                 nms = nearestVersion.get().getKey();
-            return (NMS) nms.getConstructors()[0].newInstance();
+            return nms.getConstructor(JavaPlugin.class, GlitchInventoryAPIConfig.class).newInstance(plugin, config);
         } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                  IllegalAccessException ex) {
             plugin.getSLF4JLogger().error("Error occurred while initializing GlitchInventoryAPI NMS object in %s"

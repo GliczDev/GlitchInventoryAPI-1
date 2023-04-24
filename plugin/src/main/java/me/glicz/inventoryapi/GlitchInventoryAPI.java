@@ -16,11 +16,11 @@ import org.jetbrains.annotations.NotNull;
 public class GlitchInventoryAPI {
 
     @Getter
+    private static final GlitchInventoryAPIConfig config = new GlitchInventoryAPIConfig();
+    @Getter
     private static NMS nms;
     @Getter
     private static JavaPlugin plugin;
-    @Getter
-    private static final GlitchInventoryAPIConfig config = new GlitchInventoryAPIConfig();
 
     public static boolean load(@NotNull JavaPlugin plugin) {
         if (GlitchInventoryAPI.plugin != null)
@@ -30,7 +30,7 @@ public class GlitchInventoryAPI {
 
     public static boolean load(@NotNull JavaPlugin plugin, @NotNull InventoryEventHandler listener) {
         GlitchInventoryAPI.plugin = plugin;
-        nms = NMSInitializer.initialize(plugin);
+        nms = NMSInitializer.initialize(plugin, getConfig());
         if (!plugin.isEnabled())
             return false;
         InventoryEventHandler.set(listener);

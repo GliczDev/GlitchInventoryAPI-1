@@ -32,16 +32,16 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         super(rows);
     }
 
+    @Unmodifiable
+    public List<GuiItem> getPageItems() {
+        return Collections.unmodifiableList(pageItems);
+    }
+
     public PaginatedInventory setPageItems(List<GuiItem> pageItems) {
         this.pageItems = pageItems;
         getViewers().forEach(this::updateCurrentPageItems);
         updateItems();
         return this;
-    }
-
-    @Unmodifiable
-    public List<GuiItem> getPageItems() {
-        return Collections.unmodifiableList(pageItems);
     }
 
     @Unmodifiable

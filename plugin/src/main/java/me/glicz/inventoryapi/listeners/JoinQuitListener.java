@@ -10,11 +10,11 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        GlitchInventoryAPI.getNms().registerListener(GlitchInventoryAPI.getPlugin(), e.getPlayer());
+        GlitchInventoryAPI.getNms().registerListener(e.getPlayer());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        GlitchInventoryAPI.getNms().unregisterListener(GlitchInventoryAPI.getPlugin(), e.getPlayer());
+        GlitchInventoryAPI.getNms().unregisterListener(e.getPlayer());
     }
 }

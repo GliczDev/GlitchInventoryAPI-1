@@ -1,5 +1,6 @@
 package me.glicz.inventoryapi.nms.v1_19_R3;
 
+import me.glicz.inventoryapi.GlitchInventoryAPIConfig;
 import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
 import me.glicz.inventoryapi.nms.NativeVersion;
@@ -9,11 +10,13 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.inventory.MenuType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @NativeVersion(major = 1, minor = 19, patch = 4)
 public class v1_19_R3_NMS extends v1_18_R1_NMS {
 
-    public v1_19_R3_NMS() throws ClassNotFoundException, NoSuchMethodException {
+    public v1_19_R3_NMS(JavaPlugin plugin, GlitchInventoryAPIConfig config) throws ClassNotFoundException, NoSuchMethodException {
+        super(plugin, config);
     }
 
     @Override
@@ -24,24 +27,24 @@ public class v1_19_R3_NMS extends v1_18_R1_NMS {
     @Override
     protected void handleS2CPacket(Player player, Object rawPacket) {
         if (rawPacket instanceof ClientboundContainerClosePacket packet)
-            InventoryEventHandler.get().handleClose(player, packet.getContainerId());
+            executePacketAction(() -> InventoryEventHandler.get().handleClose(player, packet.getContainerId()));
     }
 
     @Override
     protected void handleC2SPacket(Player player, Object rawPacket) {
         if (rawPacket instanceof ServerboundContainerClickPacket packet)
-            InventoryEventHandler.get().handleClick(
+            executePacketAction(() -> InventoryEventHandler.get().handleClick(
                     player,
                     packet.getContainerId(),
                     ClickType.get(packet.getClickType().ordinal(), packet.getButtonNum()),
                     packet.getSlotNum()
-            );
+            ));
         else if (rawPacket instanceof ServerboundContainerClosePacket packet)
-            InventoryEventHandler.get().handleClose(player, packet.getContainerId());
+            executePacketAction(() -> InventoryEventHandler.get().handleClose(player, packet.getContainerId()));
         else if (rawPacket instanceof ServerboundRenameItemPacket packet)
-            InventoryEventHandler.get().handleItemRename(player, packet.getName());
+            executePacketAction(() -> InventoryEventHandler.get().handleItemRename(player, packet.getName()));
         else if (rawPacket instanceof ServerboundSelectTradePacket packet)
-            InventoryEventHandler.get().handleSelectTrade(player, packet.getItem());
+            executePacketAction(() -> InventoryEventHandler.get().handleSelectTrade(player, packet.getItem()));
     }
 
     @SuppressWarnings("UnstableApiUsage")
