@@ -62,7 +62,9 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         for (int i = 0; i < value.length - margins.getTop() * 9 && i < temp.length; i++) {
             if ((slot / 9 + 1) * 9 - margins.getRight() == slot)
                 slot += margins.getRight() + margins.getLeft();
-            value[slot] = temp[i];
+            GuiItem item = temp[i];
+            if (item != null)
+                value[slot] = item;
             slot++;
         }
         currentPageItemsMap.put(player, List.of(value));
