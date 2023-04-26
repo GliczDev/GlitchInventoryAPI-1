@@ -1,6 +1,5 @@
 plugins {
     id("java")
-    id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.0"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
 }
@@ -32,14 +31,6 @@ tasks {
     shadowJar {
         archiveClassifier.set("plugin")
         archiveBaseName.set(rootProject.name)
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("publishMaven") {
-            shadow.component(this)
-        }
     }
 }
 
