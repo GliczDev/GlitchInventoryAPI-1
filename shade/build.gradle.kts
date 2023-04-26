@@ -2,22 +2,17 @@ plugins {
     id("java")
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.0"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
 }
 
 buildDir = rootProject.buildDir
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-    compileOnly(project(":core"))
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
-    implementation(project(":shade", "shadow"))
+    implementation(project(":core"))
+    implementation(project(":nms", "shadow"))
 }
 
 java {
@@ -32,7 +27,7 @@ tasks {
     }
 
     shadowJar {
-        archiveClassifier.set("plugin")
+        archiveClassifier.set("")
         archiveBaseName.set(rootProject.name)
     }
 }
@@ -43,11 +38,4 @@ publishing {
             shadow.component(this)
         }
     }
-}
-
-bukkit {
-    name = rootProject.name
-    main = "me.glicz.inventoryapi.plugin.GlitchInventoryAPIPlugin"
-    apiVersion = "1.17"
-    author = "Glicz"
 }

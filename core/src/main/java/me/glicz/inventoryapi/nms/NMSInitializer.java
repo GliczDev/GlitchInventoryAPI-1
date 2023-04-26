@@ -4,7 +4,6 @@ import com.google.common.reflect.ClassPath;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import me.glicz.inventoryapi.GlitchInventoryAPIConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,13 +21,12 @@ public class NMSInitializer {
 
     @SneakyThrows
     @SuppressWarnings({"unchecked", "UnstableApiUsage"})
-    public static NMS initialize(JavaPlugin plugin, GlitchInventoryAPIConfig config) {
+    public static NMS initialize(JavaPlugin plugin) {
         try {
             int[] serverVersion = Arrays.stream(Bukkit.getMinecraftVersion().split("\\.")).mapToInt(Integer::parseInt).toArray();
             int serverMajor = serverVersion[0];
             int serverMinor = serverVersion[1];
             int serverPatch = (serverVersion.length == 3) ? serverVersion[2] : 0;
-            Class<? extends NMS> nms;
             var nearestVersion = ClassPath.from(plugin.getClass().getClassLoader())
                     .getTopLevelClassesRecursive(NMSInitializer.class.getPackageName())
                     .stream()
@@ -52,11 +50,9 @@ public class NMSInitializer {
                             .<Map.Entry<? extends Class<? extends NMS>, NativeVersion>>comparingInt(entry -> entry.getValue().major())
                             .thenComparingInt(entry -> entry.getValue().minor())
                             .thenComparingInt(entry -> entry.getValue().patch()));
-            if (nearestVersion.isEmpty())
-                throw new ClassNotFoundException();
-            else
-                nms = nearestVersion.get().getKey();
-            return nms.getConstructor(JavaPlugin.class, GlitchInventoryAPIConfig.class).newInstance(plugin, config);
+            if (nearestVersion.isPresent())
+                return nearestVersion.get().getKey().getConstructor(JavaPlugin.class).newInstance(plugin);
+            throw new ClassNotFoundException();
         } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                  IllegalAccessException ex) {
             plugin.getSLF4JLogger().error("Error occurred while initializing GlitchInventoryAPI NMS object in %s"
