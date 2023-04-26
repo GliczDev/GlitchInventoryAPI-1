@@ -7,6 +7,7 @@ public abstract class Title {
     public static SimpleTitle simple(String title) {
         return simple(Component.text(title));
     }
+
     public static SimpleTitle simple(Component title) {
         return new SimpleTitle(title);
     }
