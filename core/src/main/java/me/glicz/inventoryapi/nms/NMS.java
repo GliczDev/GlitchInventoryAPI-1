@@ -6,15 +6,14 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public interface NMS {
 
-    void registerListener(JavaPlugin plugin, Player player);
+    void registerListener(Player player);
 
-    void unregisterListener(JavaPlugin plugin, Player player);
+    void unregisterListener(Player player);
 
     int getNextInventoryID(Player player);
 
