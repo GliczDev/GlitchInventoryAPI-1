@@ -22,8 +22,8 @@ public enum ClickType {
     NUM_KEY_9(2, 8, org.bukkit.event.inventory.ClickType.NUMBER_KEY, Attribute.NUMBER_KEY),
     OFFHAND_SWAP(2, 40, org.bukkit.event.inventory.ClickType.SWAP_OFFHAND),
     MIDDLE(3, 2, org.bukkit.event.inventory.ClickType.MIDDLE, Attribute.MIDDLE),
-    DROP(4, 0, org.bukkit.event.inventory.ClickType.DROP),
-    CTRL_DROP(4, 1, org.bukkit.event.inventory.ClickType.CONTROL_DROP),
+    DROP(4, 0, org.bukkit.event.inventory.ClickType.DROP, Attribute.DROP),
+    CTRL_DROP(4, 1, org.bukkit.event.inventory.ClickType.CONTROL_DROP, Attribute.DROP),
     DOUBLE(6, 0, org.bukkit.event.inventory.ClickType.DOUBLE_CLICK);
 
     private final int mode;
@@ -64,6 +64,7 @@ public enum ClickType {
         RIGHT,
         MIDDLE,
         SHIFT,
-        NUMBER_KEY
+        NUMBER_KEY,
+        DROP
     }
 }
