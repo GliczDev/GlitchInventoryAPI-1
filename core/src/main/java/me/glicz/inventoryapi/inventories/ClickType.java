@@ -24,15 +24,6 @@ public enum ClickType {
     MIDDLE(3, 2, org.bukkit.event.inventory.ClickType.MIDDLE, Attribute.MIDDLE),
     DROP(4, 0, org.bukkit.event.inventory.ClickType.DROP),
     CTRL_DROP(4, 1, org.bukkit.event.inventory.ClickType.CONTROL_DROP),
-    LEFT_DRAG(5, 0, Attribute.LEFT, Attribute.DRAG),
-    RIGHT_DRAG(5, 4, Attribute.RIGHT, Attribute.DRAG),
-    MIDDLE_DRAG(5, 8, Attribute.MIDDLE, Attribute.DRAG),
-    ADD_SLOT_LEFT_DRAG(5, 1, Attribute.DRAG),
-    ADD_SLOT_RIGHT_DRAG(5, 5, Attribute.DRAG),
-    ADD_SLOT_MIDDLE_DRAG(5, 9, Attribute.DRAG),
-    END_LEFT_DRAG(5, 2, Attribute.LEFT, Attribute.DRAG),
-    END_RIGHT_DRAG(5, 6, Attribute.RIGHT, Attribute.DRAG),
-    END_MIDDLE_DRAG(5, 10, Attribute.MIDDLE, Attribute.DRAG),
     DOUBLE(6, 0, org.bukkit.event.inventory.ClickType.DOUBLE_CLICK);
 
     private final int mode;
@@ -42,10 +33,6 @@ public enum ClickType {
     @Getter
     private final List<Attribute> attributes;
 
-    ClickType(int mode, int button, Attribute... attributes) {
-        this(mode, button, null, attributes);
-    }
-
     ClickType(int mode, int button, org.bukkit.event.inventory.ClickType asBukkit, Attribute... attributes) {
         this.mode = mode;
         this.button = button;
@@ -54,6 +41,14 @@ public enum ClickType {
     }
 
     public static ClickType get(int mode, int button) {
+        if (mode == 5) {
+            if (button <= 2)
+                return ClickType.LEFT;
+            if (button <= 6)
+                return ClickType.RIGHT;
+            if (button <= 10)
+                return ClickType.MIDDLE;
+        }
         return Arrays.stream(values())
                 .filter(clickType -> clickType.mode == mode && clickType.button == button)
                 .findFirst()
@@ -69,7 +64,6 @@ public enum ClickType {
         RIGHT,
         MIDDLE,
         SHIFT,
-        NUMBER_KEY,
-        DRAG
+        NUMBER_KEY
     }
 }
