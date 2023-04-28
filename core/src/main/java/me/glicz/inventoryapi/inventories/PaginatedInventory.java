@@ -1,9 +1,12 @@
 package me.glicz.inventoryapi.inventories;
 
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.paginated.InventoryPageChangeEvent;
+import me.glicz.inventoryapi.inventories.paginated.Margins;
+import me.glicz.inventoryapi.inventories.paginated.PaginationMode;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,6 +23,8 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     private final Map<Player, Integer> pageMap = new HashMap<>();
     private List<GuiItem> pageItems = new ArrayList<>();
     private Margins margins = Margins.zero();
+    @Getter
+    private PaginationMode paginationMode = PaginationMode.NORMAL;
     @Setter
     @Accessors(chain = true)
     private Consumer<InventoryPageChangeEvent> pageChangeAction;
@@ -51,20 +56,14 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     public PaginatedInventory updateCurrentPageItems(Player player) {
         GuiItem[] value = getViewerItems(player).toArray(GuiItem[]::new);
-        GuiItem[] temp;
-        int page = getPage(player);
-        int itemsPerPage = getSize() - margins.sumSlots(getSize() / 9);
-        if ((page + 1) * itemsPerPage <= pageItems.size())
-            temp = Arrays.copyOfRange(pageItems.toArray(GuiItem[]::new), page * itemsPerPage, (page + 1) * itemsPerPage);
-        else
-            temp = Arrays.copyOfRange(pageItems.toArray(GuiItem[]::new), page * itemsPerPage, pageItems.size());
+        GuiItem[] temp = paginationMode.parse(player, this);
         int slot = margins.getTop() * 9 + margins.getLeft();
         for (int i = 0; i < value.length - margins.getTop() * 9 && i < temp.length; i++) {
-            if ((slot / 9 + 1) * 9 - margins.getRight() == slot)
-                slot += margins.getRight() + margins.getLeft();
             GuiItem item = temp[i];
             if (item != null)
                 value[slot] = item;
+            if ((slot / 9 + 1) * 9 - margins.getRight() - 1 == slot)
+                slot += margins.getLeft() + margins.getRight();
             slot++;
         }
         currentPageItemsMap.put(player, List.of(value));
@@ -77,6 +76,14 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     public PaginatedInventory setMargins(Margins margins) {
         this.margins = margins;
+        getViewers().forEach(this::updateCurrentPageItems);
+        updateItems();
+        return this;
+    }
+
+    public PaginatedInventory setPaginationMode(PaginationMode paginationMode) {
+        this.paginationMode = paginationMode;
+        getViewers().forEach(this::updateCurrentPageItems);
         updateItems();
         return this;
     }
@@ -95,8 +102,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
             return this;
         int oldPage = getPage(player);
         pageMap.put(player, page);
-        if (pageChangeAction != null)
-            pageChangeAction.accept(new InventoryPageChangeEvent(player, this, page, oldPage));
+        executePageChangeAction(new InventoryPageChangeEvent(player, this, page, oldPage));
         if (getViewers().contains(player)) {
             updateCurrentPageItems(player);
             updateItems(player);
@@ -141,8 +147,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     }
 
     public int getPageCount() {
-        double itemsPerPage = getSize() - margins.sumSlots(getSize() / 9);
-        return (int) Math.ceil(getPageItems().size() / itemsPerPage);
+        return paginationMode.getPageCount(this);
     }
 
     public PaginatedInventory nextPage() {
@@ -168,7 +173,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     }
 
     public boolean hasNextPage(Player player) {
-        return getPage(player) < getPageCount();
+        return getPage(player) < getPageCount() - 1;
     }
 
     public boolean hasPreviousPage(Player player) {
