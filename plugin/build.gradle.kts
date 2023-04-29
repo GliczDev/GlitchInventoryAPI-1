@@ -15,6 +15,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     implementation(project(":shade", "shadow"))
+    library("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
 }
 
 java {
