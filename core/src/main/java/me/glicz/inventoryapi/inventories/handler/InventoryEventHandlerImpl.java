@@ -58,12 +58,16 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
     @Override
     public void handleSelectTrade(Player player, int recipe) {
         if (GlitchInventory.get(player) instanceof MerchantInventory inventory) {
-            inventory.setSelectedRecipe(player, recipe);
-            InventoryTradeSelectEvent event = new InventoryTradeSelectEvent(player, inventory, recipe);
-            if (GlitchInventoryAPI.getConfig().synchronizeHandlingPackets())
-                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), () -> inventory.executeTradeSelectAction(event));
-            else
+            Runnable action = () -> {
+                InventoryTradeSelectEvent event = new InventoryTradeSelectEvent(player, inventory, recipe);
                 inventory.executeTradeSelectAction(event);
+                if (!event.isCancelled())
+                    inventory.setSelectedRecipe(player, recipe);
+            };
+            if (GlitchInventoryAPI.getConfig().synchronizeHandlingPackets())
+                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), action);
+            else
+                action.run();
         }
     }
 }

@@ -100,9 +100,11 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     public PaginatedInventory setPage(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int page) {
         if (!getViewers().contains(player))
             return this;
-        int oldPage = getPage(player);
+        InventoryPageChangeEvent event = new InventoryPageChangeEvent(player, this, page, getPage(player));
+        executePageChangeAction(event);
+        if (event.isCancelled())
+            return this;
         pageMap.put(player, page);
-        executePageChangeAction(new InventoryPageChangeEvent(player, this, page, oldPage));
         if (getViewers().contains(player)) {
             updateCurrentPageItems(player);
             updateItems(player);
