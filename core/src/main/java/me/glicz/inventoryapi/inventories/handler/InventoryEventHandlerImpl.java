@@ -2,7 +2,9 @@ package me.glicz.inventoryapi.inventories.handler;
 
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
+import me.glicz.inventoryapi.events.anvil.InventoryInputChangeEvent;
 import me.glicz.inventoryapi.events.merchant.InventoryTradeSelectEvent;
+import me.glicz.inventoryapi.inventories.AnvilInventory;
 import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.GlitchInventory;
 import me.glicz.inventoryapi.inventories.MerchantInventory;
@@ -46,9 +48,11 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
 
     @Override
     public void handleItemRename(Player player, String name) {
-        if (GlitchInventory.has(player))
-            GlitchInventory.get(player).setItem(2, ItemBuilder.of(
-                    GlitchInventory.get(player).getItem(0).getItemStack()).setName(name).asGuiItem());
+        if (GlitchInventory.get(player) instanceof AnvilInventory inventory) {
+            if (inventory.isShouldInsertItem())
+                inventory.setItem(2, ItemBuilder.of(inventory.getItem(0).getItemStack()).setName(name).asGuiItem());
+            inventory.executeInputChangeAction(new InventoryInputChangeEvent(player, inventory, name));
+        }
     }
 
     @Override
