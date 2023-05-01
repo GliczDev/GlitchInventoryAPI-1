@@ -78,6 +78,10 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return new MerchantInventory();
     }
 
+    public static AnvilInventory anvil() {
+        return new AnvilInventory();
+    }
+
     public static GlitchInventory<?> get(Player player) {
         return PLAYER_INVENTORY_MAP.get(player);
     }
