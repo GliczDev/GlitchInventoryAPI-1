@@ -129,7 +129,6 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
 
     /**
      * Allows you to get item from player's view.
-     * Better implemented in paginated-based inventories.
      *
      * @param player Selected viewer
      * @param slot   Selected slot
@@ -180,6 +179,12 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public T drawRow(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int row, GuiItem item) {
         for (int i = 0; i < 9; i++)
             setItem(player, row * 9 + i, item);
+        return (T) this;
+    }
+
+    public T clearItems() {
+        Collections.fill(items, ItemBuilder.of(Material.AIR).asGuiItem());
+        updateItems();
         return (T) this;
     }
 
