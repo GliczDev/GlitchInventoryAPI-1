@@ -298,8 +298,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
                 id = current.getId(player);
                 current.silentClose(player);
             }
-        }
-        player.closeInventory();
+        } else player.closeInventory();
         if (id == null)
             id = GlitchInventoryAPI.getNms().getNextInventoryID(player);
         final int finalId = id;
