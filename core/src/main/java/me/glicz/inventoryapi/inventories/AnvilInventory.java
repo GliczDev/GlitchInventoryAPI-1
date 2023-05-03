@@ -3,16 +3,19 @@ package me.glicz.inventoryapi.inventories;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import me.glicz.inventoryapi.events.Listener;
 import me.glicz.inventoryapi.events.anvil.InventoryInputChangeEvent;
 import org.bukkit.event.inventory.InventoryType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-@Setter
 public class AnvilInventory extends GlitchInventory<AnvilInventory> {
 
-    @Accessors(chain = true)
-    private Consumer<InventoryInputChangeEvent> inputChangeAction;
+
+    private final List<Listener<InventoryInputChangeEvent>> inputChangeListeners = new ArrayList<>();
+    @Setter
     @Getter
     @Accessors(chain = true)
     private boolean shouldInsertItem = true;
@@ -21,9 +24,17 @@ public class AnvilInventory extends GlitchInventory<AnvilInventory> {
         super(InventoryType.ANVIL);
     }
 
-    public void executeInputChangeAction(InventoryInputChangeEvent event) {
-        if (inputChangeAction == null)
-            return;
-        inputChangeAction.accept(event);
+    public AnvilInventory addInputChangeListener(Consumer<InventoryInputChangeEvent> action) {
+        return addInputChangeListener(action, true);
+    }
+
+    public AnvilInventory addInputChangeListener(Consumer<InventoryInputChangeEvent> action, boolean sync) {
+        inputChangeListeners.add(new Listener<>(action, sync));
+        return this;
+    }
+
+    public AnvilInventory runInputChangeListeners(InventoryInputChangeEvent event) {
+        inputChangeListeners.forEach(listener -> listener.run(event));
+        return this;
     }
 }

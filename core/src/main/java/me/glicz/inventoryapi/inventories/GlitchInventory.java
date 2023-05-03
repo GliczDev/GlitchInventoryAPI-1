@@ -1,12 +1,11 @@
 package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.events.InventoryCloseEvent;
 import me.glicz.inventoryapi.events.InventoryOpenEvent;
+import me.glicz.inventoryapi.events.Listener;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import me.glicz.inventoryapi.nms.NMS;
 import me.glicz.inventoryapi.titles.Title;
@@ -34,13 +33,9 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     @Getter
     private final int size;
     private final List<GuiItem> items;
-    private final Map<Integer, Consumer<InventoryClickEvent>> slotClickActions = new HashMap<>();
-    @Setter
-    @Accessors(chain = true)
-    private Consumer<InventoryOpenEvent> openAction;
-    @Setter
-    @Accessors(chain = true)
-    private Consumer<InventoryCloseEvent> closeAction;
+    private final Map<Integer, List<Listener<InventoryClickEvent>>> slotClickListeners = new HashMap<>();
+    private final List<Listener<InventoryOpenEvent>> openListeners = new ArrayList<>();
+    private final List<Listener<InventoryCloseEvent>> closeListeners = new ArrayList<>();
     @Getter
     private Title title;
 
@@ -246,32 +241,47 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return (T) this;
     }
 
-    public T addSlotClickAction(int slot, Consumer<InventoryClickEvent> action) {
-        slotClickActions.put(slot, action);
+    public T addSlotClickListener(int slot, Consumer<InventoryClickEvent> action) {
+        return addSlotClickListener(slot, action, true);
+    }
+
+    public T addSlotClickListener(int slot, Consumer<InventoryClickEvent> action, boolean sync) {
+        slotClickListeners.putIfAbsent(slot, new ArrayList<>());
+        slotClickListeners.get(slot).add(new Listener<>(action, sync));
         return (T) this;
     }
 
-    public T removeSlotClickAction(int slot) {
-        slotClickActions.remove(slot);
+    public T runSlotClickListeners(int slot, InventoryClickEvent event) {
+        slotClickListeners.getOrDefault(slot, new ArrayList<>()).forEach(listener -> listener.run(event));
         return (T) this;
     }
 
-    public void executeSlotClickAction(int slot, InventoryClickEvent event) {
-        if (!slotClickActions.containsKey(slot))
-            return;
-        slotClickActions.get(slot).accept(event);
+    public T addOpenListener(Consumer<InventoryOpenEvent> action) {
+        return addOpenListener(action, true);
     }
 
-    public void executeOpenAction(InventoryOpenEvent event) {
-        if (openAction == null)
-            return;
-        openAction.accept(event);
+    public T addOpenListener(Consumer<InventoryOpenEvent> action, boolean sync) {
+        openListeners.add(new Listener<>(action, sync));
+        return (T) this;
     }
 
-    public void executeCloseAction(InventoryCloseEvent event) {
-        if (closeAction == null)
-            return;
-        closeAction.accept(event);
+    public T runOpenListeners(InventoryOpenEvent event) {
+        openListeners.forEach(listener -> listener.run(event));
+        return (T) this;
+    }
+
+    public T addCloseListener(Consumer<InventoryCloseEvent> action) {
+        return addCloseListener(action, true);
+    }
+
+    public T addCloseListener(Consumer<InventoryCloseEvent> action, boolean sync) {
+        closeListeners.add(new Listener<>(action, sync));
+        return (T) this;
+    }
+
+    public T runCloseListeners(InventoryCloseEvent event) {
+        closeListeners.forEach(listener -> listener.run(event));
+        return (T) this;
     }
 
     public T open(Player player) {
@@ -299,7 +309,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
             PLAYER_INVENTORY_MAP.put(player, this);
             sendInventory(player);
             updateItems(player);
-            executeOpenAction(new InventoryOpenEvent(player, this));
+            runOpenListeners(new InventoryOpenEvent(player, this));
         }, 1);
         return (T) this;
     }
@@ -328,7 +338,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         PLAYER_INVENTORY_MAP.remove(player);
         viewers.remove(player);
         viewerItems.remove(player);
-        executeCloseAction(new InventoryCloseEvent(player, this));
+        runCloseListeners(new InventoryCloseEvent(player, this));
         return (T) this;
     }
 

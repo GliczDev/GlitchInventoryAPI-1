@@ -12,5 +12,4 @@ public class GlitchInventoryAPIConfig {
 
     private boolean verifyInventoryIdOnClose;
     private boolean removeViewerItemOnItemSet = true;
-    private boolean synchronizeHandlingPackets = true;
 }

@@ -2,6 +2,7 @@ package me.glicz.inventoryapi.itembuilders;
 
 import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
+import me.glicz.inventoryapi.events.Listener;
 import me.glicz.inventoryapi.inventories.GuiItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -201,7 +202,11 @@ public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
     }
 
     public GuiItem asGuiItem(Consumer<InventoryClickEvent> clickAction) {
-        return GuiItem.of(asItemStack(), clickAction);
+        return asGuiItem(clickAction, true);
+    }
+
+    public GuiItem asGuiItem(Consumer<InventoryClickEvent> clickAction, boolean sync) {
+        return GuiItem.of(asItemStack(), new Listener<>(clickAction, sync));
     }
 
     public ItemStack asItemStack() {

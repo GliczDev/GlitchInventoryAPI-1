@@ -1,8 +1,7 @@
 package me.glicz.inventoryapi.inventories;
 
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
+import me.glicz.inventoryapi.events.Listener;
 import me.glicz.inventoryapi.events.merchant.InventoryTradeSelectEvent;
 import me.glicz.inventoryapi.titles.Title;
 import org.bukkit.entity.Player;
@@ -17,9 +16,7 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
 
     private final List<MerchantRecipe> recipeList = new ArrayList<>();
     private final Map<Player, MerchantRecipe> selectedRecipes = new HashMap<>();
-    @Setter
-    @Accessors(chain = true)
-    private Consumer<InventoryTradeSelectEvent> tradeSelectAction;
+    private final List<Listener<InventoryTradeSelectEvent>> tradeSelectListeners = new ArrayList<>();
 
     protected MerchantInventory() {
         super(InventoryType.MERCHANT);
@@ -76,13 +73,21 @@ public class MerchantInventory extends GlitchInventory<MerchantInventory> {
         super.open(player, closeCurrent);
         setSelectedRecipe(player, 0);
         if (getSelectedRecipe(player) != null)
-            executeTradeSelectAction(new InventoryTradeSelectEvent(player, this, 0));
+            runTradeSelectListeners(new InventoryTradeSelectEvent(player, this, 0));
         return this;
     }
 
-    public void executeTradeSelectAction(InventoryTradeSelectEvent event) {
-        if (tradeSelectAction == null)
-            return;
-        tradeSelectAction.accept(event);
+    public MerchantInventory addTradeSelectListener(Consumer<InventoryTradeSelectEvent> action) {
+        return addTradeSelectListener(action, true);
+    }
+
+    public MerchantInventory addTradeSelectListener(Consumer<InventoryTradeSelectEvent> action, boolean sync) {
+        tradeSelectListeners.add(new Listener<>(action, sync));
+        return this;
+    }
+
+    public MerchantInventory runTradeSelectListeners(InventoryTradeSelectEvent event) {
+        tradeSelectListeners.forEach(listener -> listener.run(event));
+        return this;
     }
 }

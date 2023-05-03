@@ -1,9 +1,8 @@
 package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
+import me.glicz.inventoryapi.events.Listener;
 import me.glicz.inventoryapi.events.paginated.InventoryPageChangeEvent;
 import me.glicz.inventoryapi.inventories.paginated.Margins;
 import me.glicz.inventoryapi.inventories.paginated.PaginationMode;
@@ -21,13 +20,11 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     private final Map<Player, List<GuiItem>> currentPageItemsMap = new HashMap<>();
     private final Map<Player, Integer> pageMap = new HashMap<>();
+    private final List<Listener<InventoryPageChangeEvent>> pageChangeListeners = new ArrayList<>();
     private List<GuiItem> pageItems = new ArrayList<>();
     private Margins margins = Margins.zero();
     @Getter
     private PaginationMode paginationMode = PaginationMode.NORMAL;
-    @Setter
-    @Accessors(chain = true)
-    private Consumer<InventoryPageChangeEvent> pageChangeAction;
 
     protected PaginatedInventory(InventoryType inventoryType) {
         super(inventoryType);
@@ -101,7 +98,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         if (!getViewers().contains(player))
             return this;
         InventoryPageChangeEvent event = new InventoryPageChangeEvent(player, this, page, getPage(player));
-        executePageChangeAction(event);
+        runPageChangeListeners(event);
         if (event.isCancelled())
             return this;
         pageMap.put(player, page);
@@ -123,7 +120,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     @Override
     public PaginatedInventory open(Player player, boolean closeCurrent) {
-        executePageChangeAction(new InventoryPageChangeEvent(player, this, 0, 0));
+        runPageChangeListeners(new InventoryPageChangeEvent(player, this, 0, 0));
         pageMap.put(player, 0);
         updateCurrentPageItems(player);
         return super.open(player, closeCurrent);
@@ -142,10 +139,18 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         return super.silentClose(player);
     }
 
-    public void executePageChangeAction(InventoryPageChangeEvent event) {
-        if (pageChangeAction == null)
-            return;
-        pageChangeAction.accept(event);
+    public PaginatedInventory addPageChangeListener(Consumer<InventoryPageChangeEvent> action) {
+        return addPageChangeListener(action, true);
+    }
+
+    public PaginatedInventory addPageChangeListener(Consumer<InventoryPageChangeEvent> action, boolean sync) {
+        pageChangeListeners.add(new Listener<>(action, sync));
+        return this;
+    }
+
+    public PaginatedInventory runPageChangeListeners(InventoryPageChangeEvent event) {
+        pageChangeListeners.forEach(listener -> listener.run(event));
+        return this;
     }
 
     public int getPageCount() {

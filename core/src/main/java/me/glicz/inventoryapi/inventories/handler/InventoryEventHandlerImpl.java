@@ -9,7 +9,6 @@ import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.GlitchInventory;
 import me.glicz.inventoryapi.inventories.MerchantInventory;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class InventoryEventHandlerImpl extends InventoryEventHandler {
@@ -21,15 +20,9 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             inventory.updateItems(player);
             player.updateInventory();
             if (inventory.getId(player) != inventoryId) return;
-            Runnable action = () -> {
-                InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
-                inventory.executeSlotClickAction(slot, event);
-                inventory.getItem(player, slot).executeClickAction(event);
-            };
-            if (GlitchInventoryAPI.getConfig().synchronizeHandlingPackets())
-                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), action);
-            else
-                action.run();
+            InventoryClickEvent event = new InventoryClickEvent(player, inventory, clickType, slot);
+            inventory.runSlotClickListeners(slot, event);
+            inventory.getItem(player, slot).runClickListener(event);
         }
     }
 
@@ -39,10 +32,7 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
             GlitchInventory<?> inventory = GlitchInventory.get(player);
             if (GlitchInventoryAPI.getConfig().verifyInventoryIdOnClose() && inventory.getId(player) != inventoryId)
                 return;
-            if (GlitchInventoryAPI.getConfig().synchronizeHandlingPackets())
-                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), () -> inventory.silentClose(player));
-            else
-                inventory.silentClose(player);
+            inventory.silentClose(player);
         }
     }
 
@@ -51,23 +41,17 @@ public class InventoryEventHandlerImpl extends InventoryEventHandler {
         if (GlitchInventory.get(player) instanceof AnvilInventory inventory) {
             if (inventory.isShouldInsertItem())
                 inventory.setItem(2, ItemBuilder.of(inventory.getItem(0).getItemStack()).setName(name).asGuiItem());
-            inventory.executeInputChangeAction(new InventoryInputChangeEvent(player, inventory, name));
+            inventory.runInputChangeListeners(new InventoryInputChangeEvent(player, inventory, name));
         }
     }
 
     @Override
     public void handleSelectTrade(Player player, int recipe) {
         if (GlitchInventory.get(player) instanceof MerchantInventory inventory) {
-            Runnable action = () -> {
-                InventoryTradeSelectEvent event = new InventoryTradeSelectEvent(player, inventory, recipe);
-                inventory.executeTradeSelectAction(event);
-                if (!event.isCancelled())
-                    inventory.setSelectedRecipe(player, recipe);
-            };
-            if (GlitchInventoryAPI.getConfig().synchronizeHandlingPackets())
-                Bukkit.getScheduler().runTask(GlitchInventoryAPI.getPlugin(), action);
-            else
-                action.run();
+            InventoryTradeSelectEvent event = new InventoryTradeSelectEvent(player, inventory, recipe);
+            inventory.runTradeSelectListeners(event);
+            if (!event.isCancelled())
+                inventory.setSelectedRecipe(player, recipe);
         }
     }
 }
