@@ -237,8 +237,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T setTitle(Player player, Title title) {
-        sendInventory(player, title);
-        return (T) this;
+        return sendInventory(player, title);
     }
 
     public T addSlotClickListener(int slot, Consumer<InventoryClickEvent> action) {
@@ -289,6 +288,11 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T open(Player player, boolean closeCurrent) {
+        if (viewers.containsKey(player)) {
+            sendInventory(player);
+            updateItems(player);
+            return (T) this;
+        }
         Integer id = null;
         if (has(player)) {
             GlitchInventory<?> current = get(player);

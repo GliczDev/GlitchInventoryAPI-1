@@ -97,6 +97,8 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     public PaginatedInventory setPage(Player player, @Range(from = 0, to = Integer.MAX_VALUE) int page) {
         if (!getViewers().contains(player))
             return this;
+        if (getPage(player) == page)
+            return this;
         InventoryPageChangeEvent event = new InventoryPageChangeEvent(player, this, page, getPage(player));
         runPageChangeListeners(event);
         if (event.isCancelled())
@@ -120,6 +122,12 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     @Override
     public PaginatedInventory open(Player player, boolean closeCurrent) {
+        if (viewers.containsKey(player)) {
+            sendInventory(player);
+            updateCurrentPageItems(player);
+            updateItems(player);
+            return this;
+        }
         runPageChangeListeners(new InventoryPageChangeEvent(player, this, 0, 0));
         pageMap.put(player, 0);
         updateCurrentPageItems(player);
