@@ -24,19 +24,16 @@ public class GlitchInventoryAPI {
     @Getter
     private static JavaPlugin plugin;
 
-    public static boolean load(@NotNull JavaPlugin plugin) {
+    public static void load(@NotNull JavaPlugin plugin) {
         if (GlitchInventoryAPI.plugin != null)
             throw new RuntimeException("GlitchInventoryAPI instance is already created by " + GlitchInventoryAPI.plugin.getName());
-        return load(plugin, new InventoryEventHandlerImpl());
+        load(plugin, new InventoryEventHandlerImpl());
     }
 
-    public static boolean load(@NotNull JavaPlugin plugin, @NotNull InventoryEventHandler listener) {
+    public static void load(@NotNull JavaPlugin plugin, @NotNull InventoryEventHandler listener) {
         GlitchInventoryAPI.plugin = plugin;
         nms = NMSInitializer.initialize(plugin);
-        if (!plugin.isEnabled())
-            return false;
         InventoryEventHandler.set(listener);
         Bukkit.getPluginManager().registerEvents(new JoinQuitListener(), plugin);
-        return true;
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.reflect.ClassPath;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import me.glicz.inventoryapi.exceptions.UnsupportedVersionException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -53,14 +54,8 @@ public class NMSInitializer {
             if (nearestVersion.isPresent())
                 return nearestVersion.get().getKey().getConstructor(JavaPlugin.class).newInstance(plugin);
             throw new ClassNotFoundException();
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
-                 IllegalAccessException ex) {
-            plugin.getSLF4JLogger().error("Error occurred while initializing GlitchInventoryAPI NMS object in %s"
-                    .formatted(plugin.getDescription().getFullName()), ex);
-            plugin.getLogger().severe("GlitchInventoryAPI DOES NOT support your server version (%s)!".formatted(Bukkit.getMinecraftVersion()));
-            plugin.getLogger().severe("If you think this is a bug, please report it on github (https://github.com/GliczDev/GlitchInventoryAPI/issues)");
-            Bukkit.getPluginManager().disablePlugin(plugin);
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+            throw new UnsupportedVersionException();
         }
-        return null;
     }
 }
