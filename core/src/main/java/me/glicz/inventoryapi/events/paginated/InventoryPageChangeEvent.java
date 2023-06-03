@@ -21,8 +21,8 @@ public class InventoryPageChangeEvent extends InventoryEvent implements Cancella
         super(player, inventory);
         this.newPage = newPage;
         this.oldPage = oldPage;
-        this.hasNext = inventory.hasNextPage(player);
-        this.hasPrevious = inventory.hasPreviousPage(player);
+        this.hasNext = inventory.getPageCount() > newPage - 1;
+        this.hasPrevious = newPage > 0;
     }
 
     @Override
