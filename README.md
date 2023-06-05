@@ -93,5 +93,4 @@ GlitchInventory.simple(3) //Create simple inventory with 3 rows (Bukkit Inventor
 
 ### Title types
 - Simple (`Title.simple()`) - a normal title
-- Animated (`Title.animated()`) - an animated title <ins>**//Soon**</ins>
-- Random (`Title.random()`) - a randomly animated title <ins>**//Soon**</ins>
+- Animated (`Title.animated()`) - an animated title
