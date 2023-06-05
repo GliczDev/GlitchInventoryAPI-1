@@ -10,7 +10,7 @@ import java.util.function.BiConsumer;
 
 public class Animator<T extends GlitchInventory<T>> {
 
-    private static final List<Animator<?>> ACTIVE_ANIMATORS = new ArrayList<>();
+    private static final Set<Animator<?>> ACTIVE_ANIMATORS = new HashSet<>();
     private final Map<String, BiConsumer<Integer, T>> actionMap = new HashMap<>();
     @Getter
     @Accessors(fluent = true)
@@ -30,8 +30,8 @@ public class Animator<T extends GlitchInventory<T>> {
     }
 
     @Unmodifiable
-    public static List<Animator<?>> getActiveAnimators() {
-        return Collections.unmodifiableList(ACTIVE_ANIMATORS);
+    public static Set<Animator<?>> getActiveAnimators() {
+        return Collections.unmodifiableSet(ACTIVE_ANIMATORS);
     }
 
     public Animator<T> addEveryTickAction(String id, BiConsumer<Integer, T> action) {
