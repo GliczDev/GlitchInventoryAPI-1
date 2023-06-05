@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.glicz.inventoryapi.animators.Animator;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandlerImpl;
 import me.glicz.inventoryapi.listeners.JoinQuitListener;
@@ -35,5 +36,6 @@ public class GlitchInventoryAPI {
         nms = NMSInitializer.initialize(plugin);
         InventoryEventHandler.set(listener);
         Bukkit.getPluginManager().registerEvents(new JoinQuitListener(), plugin);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> Animator.getActiveAnimators().forEach(Animator::tick), 0, 1);
     }
 }

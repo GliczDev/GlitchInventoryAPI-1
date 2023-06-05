@@ -2,6 +2,7 @@ package me.glicz.inventoryapi.inventories;
 
 import lombok.Getter;
 import me.glicz.inventoryapi.GlitchInventoryAPI;
+import me.glicz.inventoryapi.animators.Animator;
 import me.glicz.inventoryapi.events.InventoryClickEvent;
 import me.glicz.inventoryapi.events.InventoryCloseEvent;
 import me.glicz.inventoryapi.events.InventoryOpenEvent;
@@ -36,6 +37,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private final Map<Integer, List<Listener<InventoryClickEvent>>> slotClickListeners = new HashMap<>();
     private final List<Listener<InventoryOpenEvent>> openListeners = new ArrayList<>();
     private final List<Listener<InventoryCloseEvent>> closeListeners = new ArrayList<>();
+    @Getter
+    private final Animator<T> animator = Animator.create((T) this);
     @Getter
     private Title title;
 
