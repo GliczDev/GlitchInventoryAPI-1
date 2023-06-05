@@ -40,20 +40,20 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     @Getter
     private final Animator<T> animator = Animator.create((T) this);
     @Getter
-    private Title title;
+    private Title<?> title;
 
     protected GlitchInventory(InventoryType inventoryType) {
         this.inventoryType = inventoryType;
         this.size = inventoryType.getDefaultSize();
         this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
-        this.title = Title.simple(inventoryType.defaultTitle());
+        setTitle(Title.simple(inventoryType.defaultTitle()));
     }
 
     protected GlitchInventory(int rows) {
         this.inventoryType = InventoryType.CHEST;
         this.size = rows * 9;
         this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
-        this.title = Title.simple(inventoryType.defaultTitle());
+        setTitle(Title.simple(inventoryType.defaultTitle()));
     }
 
     public static SimpleInventory simple(InventoryType inventoryType) {
@@ -233,13 +233,20 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return viewers.get(player);
     }
 
-    public T setTitle(Title title) {
-        this.title = title;
+    public T setTitle(Title<?> title) {
+        return setTitle(title, false);
+    }
+
+    public T setTitle(Title<?> title, boolean activeAnimator) {
+        getAnimator().removeEveryTickAction("title");
+        this.title = title.accept(this);
+        if (activeAnimator)
+            getAnimator().setActive(true);
         viewers.keySet().forEach(this::sendInventory);
         return (T) this;
     }
 
-    public T setTitle(Player player, Title title) {
+    public T setTitle(Player player, Title<?> title) {
         return sendInventory(player, title);
     }
 
@@ -324,7 +331,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         return sendInventory(player, title);
     }
 
-    public T sendInventory(Player player, Title title) {
+    public T sendInventory(Player player, Title<?> title) {
         NMS nms = GlitchInventoryAPI.getNms();
         if (inventoryType == InventoryType.CHEST)
             nms.openInventory(getId(player), player, size / 9, title.getComponent());
@@ -344,6 +351,8 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         PLAYER_INVENTORY_MAP.remove(player);
         viewers.remove(player);
         viewerItems.remove(player);
+        if (getViewers().isEmpty())
+            getAnimator().setActive(false);
         runCloseListeners(new InventoryCloseEvent(player, this));
         return (T) this;
     }

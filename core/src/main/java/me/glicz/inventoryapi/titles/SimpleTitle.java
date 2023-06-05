@@ -1,8 +1,9 @@
 package me.glicz.inventoryapi.titles;
 
+import me.glicz.inventoryapi.inventories.GlitchInventory;
 import net.kyori.adventure.text.Component;
 
-public class SimpleTitle extends Title {
+public class SimpleTitle extends Title<SimpleTitle> {
 
     private final Component title;
 
@@ -13,5 +14,10 @@ public class SimpleTitle extends Title {
     @Override
     public Component getComponent() {
         return title;
+    }
+
+    @Override
+    public SimpleTitle accept(GlitchInventory<?> inventory) {
+        return new SimpleTitle(title);
     }
 }
