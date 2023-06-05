@@ -1,15 +1,14 @@
 package me.glicz.inventoryapi.titles;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import me.glicz.inventoryapi.inventories.GlitchInventory;
 import net.kyori.adventure.text.Component;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class SimpleTitle extends Title<SimpleTitle> {
 
     private final Component title;
-
-    protected SimpleTitle(Component title) {
-        this.title = title;
-    }
 
     @Override
     public Component getComponent() {
