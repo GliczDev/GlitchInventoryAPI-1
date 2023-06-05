@@ -54,7 +54,8 @@ public class NMSInitializer {
             if (nearestVersion.isPresent())
                 return nearestVersion.get().getKey().getConstructor(JavaPlugin.class).newInstance(plugin);
             throw new ClassNotFoundException();
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException ex) {
             throw new UnsupportedVersionException();
         }
     }
