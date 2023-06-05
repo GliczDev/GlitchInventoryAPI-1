@@ -5,6 +5,7 @@ import me.glicz.inventoryapi.GlitchInventoryAPI;
 import me.glicz.inventoryapi.events.Listener;
 import me.glicz.inventoryapi.events.paginated.InventoryPageChangeEvent;
 import me.glicz.inventoryapi.inventories.paginated.Margins;
+import me.glicz.inventoryapi.inventories.paginated.PaginationDirection;
 import me.glicz.inventoryapi.inventories.paginated.PaginationMode;
 import me.glicz.inventoryapi.itembuilders.ItemBuilder;
 import org.bukkit.Material;
@@ -25,6 +26,8 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
     private Margins margins = Margins.zero();
     @Getter
     private PaginationMode paginationMode = PaginationMode.NORMAL;
+    @Getter
+    private PaginationDirection paginationDirection = PaginationDirection.DOWN;
 
     protected PaginatedInventory(InventoryType inventoryType) {
         super(inventoryType);
@@ -53,15 +56,10 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     public PaginatedInventory updateCurrentPageItems(Player player) {
         GuiItem[] value = getViewerItems(player).toArray(GuiItem[]::new);
-        GuiItem[] temp = paginationMode.parse(player, this);
-        int slot = margins.getTop() * 9 + margins.getLeft();
-        for (int i = 0; i < value.length - margins.getTop() * 9 && i < temp.length; i++) {
-            GuiItem item = temp[i];
-            if (item != null)
-                value[slot] = item;
-            if ((slot / 9 + 1) * 9 - margins.getRight() - 1 == slot)
-                slot += margins.getLeft() + margins.getRight();
-            slot++;
+        GuiItem[] temp = paginationDirection.parse(this, paginationMode.parse(player, this));
+        for (int i = 0; i < value.length; i++) {
+            if (temp[i] != null)
+                value[i] = temp[i];
         }
         currentPageItemsMap.put(player, List.of(value));
         return this;
@@ -80,6 +78,13 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
 
     public PaginatedInventory setPaginationMode(PaginationMode paginationMode) {
         this.paginationMode = paginationMode;
+        getViewers().forEach(this::updateCurrentPageItems);
+        updateItems();
+        return this;
+    }
+
+    public PaginatedInventory setPaginationDirection(PaginationDirection paginationDirection) {
+        this.paginationDirection = paginationDirection;
         getViewers().forEach(this::updateCurrentPageItems);
         updateItems();
         return this;
