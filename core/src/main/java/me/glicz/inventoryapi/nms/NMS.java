@@ -30,4 +30,8 @@ public interface NMS {
     void setRecipes(int id, Player player, List<MerchantRecipe> recipeList);
 
     void closeInventory(int id, Player player);
+
+    void validateInventory(int rows);
+
+    void validateInventory(InventoryType inventoryType);
 }

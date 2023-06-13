@@ -70,9 +70,11 @@ public class v1_19_R3_NMS extends v1_18_R1_NMS {
             case STONECUTTER -> MenuType.STONECUTTER;
             case MERCHANT -> MenuType.MERCHANT;
             case SMITHING_NEW -> MenuType.SMITHING;
-            case CREATIVE, CRAFTING ->
-                    throw new IllegalArgumentException("Can't open a " + inventoryType + " inventory!");
-            default -> MenuType.GENERIC_9x3;
+            default -> {
+                if (!inventoryType.isCreatable())
+                    throw new IllegalArgumentException("Can't create a %s inventory!".formatted(inventoryType));
+                yield MenuType.GENERIC_9x3;
+            }
         };
     }
 }

@@ -43,6 +43,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     private Title<?> title;
 
     protected GlitchInventory(InventoryType inventoryType) {
+        GlitchInventoryAPI.getNms().validateInventory(inventoryType);
         this.inventoryType = inventoryType;
         this.size = inventoryType.getDefaultSize();
         this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
@@ -50,6 +51,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     protected GlitchInventory(int rows) {
+        GlitchInventoryAPI.getNms().validateInventory(rows);
         this.inventoryType = InventoryType.CHEST;
         this.size = rows * 9;
         this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));

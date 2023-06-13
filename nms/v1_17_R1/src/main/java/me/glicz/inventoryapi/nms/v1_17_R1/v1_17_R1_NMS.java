@@ -164,7 +164,7 @@ public class v1_17_R1_NMS implements NMS {
             case 4 -> MenuType.GENERIC_9x4;
             case 5 -> MenuType.GENERIC_9x5;
             case 6 -> MenuType.GENERIC_9x6;
-            default -> throw new IllegalArgumentException("Can't open a " + rows + " rows inventory!");
+            default -> throw new IllegalArgumentException("Can't open a %s rows inventory!".formatted(rows));
         };
     }
 
@@ -189,9 +189,11 @@ public class v1_17_R1_NMS implements NMS {
             case GRINDSTONE -> MenuType.GRINDSTONE;
             case STONECUTTER -> MenuType.STONECUTTER;
             case MERCHANT -> MenuType.MERCHANT;
-            case CREATIVE, CRAFTING ->
-                    throw new IllegalArgumentException("Can't open a " + inventoryType + " inventory!");
-            default -> MenuType.GENERIC_9x3;
+            default -> {
+                if (!inventoryType.isCreatable() || inventoryType == InventoryType.COMPOSTER)
+                    throw new IllegalArgumentException("Can't create a %s inventory!".formatted(inventoryType));
+                yield MenuType.GENERIC_9x3;
+            }
         };
     }
 
@@ -246,6 +248,16 @@ public class v1_17_R1_NMS implements NMS {
     public void closeInventory(int id, Player player) {
         ClientboundContainerClosePacket packet = new ClientboundContainerClosePacket(id);
         sendPacket(player, packet);
+    }
+
+    @Override
+    public void validateInventory(int rows) {
+        getMenuType(rows); // if invalid - throws an exception
+    }
+
+    @Override
+    public void validateInventory(InventoryType inventoryType) {
+        getMenuType(inventoryType); // if invalid - throws an exception
     }
 }
 
