@@ -9,13 +9,13 @@ import lombok.SneakyThrows;
 import me.glicz.inventoryapi.inventories.ClickType;
 import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
 import me.glicz.inventoryapi.nms.NMS;
-import me.glicz.inventoryapi.nms.NMSInitializer;
 import me.glicz.inventoryapi.nms.NativeVersion;
 import net.kyori.adventure.text.Component;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,24 +36,10 @@ import java.util.List;
 public class v1_17_R1_NMS implements NMS {
 
     protected final JavaPlugin plugin;
-    protected Method playerGetHandle, itemStackAsNMS, merchantRecipeFromBukkit, merchantRecipeToMinecraft;
     protected Field connectionChannel;
 
-    public v1_17_R1_NMS(JavaPlugin plugin) throws ClassNotFoundException, NoSuchMethodException {
+    public v1_17_R1_NMS(JavaPlugin plugin) {
         this.plugin = plugin;
-
-        Class<?> craftPlayerClass = Class.forName(
-                "org.bukkit.craftbukkit.%s.entity.CraftPlayer".formatted(NMSInitializer.getVersion()));
-        playerGetHandle = craftPlayerClass.getMethod("getHandle");
-
-        Class<?> craftItemStackClass = Class.forName(
-                "org.bukkit.craftbukkit.%s.inventory.CraftItemStack".formatted(NMSInitializer.getVersion()));
-        itemStackAsNMS = craftItemStackClass.getMethod("asNMSCopy", org.bukkit.inventory.ItemStack.class);
-
-        Class<?> craftMerchantRecipeClass = Class.forName(
-                "org.bukkit.craftbukkit.%s.inventory.CraftMerchantRecipe".formatted(NMSInitializer.getVersion()));
-        merchantRecipeFromBukkit = craftMerchantRecipeClass.getMethod("fromBukkit", MerchantRecipe.class);
-        merchantRecipeToMinecraft = craftMerchantRecipeClass.getMethod("toMinecraft");
 
         connectionChannel = Arrays.stream(Connection.class.getFields())
                 .filter(field -> field.getType().isAssignableFrom(Channel.class))
@@ -62,13 +47,13 @@ public class v1_17_R1_NMS implements NMS {
                 .orElseThrow();
     }
 
-    @SneakyThrows
+    @SuppressWarnings("deprecation")
     protected ServerPlayer getNmsPlayer(Player player) {
-        return (ServerPlayer) playerGetHandle.invoke(player);
+        return MinecraftServer.getServer().getPlayerList().getPlayer(player.getUniqueId());
     }
 
     protected Connection getConnection(Player player) {
-        return getNmsPlayer(player).connection.getConnection();
+        return getNmsPlayer(player).connection.connection;
     }
 
     @SneakyThrows
@@ -76,22 +61,28 @@ public class v1_17_R1_NMS implements NMS {
         return (Channel) connectionChannel.get(getConnection(player));
     }
 
-    @SneakyThrows
     protected void sendPacket(Player player, Object packetObj) {
         if (!(packetObj instanceof Packet<?> packet))
             throw new IllegalArgumentException("Provided packetObj should be an instance of Packet class!");
         getConnection(player).send(packet);
     }
 
-    @SneakyThrows
-    protected ItemStack getNmsItemStack(org.bukkit.inventory.ItemStack itemStack) {
-        return (ItemStack) itemStackAsNMS.invoke(null, itemStack);
-    }
-
-    @SneakyThrows
-    protected MerchantOffer getNmsMerchantOffer(MerchantRecipe merchantRecipe) {
-        Object craftMerchantRecipe = merchantRecipeFromBukkit.invoke(null, merchantRecipe);
-        return (MerchantOffer) merchantRecipeToMinecraft.invoke(craftMerchantRecipe);
+    protected MerchantOffer getNmsMerchantOffer(MerchantRecipe recipe) {
+        return new MerchantOffer(
+                recipe.getIngredients().size() > 0
+                        ? ItemStack.fromBukkitCopy(recipe.getIngredients().get(0))
+                        : ItemStack.EMPTY,
+                recipe.getIngredients().size() > 1
+                        ? ItemStack.fromBukkitCopy(recipe.getIngredients().get(1))
+                        : ItemStack.EMPTY,
+                ItemStack.fromBukkitCopy(recipe.getResult()),
+                recipe.getUses(),
+                recipe.getMaxUses(),
+                recipe.getVillagerExperience(),
+                recipe.getPriceMultiplier(),
+                0,
+                recipe.shouldIgnoreDiscounts()
+        );
     }
 
     @Override
@@ -150,7 +141,6 @@ public class v1_17_R1_NMS implements NMS {
             InventoryEventHandler.get().handleSelectTrade(player, packet.getItem());
     }
 
-    @SneakyThrows
     @Override
     public int getNextInventoryID(Player player) {
         return getNmsPlayer(player).nextContainerCounter();
@@ -222,7 +212,7 @@ public class v1_17_R1_NMS implements NMS {
     @Override
     public void setItems(int id, Player player, List<org.bukkit.inventory.ItemStack> items) {
         ItemStack[] itemStacks = items.stream()
-                .map(this::getNmsItemStack)
+                .map(ItemStack::fromBukkitCopy)
                 .toArray(ItemStack[]::new);
         ClientboundContainerSetContentPacket packet = new ClientboundContainerSetContentPacket(id, 0,
                 NonNullList.of(ItemStack.EMPTY, itemStacks), ItemStack.EMPTY);
@@ -231,7 +221,7 @@ public class v1_17_R1_NMS implements NMS {
 
     @Override
     public void setItem(int id, int slot, Player player, org.bukkit.inventory.ItemStack item) {
-        ClientboundContainerSetSlotPacket packet = new ClientboundContainerSetSlotPacket(id, 0, slot, getNmsItemStack(item));
+        ClientboundContainerSetSlotPacket packet = new ClientboundContainerSetSlotPacket(id, 0, slot, ItemStack.fromBukkitCopy(item));
         sendPacket(player, packet);
     }
 

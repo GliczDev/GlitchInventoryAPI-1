@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 @NativeVersion(major = 1, minor = 20)
 public class v1_20_R1_NMS extends v1_19_R3_NMS {
 
-    public v1_20_R1_NMS(JavaPlugin plugin) throws ClassNotFoundException, NoSuchMethodException {
+    public v1_20_R1_NMS(JavaPlugin plugin) {
         super(plugin);
     }
 
