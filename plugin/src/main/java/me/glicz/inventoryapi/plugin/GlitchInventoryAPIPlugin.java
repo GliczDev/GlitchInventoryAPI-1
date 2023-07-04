@@ -1,7 +1,7 @@
 package me.glicz.inventoryapi.plugin;
 
 import me.glicz.inventoryapi.GlitchInventoryAPI;
-import me.glicz.inventoryapi.exceptions.UnsupportedVersionException;
+import me.glicz.inventoryapi.exception.UnsupportedVersionException;
 import me.glicz.inventoryapi.nms.NMSInitializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

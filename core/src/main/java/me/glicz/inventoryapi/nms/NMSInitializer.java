@@ -4,7 +4,7 @@ import com.google.common.reflect.ClassPath;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import me.glicz.inventoryapi.exceptions.UnsupportedVersionException;
+import me.glicz.inventoryapi.exception.UnsupportedVersionException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -1,7 +1,7 @@
 package me.glicz.inventoryapi.nms.v1_19_R3;
 
-import me.glicz.inventoryapi.inventories.ClickType;
-import me.glicz.inventoryapi.inventories.handler.InventoryEventHandler;
+import me.glicz.inventoryapi.inventory.ClickType;
+import me.glicz.inventoryapi.inventory.handler.InventoryEventHandler;
 import me.glicz.inventoryapi.nms.NativeVersion;
 import me.glicz.inventoryapi.nms.v1_18_R1.v1_18_R1_NMS;
 import net.minecraft.network.Connection;
