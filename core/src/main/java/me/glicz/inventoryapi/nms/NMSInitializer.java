@@ -1,9 +1,8 @@
 package me.glicz.inventoryapi.nms;
 
 import com.google.common.reflect.ClassPath;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import me.glicz.inventoryapi.exception.UnsupportedVersionException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,7 +12,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.NONE)
+@UtilityClass
 public class NMSInitializer {
 
     public static String getVersion() {
