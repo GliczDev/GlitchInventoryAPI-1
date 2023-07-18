@@ -3,11 +3,14 @@ package me.glicz.inventoryapi.inventory;
 import lombok.Getter;
 import me.glicz.inventoryapi.event.InventoryClickEvent;
 import me.glicz.inventoryapi.event.Listener;
+import me.glicz.inventoryapi.itembuilder.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GuiItem {
+    public static final GuiItem EMPTY = ItemBuilder.of(Material.AIR).asGuiItem();
 
     @Getter
     private final ItemStack itemStack;
