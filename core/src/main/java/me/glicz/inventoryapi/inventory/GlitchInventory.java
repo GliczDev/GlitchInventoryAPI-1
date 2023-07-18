@@ -7,11 +7,9 @@ import me.glicz.inventoryapi.event.InventoryClickEvent;
 import me.glicz.inventoryapi.event.InventoryCloseEvent;
 import me.glicz.inventoryapi.event.InventoryOpenEvent;
 import me.glicz.inventoryapi.event.Listener;
-import me.glicz.inventoryapi.itembuilder.ItemBuilder;
 import me.glicz.inventoryapi.nms.NMS;
 import me.glicz.inventoryapi.title.Title;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
@@ -46,7 +44,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         GlitchInventoryAPI.getNms().validateInventory(inventoryType);
         this.inventoryType = inventoryType;
         this.size = inventoryType.getDefaultSize();
-        this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
+        this.items = new ArrayList<>(Collections.nCopies(size, GuiItem.EMPTY));
         setTitle(Title.simple(inventoryType.defaultTitle()));
     }
 
@@ -54,7 +52,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         GlitchInventoryAPI.getNms().validateInventory(rows);
         this.inventoryType = InventoryType.CHEST;
         this.size = rows * 9;
-        this.items = new ArrayList<>(Collections.nCopies(size, ItemBuilder.of(Material.AIR).asGuiItem()));
+        this.items = new ArrayList<>(Collections.nCopies(size, GuiItem.EMPTY));
         setTitle(Title.simple(inventoryType.defaultTitle()));
     }
 
@@ -93,7 +91,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     public T setItem(@Range(from = 0, to = Integer.MAX_VALUE) int slot, GuiItem item) {
         try {
             if (item == null)
-                item = ItemBuilder.of(Material.AIR).asGuiItem();
+                item = GuiItem.EMPTY;
             items.set(slot, item);
             if (GlitchInventoryAPI.getConfig().removeViewerItemOnItemSet())
                 viewerItems.values().forEach(map -> map.remove(slot));
@@ -127,7 +125,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         try {
             return items.get(slot);
         } catch (IndexOutOfBoundsException ignored) {
-            return ItemBuilder.of(Material.AIR).asGuiItem();
+            return GuiItem.EMPTY;
         }
     }
 
@@ -142,7 +140,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
         try {
             return getViewerItems(player).get(slot);
         } catch (IndexOutOfBoundsException ignored) {
-            return ItemBuilder.of(Material.AIR).asGuiItem();
+            return GuiItem.EMPTY;
         }
     }
 
@@ -187,7 +185,7 @@ public abstract class GlitchInventory<T extends GlitchInventory<T>> {
     }
 
     public T clearItems() {
-        Collections.fill(items, ItemBuilder.of(Material.AIR).asGuiItem());
+        Collections.fill(items, GuiItem.EMPTY);
         updateItems();
         return (T) this;
     }

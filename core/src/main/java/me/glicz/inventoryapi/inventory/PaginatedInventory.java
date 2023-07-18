@@ -7,8 +7,6 @@ import me.glicz.inventoryapi.event.paginated.InventoryPageChangeEvent;
 import me.glicz.inventoryapi.inventory.paginated.Margins;
 import me.glicz.inventoryapi.inventory.paginated.PaginationDirection;
 import me.glicz.inventoryapi.inventory.paginated.PaginationMode;
-import me.glicz.inventoryapi.itembuilder.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.Range;
@@ -121,7 +119,7 @@ public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
         try {
             return getCurrentPageItems(player).get(slot);
         } catch (IndexOutOfBoundsException ignored) {
-            return ItemBuilder.of(Material.AIR).asGuiItem();
+            return GuiItem.EMPTY;
         }
     }
 
