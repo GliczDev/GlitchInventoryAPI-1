@@ -20,7 +20,6 @@ public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
 
     private InventoryPatternBuilder(T inventory) {
         this.inventory = inventory;
-        replacements.put(' ', ItemBuilder.of(Material.AIR).asGuiItem());
     }
 
     public static <T extends GlitchInventory<T>> InventoryPatternBuilder<T> create(@NotNull T inventory) {
@@ -49,8 +48,11 @@ public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
             char[] chars = line.toCharArray();
             for (int x = 0; x < chars.length; x++) {
                 char id = chars[x];
-                if (!replacements.containsKey(id))
-                    throw new RuntimeException("No replacement found for key '%s'!".formatted(id));
+                if (!replacements.containsKey(id)) {
+                    if (id == ' ')
+                        continue;
+                    throw new NullPointerException("No replacement found for key '%s'!".formatted(id));
+                }
                 inventory.setItem(y * line.length() + x, replacements.get(id));
             }
         }
