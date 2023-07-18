@@ -3,17 +3,16 @@ package me.glicz.inventoryapi.inventory.pattern;
 import lombok.Getter;
 import me.glicz.inventoryapi.inventory.GlitchInventory;
 import me.glicz.inventoryapi.inventory.GuiItem;
-import me.glicz.inventoryapi.itembuilder.ItemBuilder;
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
 
-    private final Map<Character, GuiItem> replacements = new HashMap<>();
+    private final Map<Character, Function<Integer, GuiItem>> replacements = new HashMap<>();
     private final T inventory;
     @Getter
     private List<String> pattern;
@@ -34,12 +33,16 @@ public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
     }
 
     public InventoryPatternBuilder<T> setReplacement(char character, GuiItem item) {
+        return setReplacement(character, (slot) -> item);
+    }
+
+    public InventoryPatternBuilder<T> setReplacement(char character, Function<Integer, GuiItem> item) {
         replacements.put(character, item);
         return this;
     }
 
-    public GuiItem getReplacement(char character) {
-        return replacements.get(character);
+    public GuiItem getReplacement(char character, int slot) {
+        return replacements.get(character).apply(slot);
     }
 
     public T build() {
@@ -53,7 +56,8 @@ public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
                         continue;
                     throw new NullPointerException("No replacement found for key '%s'!".formatted(id));
                 }
-                inventory.setItem(y * line.length() + x, replacements.get(id));
+                int slot = y * line.length() + x;
+                inventory.setItem(slot, getReplacement(id, slot));
             }
         }
         return inventory;
