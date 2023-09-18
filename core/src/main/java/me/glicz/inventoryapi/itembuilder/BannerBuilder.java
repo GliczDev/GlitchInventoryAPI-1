@@ -7,7 +7,6 @@ import org.bukkit.inventory.meta.BannerMeta;
 import java.util.List;
 
 public class BannerBuilder extends ItemBuilder<BannerBuilder, BannerMeta> {
-
     protected BannerBuilder(ItemStack itemStack) {
         super(itemStack);
     }

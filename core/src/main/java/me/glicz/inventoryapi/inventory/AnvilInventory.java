@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AnvilInventory extends GlitchInventory<AnvilInventory> {
-
-
     private final List<Listener<InventoryInputChangeEvent>> inputChangeListeners = new ArrayList<>();
     @Setter
     @Getter

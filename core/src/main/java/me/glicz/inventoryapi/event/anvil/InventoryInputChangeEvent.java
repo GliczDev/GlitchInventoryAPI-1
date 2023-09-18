@@ -5,9 +5,8 @@ import me.glicz.inventoryapi.event.InventoryEvent;
 import me.glicz.inventoryapi.inventory.AnvilInventory;
 import org.bukkit.entity.Player;
 
+@Getter
 public class InventoryInputChangeEvent extends InventoryEvent {
-
-    @Getter
     private final String text;
 
     public InventoryInputChangeEvent(Player player, AnvilInventory inventory, String text) {

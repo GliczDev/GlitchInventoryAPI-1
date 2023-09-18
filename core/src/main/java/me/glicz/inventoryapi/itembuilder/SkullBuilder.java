@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.UUID;
 
 public class SkullBuilder extends ItemBuilder<SkullBuilder, SkullMeta> {
-
     private static final BaseEncoding base64 = BaseEncoding.base64();
 
     protected SkullBuilder() {

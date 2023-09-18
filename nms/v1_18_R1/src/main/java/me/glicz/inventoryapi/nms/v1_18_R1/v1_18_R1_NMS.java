@@ -10,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 @NativeVersion(major = 1, minor = 18)
 public class v1_18_R1_NMS extends v1_17_R1_NMS {
-
     public v1_18_R1_NMS(JavaPlugin plugin) {
         super(plugin);
     }

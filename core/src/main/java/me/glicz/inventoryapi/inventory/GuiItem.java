@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class GuiItem {
     public static final GuiItem EMPTY = ItemBuilder.of(Material.AIR).asGuiItem();
-
     @Getter
     private final ItemStack itemStack;
     private final Listener<InventoryClickEvent> clickListener;

@@ -2,15 +2,12 @@ package me.glicz.inventoryapi.inventory.paginated;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.experimental.Accessors;
 
+@Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Margins {
-
-    @Getter
-    @Setter
     @Accessors(chain = true)
     private int top, left, bottom, right;
 

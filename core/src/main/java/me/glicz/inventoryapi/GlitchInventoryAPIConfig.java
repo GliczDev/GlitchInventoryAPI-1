@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Accessors(chain = true, fluent = true)
 public class GlitchInventoryAPIConfig {
-
     private boolean verifyInventoryIdOnClose;
     private boolean removeViewerItemOnItemSet = true;
 }

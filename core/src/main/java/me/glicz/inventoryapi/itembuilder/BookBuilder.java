@@ -7,7 +7,6 @@ import org.bukkit.inventory.meta.BookMeta;
 
 @SuppressWarnings("deprecation")
 public class BookBuilder extends ItemBuilder<BookBuilder, BookMeta> {
-
     protected BookBuilder() {
         super(new ItemStack(Material.WRITTEN_BOOK));
     }

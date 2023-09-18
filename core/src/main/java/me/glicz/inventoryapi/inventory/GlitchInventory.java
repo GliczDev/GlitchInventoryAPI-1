@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public abstract class GlitchInventory<T extends GlitchInventory<T>> {
-
     private static final Map<Player, GlitchInventory<?>> PLAYER_INVENTORY_MAP = new HashMap<>();
     protected final Map<Player, Integer> viewers = new HashMap<>();
     private final Map<Player, Map<Integer, GuiItem>> viewerItems = new HashMap<>();

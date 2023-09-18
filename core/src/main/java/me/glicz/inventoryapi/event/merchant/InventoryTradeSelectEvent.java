@@ -10,7 +10,6 @@ import org.bukkit.inventory.MerchantRecipe;
 
 @Getter
 public class InventoryTradeSelectEvent extends InventoryEvent implements Cancellable {
-
     private final MerchantRecipe recipe;
     private final int recipeIndex;
     @Setter

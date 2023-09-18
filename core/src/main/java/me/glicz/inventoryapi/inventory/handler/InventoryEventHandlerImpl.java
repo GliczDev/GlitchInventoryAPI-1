@@ -12,7 +12,6 @@ import me.glicz.inventoryapi.itembuilder.ItemBuilder;
 import org.bukkit.entity.Player;
 
 public class InventoryEventHandlerImpl extends InventoryEventHandler {
-
     @Override
     public void handleClick(Player player, int inventoryId, ClickType clickType, int slot) {
         if (GlitchInventory.has(player)) {

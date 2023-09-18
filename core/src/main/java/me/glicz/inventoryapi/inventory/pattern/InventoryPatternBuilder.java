@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class InventoryPatternBuilder<T extends GlitchInventory<T>> {
-
     private final Map<Character, Function<Integer, GuiItem>> replacements = new HashMap<>();
     private final T inventory;
     @Getter

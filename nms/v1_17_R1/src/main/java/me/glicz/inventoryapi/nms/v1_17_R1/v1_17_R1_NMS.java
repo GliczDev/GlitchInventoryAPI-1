@@ -34,7 +34,6 @@ import java.util.List;
 
 @NativeVersion(major = 1, minor = 17, patch = 1)
 public class v1_17_R1_NMS implements NMS {
-
     protected final JavaPlugin plugin;
     protected Field connectionChannel;
 

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Title<T extends Title<T>> {
-
     public static SimpleTitle simple(String title) {
         return simple(Component.text(title));
     }

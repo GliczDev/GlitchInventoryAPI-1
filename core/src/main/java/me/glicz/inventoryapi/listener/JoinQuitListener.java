@@ -7,7 +7,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class JoinQuitListener implements Listener {
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         GlitchInventoryAPI.getNms().registerListener(e.getPlayer());

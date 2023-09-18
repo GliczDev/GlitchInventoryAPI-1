@@ -7,7 +7,6 @@ import net.kyori.adventure.text.Component;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class SimpleTitle extends Title<SimpleTitle> {
-
     private final Component title;
 
     @Override

@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class Animator<T extends GlitchInventory<T>> {
-
     private static final Set<Animator<?>> ACTIVE_ANIMATORS = new HashSet<>();
     private final Map<String, BiConsumer<Integer, T>> actionMap = new HashMap<>();
     @Getter

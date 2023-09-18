@@ -14,7 +14,6 @@ import java.util.Map;
 
 @UtilityClass
 public class NMSInitializer {
-
     public static String getVersion() {
         return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     }

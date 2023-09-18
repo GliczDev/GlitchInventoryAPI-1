@@ -4,7 +4,6 @@ import me.glicz.inventoryapi.inventory.ClickType;
 import org.bukkit.entity.Player;
 
 public abstract class InventoryEventHandler {
-
     private static InventoryEventHandler instance;
 
     public static void set(InventoryEventHandler instance) {

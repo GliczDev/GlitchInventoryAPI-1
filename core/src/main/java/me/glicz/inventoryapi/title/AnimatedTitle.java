@@ -10,7 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AnimatedTitle extends Title<AnimatedTitle> {
-
     private final Map<Integer, Component> titleMap;
     private final int maxFrame;
     private int tick;

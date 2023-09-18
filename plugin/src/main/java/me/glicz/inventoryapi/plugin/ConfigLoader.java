@@ -18,7 +18,6 @@ import java.io.File;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class ConfigLoader {
-
     @SneakyThrows
     public static void load(JavaPlugin plugin) {
         if (!plugin.getDataFolder().exists() && !plugin.getDataFolder().mkdirs())

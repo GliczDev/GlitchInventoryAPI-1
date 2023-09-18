@@ -10,7 +10,6 @@ import org.bukkit.event.Cancellable;
 
 @Getter
 public class InventoryPageChangeEvent extends InventoryEvent implements Cancellable {
-
     private final int newPage, oldPage;
     @Accessors(fluent = true)
     private final boolean hasNext, hasPrevious;

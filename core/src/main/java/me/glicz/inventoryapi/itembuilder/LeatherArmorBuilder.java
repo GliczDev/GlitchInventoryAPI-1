@@ -5,7 +5,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class LeatherArmorBuilder extends ItemBuilder<LeatherArmorBuilder, LeatherArmorMeta> {
-
     protected LeatherArmorBuilder(ItemStack itemStack) {
         super(itemStack);
     }

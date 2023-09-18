@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
 public class ItemBuilder<T extends ItemBuilder<T, I>, I extends ItemMeta> {
-
     protected final ItemStack itemStack;
     protected final I itemMeta;
 

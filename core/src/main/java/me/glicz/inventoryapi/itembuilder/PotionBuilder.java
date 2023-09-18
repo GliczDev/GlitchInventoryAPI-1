@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 
 public class PotionBuilder extends ItemBuilder<PotionBuilder, PotionMeta> {
-
     protected PotionBuilder(ItemStack itemStack) {
         super(itemStack);
     }

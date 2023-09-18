@@ -10,7 +10,6 @@ import org.bukkit.inventory.MerchantRecipe;
 import java.util.List;
 
 public interface NMS {
-
     void registerListener(Player player);
 
     void unregisterListener(Player player);

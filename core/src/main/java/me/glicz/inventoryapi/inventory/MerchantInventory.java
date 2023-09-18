@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class MerchantInventory extends GlitchInventory<MerchantInventory> {
-
     private final List<MerchantRecipe> recipeList = new ArrayList<>();
     private final Map<Player, MerchantRecipe> selectedRecipes = new HashMap<>();
     private final List<Listener<InventoryTradeSelectEvent>> tradeSelectListeners = new ArrayList<>();

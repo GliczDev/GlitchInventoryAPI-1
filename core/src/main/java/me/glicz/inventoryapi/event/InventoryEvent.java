@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 @Getter
 public class InventoryEvent {
-
     private final Player player;
     private final GlitchInventory<?> inventory;
 

@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class GlitchInventoryAPI {
-
     @Getter
     @Setter
     private static GlitchInventoryAPIConfig config = new GlitchInventoryAPIConfig();

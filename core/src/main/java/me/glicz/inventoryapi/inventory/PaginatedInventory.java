@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class PaginatedInventory extends GlitchInventory<PaginatedInventory> {
-
     private final Map<Player, List<GuiItem>> currentPageItemsMap = new HashMap<>();
     private final Map<Player, Integer> pageMap = new HashMap<>();
     private final List<Listener<InventoryPageChangeEvent>> pageChangeListeners = new ArrayList<>();
