@@ -1,12 +1,3 @@
-plugins {
-    id("java")
-    id("io.papermc.paperweight.userdev") version "1.5.3"
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
     compileOnly(project(":core"))
