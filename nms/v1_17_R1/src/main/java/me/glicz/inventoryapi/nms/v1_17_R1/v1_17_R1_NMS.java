@@ -47,12 +47,12 @@ public class v1_17_R1_NMS implements NMS {
     }
 
     @SuppressWarnings("deprecation")
-    protected ServerPlayer getNmsPlayer(Player player) {
+    protected ServerPlayer getServerPlayer(Player player) {
         return MinecraftServer.getServer().getPlayerList().getPlayer(player.getUniqueId());
     }
 
     protected Connection getConnection(Player player) {
-        return getNmsPlayer(player).connection.connection;
+        return getServerPlayer(player).connection.connection;
     }
 
     @SneakyThrows
@@ -66,9 +66,9 @@ public class v1_17_R1_NMS implements NMS {
         getConnection(player).send(packet);
     }
 
-    protected MerchantOffer getNmsMerchantOffer(MerchantRecipe recipe) {
+    protected MerchantOffer getMerchantOffer(MerchantRecipe recipe) {
         return new MerchantOffer(
-                recipe.getIngredients().size() > 0
+                !recipe.getIngredients().isEmpty()
                         ? ItemStack.fromBukkitCopy(recipe.getIngredients().get(0))
                         : ItemStack.EMPTY,
                 recipe.getIngredients().size() > 1
@@ -142,7 +142,7 @@ public class v1_17_R1_NMS implements NMS {
 
     @Override
     public int getNextInventoryID(Player player) {
-        return getNmsPlayer(player).nextContainerCounter();
+        return getServerPlayer(player).nextContainerCounter();
     }
 
     protected MenuType<?> getMenuType(int rows) {
@@ -213,8 +213,11 @@ public class v1_17_R1_NMS implements NMS {
         ItemStack[] itemStacks = items.stream()
                 .map(ItemStack::fromBukkitCopy)
                 .toArray(ItemStack[]::new);
-        ClientboundContainerSetContentPacket packet = new ClientboundContainerSetContentPacket(id, 0,
-                NonNullList.of(ItemStack.EMPTY, itemStacks), ItemStack.EMPTY);
+        ClientboundContainerSetContentPacket packet = new ClientboundContainerSetContentPacket(
+                id, 0,
+                NonNullList.of(ItemStack.EMPTY, itemStacks),
+                ItemStack.EMPTY
+        );
         sendPacket(player, packet);
     }
 
@@ -227,7 +230,7 @@ public class v1_17_R1_NMS implements NMS {
     @Override
     public void setRecipes(int id, Player player, List<MerchantRecipe> recipeList) {
         MerchantOffers offers = new MerchantOffers();
-        recipeList.forEach(recipe -> offers.add(getNmsMerchantOffer(recipe)));
+        recipeList.forEach(recipe -> offers.add(getMerchantOffer(recipe)));
         ClientboundMerchantOffersPacket packet = new ClientboundMerchantOffersPacket(
                 id, offers, 0, 0, false, false);
         sendPacket(player, packet);

@@ -16,7 +16,7 @@ public class v1_18_R1_NMS extends v1_17_R1_NMS {
 
     @SuppressWarnings("deprecation")
     @Override
-    protected ServerPlayer getNmsPlayer(Player player) {
+    protected ServerPlayer getServerPlayer(Player player) {
         return MinecraftServer.getServer().getPlayerList().getPlayer(player.getUniqueId());
     }
 

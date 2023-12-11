@@ -20,7 +20,7 @@ public class v1_20_R2_NMS extends v1_20_R1_NMS {
 
     @Override
     protected Connection getConnection(Player player) {
-        return getNmsPlayer(player).connection.connection;
+        return getServerPlayer(player).connection.connection;
     }
 
     @Override
