@@ -1,3 +1,5 @@
+# ⚠️ OUTDATED. See: https://github.com/GliczDev/GlitchInventoryAPI
+
 # GlitchInventoryAPI [![CodeFactor](https://www.codefactor.io/repository/github/gliczdev/glitchinventoryapi/badge)](#)
 <div align="center">
 <a href="https://discord.gg/ZRuaXh3P63"><img alt="discord-plural" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-plural_46h.png"></a>
